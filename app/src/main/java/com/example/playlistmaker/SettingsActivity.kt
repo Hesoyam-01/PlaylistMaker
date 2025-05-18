@@ -18,6 +18,8 @@ class SettingsActivity : AppCompatActivity() {
         settingsToolbar.setNavigationOnClickListener {
             finish()
         }
+        val a = "a"
+
 
     }
 }
