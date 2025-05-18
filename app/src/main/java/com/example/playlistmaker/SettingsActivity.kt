@@ -15,8 +15,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val backspaceLibraryButton = findViewById<ImageView>(R.id.settings_backspace_button)
         backspaceLibraryButton.setOnClickListener {
-            val backspaceLibraryButtonIntent = Intent(this@SettingsActivity, MainActivity::class.java)
-            startActivity(backspaceLibraryButtonIntent)
+            finish()
         }
 
     }
