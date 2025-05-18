@@ -64,7 +64,7 @@
             android:textSize="@dimen/default_textSize"
             android:letterSpacing="0"
             android:id="@+id/library_button"
-            android:foreground="?attr/selectableItemBackground"/>
+            />
 
         <Button
             android:layout_width="match_parent"
