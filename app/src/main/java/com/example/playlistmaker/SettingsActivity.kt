@@ -18,8 +18,5 @@ class SettingsActivity : AppCompatActivity() {
         settingsToolbar.setNavigationOnClickListener {
             finish()
         }
-        val a = 3
-
-
     }
 }
