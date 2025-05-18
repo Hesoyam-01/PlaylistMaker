@@ -15,6 +15,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val searchButton = findViewById<Button>(R.id.search_button)
+        val libraryButton = findViewById<Button>(R.id.library_button)
+        val settingsButton = findViewById<Button>(R.id.settings_button)
+
         searchButton.setOnClickListener {
             Toast.makeText(
                 this@MainActivity,
@@ -23,15 +26,19 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
 
-        val libraryButton = findViewById<Button>(R.id.library_button)
-        val libraryButtonClickListener : View.OnClickListener = object : View.OnClickListener {
+
+        val libraryButtonClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                Toast.makeText(this@MainActivity, "Медиатека временно не работает.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Медиатека временно не работает.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         libraryButton.setOnClickListener(libraryButtonClickListener)
 
-        val settingsButton = findViewById<Button>(R.id.settings_button)
+
         settingsButton.setOnClickListener {
             Toast.makeText(
                 this@MainActivity,
