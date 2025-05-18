@@ -13,9 +13,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="4dp"
-            android:backgroundTint="@color/white"
             android:padding="12dp"
-            android:src="@drawable/ic_backspace"/>
+            android:src="@drawable/ic_backspace"
+            android:id="@+id/settings_backspace_button" />
 
         <TextView
             android:layout_width="wrap_content"

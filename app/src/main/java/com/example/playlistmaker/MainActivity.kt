@@ -1,13 +1,11 @@
 package com.example.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,32 +17,23 @@ class MainActivity : AppCompatActivity() {
         val settingsButton = findViewById<Button>(R.id.settings_button)
 
         searchButton.setOnClickListener {
-            Toast.makeText(
-                this@MainActivity,
-                "Поиск временно не работает.",
-                Toast.LENGTH_SHORT
-            ).show()
+            val searchButtonIntent = Intent(this@MainActivity, SearchActivity::class.java)
+            startActivity(searchButtonIntent)
         }
 
 
         val libraryButtonClickListener: View.OnClickListener = object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "Медиатека временно не работает.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val libraryButtonIntent = Intent(this@MainActivity, LibraryActivity::class.java)
+                startActivity(libraryButtonIntent)
             }
         }
         libraryButton.setOnClickListener(libraryButtonClickListener)
 
 
         settingsButton.setOnClickListener {
-            Toast.makeText(
-                this@MainActivity,
-                "Настройки временно не работают.",
-                Toast.LENGTH_SHORT
-            ).show()
+            val settingsButtonIntent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(settingsButtonIntent)
         }
 
     }
