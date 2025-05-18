@@ -5,6 +5,6 @@
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/default_textSize</item>
-        <item name="android:gravity">end</item>
     </style>
+
 </resources>

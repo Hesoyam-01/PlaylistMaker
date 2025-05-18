@@ -1,33 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="56dp">
-
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="4dp"
-            android:padding="12dp"
-            android:src="@drawable/ic_backspace"
-            android:id="@+id/settings_backspace_button" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:text="@string/settings"
-            android:textColor="@color/black"
-            android:textSize="@dimen/default_textSize"
-            android:textStyle="bold" />
-
-
-    </LinearLayout>
+        android:layout_height="48dp"
+        android:id="@+id/settings_toolbar"
+        android:layout_marginTop="4dp"
+        app:contentInsetStartWithNavigation="64dp"
+        app:navigationIcon="@drawable/ic_backspace"
+        app:title="@string/settings"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,8 +60,8 @@
             <ImageView
                 android:layout_width="@dimen/default_icon_size"
                 android:layout_height="@dimen/default_icon_size"
-                android:src="@drawable/ic_share"
-                android:layout_gravity="end|center_vertical" />
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_share" />
 
         </FrameLayout>
 
@@ -94,8 +80,8 @@
             <ImageView
                 android:layout_width="@dimen/default_icon_size"
                 android:layout_height="@dimen/default_icon_size"
-                android:src="@drawable/ic_support"
-                android:layout_gravity="end|center_vertical" />
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_support" />
 
         </FrameLayout>
 
@@ -114,8 +100,8 @@
             <ImageView
                 android:layout_width="@dimen/default_icon_size"
                 android:layout_height="@dimen/default_icon_size"
-                android:src="@drawable/ic_arrow_forward"
-                android:layout_gravity="end|center_vertical" />
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/ic_arrow_forward" />
 
         </FrameLayout>
 
