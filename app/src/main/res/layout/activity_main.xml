@@ -44,7 +44,9 @@
             android:textColor="@color/black"
             android:textAllCaps="false"
             android:textSize="@dimen/default_textSize"
-            android:letterSpacing="0"/>
+            android:letterSpacing="0"
+            android:id="@+id/search_button"
+            android:foreground="?attr/selectableItemBackground"/>
 
         <Button
             android:layout_width="match_parent"
@@ -52,15 +54,17 @@
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             app:cornerRadius="16dp"
-            app:icon="@drawable/ic_media"
+            app:icon="@drawable/ic_library"
             app:iconTint="@color/black"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/default_iconPadding"
-            android:text="@string/media"
+            android:text="@string/library"
             android:textColor="@color/black"
             android:textAllCaps="false"
             android:textSize="@dimen/default_textSize"
-            android:letterSpacing="0"/>
+            android:letterSpacing="0"
+            android:id="@+id/library_button"
+            android:foreground="?attr/selectableItemBackground"/>
 
         <Button
             android:layout_width="match_parent"
@@ -76,7 +80,9 @@
             android:textColor="@color/black"
             android:textAllCaps="false"
             android:textSize="@dimen/default_textSize"
-            android:letterSpacing="0"/>
+            android:letterSpacing="0"
+            android:id="@+id/settings_button"
+            android:foreground="?attr/selectableItemBackground"/>
 
     </LinearLayout>
 

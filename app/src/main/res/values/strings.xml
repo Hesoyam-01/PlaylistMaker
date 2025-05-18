@@ -2,7 +2,7 @@
     <string name="app_name" translatable="false">Playlist maker</string>
     <string name="title_hello">Привет, Практикум</string>
     <string name="search">Поиск</string>
-    <string name="media">Медиатека</string>
+    <string name="library">Медиатека</string>
     <string name="settings">Настройки</string>
     <string name="dark_theme">Тёмная тема</string>
     <string name="share_app">Поделиться приложением</string>
