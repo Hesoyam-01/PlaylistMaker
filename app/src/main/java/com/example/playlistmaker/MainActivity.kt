@@ -22,13 +22,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val libraryButtonClickListener: View.OnClickListener = object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                val libraryButtonIntent = Intent(this@MainActivity, LibraryActivity::class.java)
-                startActivity(libraryButtonIntent)
-            }
+        libraryButton.setOnClickListener {
+            val libraryButtonIntent = Intent(this@MainActivity, SearchActivity::class.java)
+            startActivity(libraryButtonIntent)
         }
-        libraryButton.setOnClickListener(libraryButtonClickListener)
 
 
         settingsButton.setOnClickListener {
