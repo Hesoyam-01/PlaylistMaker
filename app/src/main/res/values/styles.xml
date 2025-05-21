@@ -1,7 +1,4 @@
 <resources>
-    <style name="DarkThemeSwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/blue</item>
-    </style>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/default_textSize</item>
