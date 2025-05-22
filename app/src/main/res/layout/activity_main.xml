@@ -24,17 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="0dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/search"
         app:icon="@drawable/ic_search"
-        style="@style/MainActivityButtonStyle"/>
+        style="@style/MainActivityButtonStyle" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="0dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/library"
         app:icon="@drawable/ic_library"
         style="@style/MainActivityButtonStyle"/>
