@@ -4,4 +4,24 @@
         <item name="android:textSize">@dimen/default_textSize</item>
     </style>
 
+    <style name="MainActivityButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/default_textSize</item>
+        <item name="cornerRadius">@dimen/default_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/default_iconPadding</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
+    <style name="SettingsActivityTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingHorizontal">@dimen/default_padding</item>
+        <item name="android:textSize">@dimen/small_textSize</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

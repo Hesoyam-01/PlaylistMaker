@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
+
+    <style name="DarkThemeSwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/blue</item>
+    </style>
 </resources>

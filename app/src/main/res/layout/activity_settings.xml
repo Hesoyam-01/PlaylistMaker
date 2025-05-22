@@ -30,32 +30,23 @@
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
-        android:drawableEnd="@drawable/ic_share"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/default_padding"
         android:text="@string/share_app"
-        android:textSize="@dimen/small_textSize"
-        android:textColor="@color/black"/>
+        android:drawableEnd="@drawable/ic_share"
+        style="@style/SettingsActivityTextViewStyle"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
-        android:drawableEnd="@drawable/ic_support"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/default_padding"
         android:text="@string/support"
-        android:textSize="@dimen/small_textSize"
-        android:textColor="@color/black"/>
+        android:drawableEnd="@drawable/ic_support"
+        style="@style/SettingsActivityTextViewStyle"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
-        android:drawableEnd="@drawable/ic_arrow_forward"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/default_padding"
         android:text="@string/user_agreement"
-        android:textSize="@dimen/small_textSize"
-        android:textColor="@color/black"/>
+        android:drawableEnd="@drawable/ic_arrow_forward"
+        style="@style/SettingsActivityTextViewStyle"/>
 
 </LinearLayout>
 
