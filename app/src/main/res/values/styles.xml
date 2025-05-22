@@ -8,6 +8,7 @@
 
     <style name="MainActivityButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="backgroundTint">@color/white</item>
         <item name="android:letterSpacing">0</item>
         <item name="textAllCaps">false</item>
         <item name="android:textColor">@color/black</item>
@@ -27,9 +28,18 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingHorizontal">@dimen/default_padding</item>
         <item name="android:textSize">@dimen/small_textSize</item>
-        <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:drawableTint">?attr/colorOnPrimaryFixedVariant</item>
+    </style>
+
+    <style name="MainActivityTheme">
+        <item name="android:background">@color/blue</item>
+    </style>
+
+    <style name="SwitchColor" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/blue</item>
     </style>
 
 </resources>

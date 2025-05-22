@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/colorPrimary">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
@@ -14,14 +15,15 @@
         app:contentInsetStartWithNavigation="64dp"
         app:navigationIcon="@drawable/ic_backspace"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/Toolbar.TitleText" />
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:navigationIconTint="?attr/colorOnPrimary"/>
 
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
         android:text="@string/dark_theme"
-        android:theme="@style/DarkThemeSwitchTheme"
+        android:theme="@style/SwitchColor"
         style="@style/SettingsActivityTextViewStyle"/>
 
 
@@ -30,7 +32,7 @@
         android:layout_height="@dimen/settings_width"
         android:text="@string/share_app"
         android:drawableEnd="@drawable/ic_share"
-        style="@style/SettingsActivityTextViewStyle"/>
+        style="@style/SettingsActivityTextViewStyle" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

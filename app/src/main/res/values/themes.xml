@@ -1,16 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/white</item>
-        <!-- <item name="colorPrimary">@color/white</item> -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimaryFixedVariant">@color/light_gray</item>
     </style>
+    
 
-    <style name="Theme.PlaylistMaker" parent="Base.Theme.PlaylistMaker" />
 
-    <style name="DarkThemeSwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/blue</item>
-    </style>
 </resources>
