@@ -7,7 +7,6 @@
     </style>
 
     <style name="MainActivityButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:backgroundTint">@color/white</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:letterSpacing">0</item>
         <item name="textAllCaps">false</item>
