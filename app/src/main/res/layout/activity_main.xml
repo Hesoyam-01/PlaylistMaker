@@ -6,37 +6,40 @@
     android:background="@color/blue"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/default_padding"
-    android:paddingBottom="30dp">
+    android:paddingBottom="28dp">
 
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_marginBottom="24dp"
         app:contentInsetStart="0dp"
         app:title="@string/app_name"
         app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:titleTextColor="@color/white"/>
+        app:titleTextColor="@color/white" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/search_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginBottom="0dp"
         android:text="@string/search"
         app:icon="@drawable/ic_search"
         style="@style/MainActivityButtonStyle"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginBottom="0dp"
         android:text="@string/library"
         app:icon="@drawable/ic_library"
         style="@style/MainActivityButtonStyle"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/settings_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"

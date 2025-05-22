@@ -20,11 +20,9 @@
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/default_padding"
         android:text="@string/dark_theme"
-        android:textSize="@dimen/small_textSize"
-        android:theme="@style/DarkThemeSwitchTheme"/>
+        android:theme="@style/DarkThemeSwitchTheme"
+        style="@style/SettingsActivityTextViewStyle"/>
 
 
     <com.google.android.material.textview.MaterialTextView
