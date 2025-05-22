@@ -6,7 +6,7 @@
     android:background="@color/blue"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/default_padding"
-    android:paddingBottom="28dp">
+    android:paddingBottom="24dp">
 
 
     <com.google.android.material.appbar.MaterialToolbar
