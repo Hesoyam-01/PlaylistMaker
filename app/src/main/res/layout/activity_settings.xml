@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_width"
         android:text="@string/dark_theme"
-        android:theme="@style/SwitchColor"
+        android:theme="@style/SwitchStyle"
         style="@style/SettingsActivityTextViewStyle"/>
 
 

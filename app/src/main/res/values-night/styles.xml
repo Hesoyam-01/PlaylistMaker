@@ -3,4 +3,9 @@
     <style name="MainActivityTheme">
         <item name="background">@color/dark_gray</item>
     </style>
+
+    <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/blue_light</item>
+    </style>
 </resources>

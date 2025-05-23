@@ -38,8 +38,11 @@
         <item name="android:background">@color/blue</item>
     </style>
 
-    <style name="SwitchColor" parent="Widget.AppCompat.CompoundButton.Switch">
+    <style name="SwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
         <item name="colorControlActivated">@color/blue</item>
+        <item name="thumbTint">@color/text_gray</item>
+        <item name="trackTint">@color/light_gray</item>
+
     </style>
 
 </resources>
