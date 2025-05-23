@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_toolbar"
@@ -14,39 +14,58 @@
         android:layout_marginBottom="28dp"
         app:contentInsetStartWithNavigation="64dp"
         app:navigationIcon="@drawable/ic_backspace"
+        app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:navigationIconTint="?attr/colorOnPrimary"/>
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_width"
-        android:text="@string/dark_theme"
-        android:theme="@style/SwitchStyle"
-        style="@style/SettingsActivityTextViewStyle"/>
+        android:layout_height="@dimen/settings_height"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/theme_text"
+            style="@style/SettingsActivityTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/dark_theme" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/theme_switcher"
+            style="@style/SettingsActivityTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:foreground="@null"
+            android:theme="@style/SwitchStyle" />
+    </FrameLayout>
 
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/share_app_button"
+        style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_width"
-        android:text="@string/share_app"
+        android:layout_height="@dimen/settings_height"
         android:drawableEnd="@drawable/ic_share"
-        style="@style/SettingsActivityTextViewStyle" />
+        android:text="@string/share_app" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/support_button"
+        style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_width"
-        android:text="@string/support"
+        android:layout_height="@dimen/settings_height"
         android:drawableEnd="@drawable/ic_support"
-        style="@style/SettingsActivityTextViewStyle"/>
+        android:text="@string/support" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/user_agreement_button"
+        style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_width"
-        android:text="@string/user_agreement"
+        android:layout_height="@dimen/settings_height"
         android:drawableEnd="@drawable/ic_arrow_forward"
-        style="@style/SettingsActivityTextViewStyle"/>
+        android:text="@string/user_agreement" />
 
 </LinearLayout>
 

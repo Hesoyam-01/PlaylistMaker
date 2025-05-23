@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MainActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/default_padding"
-    android:paddingBottom="24dp"
-    style="@style/MainActivityTheme">
+    android:paddingBottom="24dp">
 
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -21,31 +21,31 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/search_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="16dp"
+        android:layout_weight="1"
         android:text="@string/search"
-        app:icon="@drawable/ic_search"
-        style="@style/MainActivityButtonStyle" />
+        app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="16dp"
+        android:layout_weight="1"
         android:text="@string/library"
-        app:icon="@drawable/ic_library"
-        style="@style/MainActivityButtonStyle"/>
+        app:icon="@drawable/ic_library" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/settings_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/settings"
-        app:icon="@drawable/ic_settings"
-        style="@style/MainActivityButtonStyle"/>
+        app:icon="@drawable/ic_settings" />
 
 </LinearLayout>

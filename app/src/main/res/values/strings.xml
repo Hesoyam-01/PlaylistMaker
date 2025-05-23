@@ -6,6 +6,11 @@
     <string name="settings">Настройки</string>
     <string name="dark_theme">Тёмная тема</string>
     <string name="share_app">Поделиться приложением</string>
+    <string name="share_app_link" translatable="false">https://practicum.yandex.ru/android-developer/</string>
     <string name="support">Написать в поддержку</string>
+    <string name="support_subject">Сообщение разработчикам приложения Playlist Maker</string>
+    <string name="support_message">Спасибо разработчикам за крутое приложение!</string>
+    <string name="support_email" translatable="false">ashot.m1985@gmail.com</string>
     <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="user_agreement_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
