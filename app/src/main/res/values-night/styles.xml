@@ -16,7 +16,8 @@
 
     <style name="editTextElementColor">
         <item name="android:tint">@color/dark_gray</item>
-        <item name="android:drawableTint">@color/dark_gray</item>
+        <item name="drawableTint">@color/dark_gray</item>
+        <item name="iconTint">@color/dark_gray</item>
         <item name="android:textColorHint">@color/dark_gray</item>
     </style>
 

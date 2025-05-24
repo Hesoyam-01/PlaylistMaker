@@ -48,13 +48,14 @@
         <item name="android:alpha">0.6</item>
     </style>
 
-    <style name="editTextBackground" parent="Widget.Material3.CardView.Filled">
+    <style name="editTextBackground">
         <item name="cardBackgroundColor">@color/light_gray</item>
     </style>
 
     <style name="editTextElementColor">
         <item name="android:tint">@color/text_gray</item>
-        <item name="android:drawableTint">@color/text_gray</item>
+        <item name="drawableTint">@color/text_gray</item>
+        <item name="iconTint">@color/text_gray</item>
         <item name="android:textColorHint">@color/text_gray</item>
     </style>
 
