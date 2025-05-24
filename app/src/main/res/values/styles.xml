@@ -46,4 +46,10 @@
         <item name="android:alpha">0.6</item>
     </style>
 
+    <style name="editTextBackground" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/light_gray</item>
+    </style>
+
+    <style name="editTextIconColor"
+
 </resources>

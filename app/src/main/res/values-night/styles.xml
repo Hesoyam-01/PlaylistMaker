@@ -9,7 +9,7 @@
         <item name="trackTint">@color/blue_light</item>
     </style>
 
-    <style name="editTextBackground" parent="Widget.AppCompat.EditText">
-        <item name="android:background">@color/white</item>
+    <style name="editTextBackground">
+        <item name="cardBackgroundColor">@color/white</item>
     </style>
 </resources>

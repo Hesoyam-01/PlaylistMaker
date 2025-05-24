@@ -15,12 +15,34 @@
         app:title="@string/search"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <EditText
-        android:id="@+id/inputEditText"
-        android:background="@drawable/edittext_background"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="36dp"
         android:layout_marginHorizontal="@dimen/default_padding"
         android:layout_marginVertical="8dp"
-        />
+        style="@style/editTextBackground"
+        app:cardCornerRadius="8dp">
+
+        <EditText
+            android:id="@+id/inputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/ic_search"
+            android:drawableTint="?attr/colorOnPrimaryFixedVariant"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:textColorHint="?attr/colorOnPrimaryFixedVariant"
+            android:maxLines="1"
+            android:background="@null"
+            android:layout_marginEnd="40dp"
+            android:fontFamily="@font/ys_display_regular"
+            android:textSize="@dimen/small_textSize"
+            android:textFontWeight="400"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|end"/>
+    </com.google.android.material.card.MaterialCardView>
+
 </LinearLayout>
