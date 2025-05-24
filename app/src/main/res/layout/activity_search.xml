@@ -9,11 +9,18 @@
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginBottom="24dp"
         app:contentInsetStartWithNavigation="64dp"
         app:navigationIcon="@drawable/ic_backspace"
         app:navigationIconTint="?attr/colorOnPrimary"
         app:title="@string/search"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
+    <EditText
+        android:id="@+id/inputEditText"
+        android:background="@drawable/edittext_background"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="@dimen/default_padding"
+        android:layout_marginVertical="8dp"
+        />
 </LinearLayout>
