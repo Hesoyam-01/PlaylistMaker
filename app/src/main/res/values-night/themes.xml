@@ -6,8 +6,8 @@
         <item name="android:statusBarColor">@color/dark_gray</item>
         <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorOnSecondary">@color/white</item>
         <item name="colorOnPrimaryFixedVariant">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
     </style>
 
 

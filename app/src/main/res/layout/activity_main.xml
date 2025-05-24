@@ -15,7 +15,7 @@
         android:layout_marginBottom="24dp"
         app:contentInsetStart="0dp"
         app:title="@string/app_name"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:titleTextAppearance="@style/ToolbarStyle"
         app:titleTextColor="@color/white" />
 
 

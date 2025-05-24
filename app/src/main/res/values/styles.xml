@@ -1,9 +1,11 @@
 <resources>
 
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="ToolbarStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/default_textSize</item>
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="navigationIconTint">?attr/colorOnPrimary</item>
     </style>
 
     <style name="MainActivityButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -50,6 +52,10 @@
         <item name="cardBackgroundColor">@color/light_gray</item>
     </style>
 
-    <style name="editTextIconColor"
+    <style name="editTextElementColor">
+        <item name="android:tint">@color/text_gray</item>
+        <item name="android:drawableTint">@color/text_gray</item>
+        <item name="android:textColorHint">@color/text_gray</item>
+    </style>
 
 </resources>
