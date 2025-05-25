@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
 class SearchActivity : AppCompatActivity() {
+    private var inputText: String = INPUT_TEXT_DEF
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -34,10 +31,17 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.visibility = clearButtonVisibility(s)
             }
 
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                inputText = s.toString()
+            }
         }
 
         searchBar.addTextChangedListener(textWatcher)
+
+        if (savedInstanceState != null) {
+            inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
+            searchBar.setText(inputText)
+        }
 
         clearButton.setOnClickListener {
             searchBar.setText("")
@@ -50,5 +54,15 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(INPUT_TEXT, inputText)
+    }
+
+    companion object {
+        const val INPUT_TEXT = "INPUT_TEXT"
+        const val INPUT_TEXT_DEF = ""
     }
 }
