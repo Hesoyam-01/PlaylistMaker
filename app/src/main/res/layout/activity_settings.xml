@@ -10,10 +10,10 @@
         android:id="@+id/settings_toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="24dp"
         app:contentInsetStartWithNavigation="64dp"
-        app:navigationIcon="@drawable/ic_backspace"
+        app:navigationIcon="@drawable/ic_arrow_back_24"
         app:title="@string/settings"
         app:titleTextAppearance="@style/ToolbarStyle" />
 
@@ -47,7 +47,7 @@
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_height"
-        android:drawableEnd="@drawable/ic_share"
+        android:drawableEnd="@drawable/ic_share_24"
         android:text="@string/share_app" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -55,7 +55,7 @@
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_height"
-        android:drawableEnd="@drawable/ic_support"
+        android:drawableEnd="@drawable/ic_support_24"
         android:text="@string/support" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -63,7 +63,7 @@
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/settings_height"
-        android:drawableEnd="@drawable/ic_arrow_forward"
+        android:drawableEnd="@drawable/ic_arrow_forward_24"
         android:text="@string/user_agreement" />
 
 </LinearLayout>

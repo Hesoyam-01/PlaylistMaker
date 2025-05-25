@@ -11,7 +11,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="24dp"
         app:contentInsetStart="0dp"
         app:title="@string/app_name"
@@ -27,7 +27,7 @@
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:text="@string/search"
-        app:icon="@drawable/ic_search" />
+        app:icon="@drawable/ic_search_24" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
@@ -37,7 +37,7 @@
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:text="@string/library"
-        app:icon="@drawable/ic_library" />
+        app:icon="@drawable/ic_library_24" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/settings_button"
@@ -46,6 +46,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/settings"
-        app:icon="@drawable/ic_settings" />
+        app:icon="@drawable/ic_settings_24" />
 
 </LinearLayout>

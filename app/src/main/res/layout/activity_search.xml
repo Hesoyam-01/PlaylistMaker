@@ -10,9 +10,9 @@
         android:id="@+id/search_toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         app:contentInsetStartWithNavigation="64dp"
-        app:navigationIcon="@drawable/ic_backspace"
+        app:navigationIcon="@drawable/ic_arrow_back_24"
         app:title="@string/search"
         app:titleTextAppearance="@style/ToolbarStyle" />
 
@@ -32,7 +32,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="40dp"
             android:background="@null"
-            android:drawableStart="@drawable/ic_search_bar"
+            android:drawableStart="@drawable/ic_search_bar_16"
             android:drawablePadding="8dp"
             android:fontFamily="@font/ys_display_regular"
             android:hint="@string/search"
@@ -52,7 +52,7 @@
             android:layout_gravity="end"
             android:background="@android:color/transparent"
             android:visibility="gone"
-            app:icon="@drawable/ic_clear"
+            app:icon="@drawable/ic_clear_16"
             app:iconGravity="textTop" />
     </com.google.android.material.card.MaterialCardView>
 
