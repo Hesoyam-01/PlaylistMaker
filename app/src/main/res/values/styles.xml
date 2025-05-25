@@ -41,11 +41,11 @@
         <item name="android:background">@color/blue</item>
     </style>
 
-    <style name="SwitchStyle" parent="Widget.MaterialComponents.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/blue</item>
+    <style name="SwitchStyle">
         <item name="thumbTint">@color/text_gray</item>
         <item name="trackTint">@color/light_gray</item>
         <item name="android:alpha">0.6</item>
+        <item name="android:thumb">@drawable/custom_thumb</item>
     </style>
 
     <style name="editTextBackground">

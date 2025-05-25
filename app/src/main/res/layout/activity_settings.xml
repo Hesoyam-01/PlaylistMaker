@@ -15,7 +15,7 @@
         app:contentInsetStartWithNavigation="64dp"
         app:navigationIcon="@drawable/ic_backspace"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/ToolbarStyle"/>
+        app:titleTextAppearance="@style/ToolbarStyle" />
 
 
     <FrameLayout
@@ -33,12 +33,12 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/theme_switcher"
-            style="@style/SettingsActivityTextViewStyle"
+            style="@style/SwitchStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
-            android:foreground="@null"
-            android:theme="@style/SwitchStyle" />
+            android:layout_marginEnd="@dimen/default_padding"
+            android:foreground="@null" />
     </FrameLayout>
 
 
