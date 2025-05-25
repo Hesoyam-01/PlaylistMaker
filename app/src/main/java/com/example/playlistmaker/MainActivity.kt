@@ -1,13 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
-import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
