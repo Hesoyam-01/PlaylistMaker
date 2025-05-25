@@ -39,6 +39,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="12dp"
+            android:textColor="@color/dark_gray"
             android:textColorHighlight="@color/blue"
             android:textFontWeight="400"
             android:textSize="@dimen/small_textSize" />
@@ -50,9 +51,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="@android:color/transparent"
+            android:visibility="gone"
             app:icon="@drawable/ic_clear"
-            app:iconGravity="textTop"
-            android:visibility="gone" />
+            app:iconGravity="textTop" />
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
