@@ -61,7 +61,7 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(INPUT_TEXT, inputText)
     }
 
-    companion object {
+    private companion object {
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
     }
