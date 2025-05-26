@@ -1,76 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MainActivityTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     android:orientation="vertical"
-    android:paddingStart="@dimen/default_padding"
-    android:paddingEnd="@dimen/default_padding"
-    android:paddingBottom="30dp">
+    android:paddingHorizontal="@dimen/default_padding"
+    android:paddingBottom="28dp">
 
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_marginBottom="24dp"
         app:contentInsetStart="0dp"
         app:title="@string/app_name"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:titleTextColor="@color/white"/>
+        app:titleTextAppearance="@style/ToolbarStyle"
+        app:titleTextColor="@color/white" />
 
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/search_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?attr/selectableItemBackground"
-        android:letterSpacing="0"
         android:text="@string/search"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/default_textSize"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_search"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/default_iconPadding"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/ic_search_24" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?attr/selectableItemBackground"
-        android:letterSpacing="0"
         android:text="@string/library"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/default_textSize"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_library"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/default_iconPadding"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/ic_library_24" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/settings_button"
+        style="@style/MainActivityButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:backgroundTint="@color/white"
-        android:foreground="?attr/selectableItemBackground"
-        android:letterSpacing="0"
         android:text="@string/settings"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/default_textSize"
-        app:cornerRadius="16dp"
-        app:icon="@drawable/ic_settings"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/default_iconPadding"
-        app:iconTint="@color/black" />
+        app:icon="@drawable/ic_settings_24" />
 
 </LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainActivityTheme">
+        <item name="android:background">@color/dark_gray</item>
+    </style>
+
+    <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/blue_light</item>
+    </style>
+
+    <style name="editTextBackground">
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="editTextElementColor">
+        <item name="android:tint">@color/dark_gray</item>
+        <item name="drawableTint">@color/dark_gray</item>
+        <item name="iconTint">@color/dark_gray</item>
+        <item name="android:textColorHint">@color/dark_gray</item>
+    </style>
+
+</resources>

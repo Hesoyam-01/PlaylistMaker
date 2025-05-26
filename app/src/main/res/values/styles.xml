@@ -1,10 +1,62 @@
 <resources>
-    <style name="DarkThemeSwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/blue</item>
+
+    <style name="ToolbarStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">@dimen/default_textSize</item>
+        <item name="fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="titleTextColor">?attr/colorOnPrimary</item>
+        <item name="navigationIconTint">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="MainActivityButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/dark_gray</item>
         <item name="android:textSize">@dimen/default_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="cornerRadius">@dimen/default_corner_radius</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/default_iconPadding</item>
+        <item name="iconTint">@color/dark_gray</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="rippleColor">@color/text_gray</item>
+    </style>
+
+    <style name="SettingsActivityTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingHorizontal">@dimen/default_padding</item>
+        <item name="android:textSize">@dimen/small_textSize</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:drawableTint">?attr/colorOnPrimaryFixedVariant</item>
+    </style>
+
+    <style name="MainActivityTheme">
+        <item name="android:background">@color/blue</item>
+    </style>
+
+    <style name="SwitchStyle">
+        <item name="thumbTint">@color/text_gray</item>
+        <item name="trackTint">@color/light_gray</item>
+        <item name="android:alpha">0.6</item>
+        <item name="android:thumb">@drawable/custom_thumb</item>
+    </style>
+
+    <style name="editTextBackground">
+        <item name="cardBackgroundColor">@color/light_gray</item>
+    </style>
+
+    <style name="editTextElementColor">
+        <item name="android:tint">@color/text_gray</item>
+        <item name="drawableTint">@color/text_gray</item>
+        <item name="iconTint">@color/text_gray</item>
+        <item name="android:textColorHint">@color/text_gray</item>
     </style>
 
 </resources>
