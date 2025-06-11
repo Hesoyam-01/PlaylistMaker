@@ -1,51 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/track_height"
-    android:background="?attr/colorPrimary">
+    android:background="?attr/colorPrimary"
+    android:paddingHorizontal="13dp">
 
     <ImageView
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="13dp"
         tools:src="@drawable/album_placeholder">
 
     </ImageView>
 
-    <TextView
-        style="@style/TrackTextViewStyle"
+    <FrameLayout
         android:layout_width="250dp"
-        android:layout_height="19dp"
+        android:layout_height="32dp"
         android:layout_marginStart="66dp"
-        android:layout_marginTop="14dp"
-        android:ellipsize="end"
-        android:foreground="null"
-        android:maxLines="1"
-        android:padding="0dp"
-        tools:text="Enter Sandman">
+        android:layout_marginTop="14dp">
 
-    </TextView>
+        <TextView
+            style="@style/TrackTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="19dp"
+            android:ellipsize="end"
+            android:foreground="null"
+            android:maxLines="1"
+            android:padding="0dp"
+            tools:text="Enter Sandman">
 
-    <TextView
-        style="@style/TrackTextViewStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="13dp"
-        android:layout_marginStart="66dp"
-        android:layout_marginTop="34dp"
-        android:ellipsize="end"
-        android:foreground="null"
-        android:maxLines="1"
-        android:textColor="?attr/colorOnPrimaryFixedVariant"
-        android:textSize="11sp"
-        android:padding="0dp"
-        tools:text="Metallica">
+        </TextView>
 
-    </TextView>
-    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="13dp"
+            android:layout_marginTop="19dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TrackTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="13dp"
+                android:maxWidth="173dp"
+                android:layout_gravity="center_vertical"
+                android:ellipsize="end"
+                android:foreground="null"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:textColor="?attr/colorOnPrimaryFixedVariant"
+                android:textSize="11sp"
+                tools:text="Metallica">
+
+            </TextView>
+
+            <ImageView
+                android:layout_width="3dp"
+                android:layout_height="3dp"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="5dp"
+                android:src="@drawable/ic_ellipse_3"
+                app:tint="?attr/colorOnPrimaryFixedVariant">
+
+            </ImageView>
+
+            <TextView
+                style="@style/TrackTextViewStyle"
+                android:layout_width="64dp"
+                android:layout_height="13dp"
+                android:layout_gravity="center_vertical"
+                android:foreground="null"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:textColor="?attr/colorOnPrimaryFixedVariant"
+                android:textSize="11sp"
+                tools:text="5:32">
+
+            </TextView>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
     <ImageView
-        android:layout_width="3dp"
-        android:layout_height="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_arrow_forward_24"
+        android:layout_gravity="center_vertical|end"
+        app:tint="?attr/colorOnPrimaryFixedVariant">
+
+    </ImageView>
 
 </FrameLayout>
