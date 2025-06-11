@@ -20,7 +20,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
@@ -46,7 +46,7 @@
         android:id="@+id/share_app_button"
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_share_24"
         android:text="@string/share_app" />
 
@@ -54,7 +54,7 @@
         android:id="@+id/support_button"
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_support_24"
         android:text="@string/support" />
 
@@ -62,7 +62,7 @@
         android:id="@+id/user_agreement_button"
         style="@style/SettingsActivityTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_arrow_forward_24"
         android:text="@string/user_agreement" />
 
