@@ -33,7 +33,8 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.visibility = clearButtonVisibility(s)
+                clearButton.visibility = setVisibilityByInput(s)
+                trackRecyclerView.visibility = setVisibilityByInput(s)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -57,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView.adapter = trackAdapter
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
+    private fun setVisibilityByInput(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {
