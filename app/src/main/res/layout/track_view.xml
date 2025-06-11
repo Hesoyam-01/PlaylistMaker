@@ -9,6 +9,9 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="13dp"
-        tools:src=""
+        tools:src="@drawable/album_placeholder">
+    </ImageView>
+
+
 
 </LinearLayout>
