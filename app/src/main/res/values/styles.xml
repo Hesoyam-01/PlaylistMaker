@@ -26,7 +26,7 @@
         <item name="rippleColor">@color/text_gray</item>
     </style>
 
-    <style name="SettingsActivityTextViewStyle" parent="Widget.MaterialComponents.TextView">
+    <style name="TrackTextViewStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingHorizontal">@dimen/default_padding</item>
