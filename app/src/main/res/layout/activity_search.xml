@@ -56,4 +56,13 @@
             app:iconGravity="textTop" />
     </com.google.android.material.card.MaterialCardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/track_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp">
+    </androidx.recyclerview.widget.RecyclerView>
+
 </LinearLayout>

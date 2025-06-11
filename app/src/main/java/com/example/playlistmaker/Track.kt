@@ -1,10 +1,10 @@
 package com.example.playlistmaker
 
-class Track(
-    private val trackName: String,
-    private val artistName: String,
-    private val trackTime: String,
-    private val artworkUrl100: String
+data class Track(
+    val trackName: String,
+    val artistName: String,
+    val trackTime: String,
+    val artworkUrl100: String
 )
 
 val trackList = arrayListOf(

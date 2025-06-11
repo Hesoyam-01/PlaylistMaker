@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 
@@ -22,6 +23,7 @@ class SearchActivity : AppCompatActivity() {
         val searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
         val searchBar = findViewById<EditText>(R.id.search_bar)
         val clearButton = findViewById<MaterialButton>(R.id.clear_button)
+        val trackRecyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
 
         searchToolbar.setNavigationOnClickListener {
             finish()
@@ -50,6 +52,9 @@ class SearchActivity : AppCompatActivity() {
             searchBar.setText("")
             hideKeyboard(searchBar)
         }
+
+        val trackAdapter = TrackAdapter(trackList)
+        trackRecyclerView.adapter = trackAdapter
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
