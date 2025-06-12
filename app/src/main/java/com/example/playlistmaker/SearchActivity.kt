@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -33,8 +34,8 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.visibility = setVisibilityByInput(s)
-                trackRecyclerView.visibility = setVisibilityByInput(s)
+                clearButton.isVisible = !s.isNullOrEmpty()
+                trackRecyclerView.isVisible = !s.isNullOrEmpty()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -51,19 +52,11 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             searchBar.setText("")
-            hideKeyboard(searchBar)
+            Companion.hideKeyboard(searchBar)
         }
 
         val trackAdapter = TrackAdapter(trackList)
         trackRecyclerView.adapter = trackAdapter
-    }
-
-    private fun setVisibilityByInput(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -71,13 +64,12 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(INPUT_TEXT, inputText)
     }
 
-    fun hideKeyboard(view: View) {
-        val keyboardService = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     private companion object {
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
+        fun hideKeyboard(view: View) {
+            val keyboardService = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
