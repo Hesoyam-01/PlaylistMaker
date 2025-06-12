@@ -2,7 +2,7 @@
 <resources>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_iconPadding">5dp</dimen>
-    <dimen name="settings_height">61dp</dimen>
+    <dimen name="track_height">61dp</dimen>
     <dimen name="default_textSize">22sp</dimen>
     <dimen name="small_textSize">16sp</dimen>
     <dimen name="default_corner_radius">16dp</dimen>

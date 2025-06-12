@@ -20,12 +20,12 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:orientation="horizontal">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/theme_text"
-            style="@style/SettingsActivityTextViewStyle"
+            style="@style/TrackTextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -44,25 +44,25 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/share_app_button"
-        style="@style/SettingsActivityTextViewStyle"
+        style="@style/TrackTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_share_24"
         android:text="@string/share_app" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/support_button"
-        style="@style/SettingsActivityTextViewStyle"
+        style="@style/TrackTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_support_24"
         android:text="@string/support" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/user_agreement_button"
-        style="@style/SettingsActivityTextViewStyle"
+        style="@style/TrackTextViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/settings_height"
+        android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_arrow_forward_24"
         android:text="@string/user_agreement" />
 
