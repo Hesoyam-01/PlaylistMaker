@@ -13,4 +13,7 @@
     <string name="support_email" translatable="false">ashot.m1985@gmail.com</string>
     <string name="user_agreement">Пользовательское соглашение</string>
     <string name="user_agreement_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="nothing_was_found">Ничего не найдено</string>
+    <string name="connection_problems">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="update">Обновить</string>
 </resources>
