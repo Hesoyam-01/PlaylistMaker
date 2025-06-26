@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -79,6 +80,13 @@ class SearchActivity : AppCompatActivity() {
         }
 
         trackRecyclerView.adapter = trackAdapter
+
+        searchBar.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                true
+            }
+            false
+        }
     }
 
     fun showPlaceholder(placeholderType: PlaceholderType) {
