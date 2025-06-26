@@ -97,7 +97,8 @@
             android:backgroundTint="?attr/colorOnPrimary"
             android:visibility="gone"
             app:cardCornerRadius="54dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            android:foreground="?attr/selectableItemBackground">
 
             <TextView
                 android:layout_width="wrap_content"

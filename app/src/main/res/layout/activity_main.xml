@@ -27,7 +27,8 @@
         android:layout_marginBottom="16dp"
         android:layout_weight="1"
         android:text="@string/search"
-        app:icon="@drawable/ic_search_24" />
+        app:icon="@drawable/ic_search_24"
+        android:background="@drawable/button_ripple"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/library_button"
