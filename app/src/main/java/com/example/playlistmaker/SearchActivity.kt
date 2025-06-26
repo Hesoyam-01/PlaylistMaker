@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,6 +18,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.search.SearchBar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,19 +38,31 @@ class SearchActivity : AppCompatActivity() {
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
     private val trackAdapter = TrackAdapter(trackList)
 
-    private val searchPlaceholder = findViewById<LinearLayout>(R.id.search_placeholder)
-    private val searchPlaceholderImage = findViewById<ImageView>(R.id.search_placeholder_image)
-    private val searchPlaceholderText = findViewById<TextView>(R.id.search_placeholder_text)
-    private val searchUpdateQueryButton = findViewById<CardView>(R.id.search_update_query_button)
+    private lateinit var lastQuery: String
+
+    private lateinit var searchPlaceholder: LinearLayout
+    private lateinit var searchPlaceholderImage: ImageView
+    private lateinit var searchPlaceholderText: TextView
+    private lateinit var searchUpdateQueryButton: CardView
+    private lateinit var searchBar: EditText
+    private lateinit var searchToolbar: MaterialToolbar
+    private lateinit var clearButton: Button
+    private lateinit var trackRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val searchToolbar = findViewById<MaterialToolbar>(R.id.search_toolbar)
-        val searchBar = findViewById<EditText>(R.id.search_bar)
-        val clearButton = findViewById<MaterialButton>(R.id.clear_button)
-        val trackRecyclerView = findViewById<RecyclerView>(R.id.track_recycler_view)
+        searchPlaceholder = findViewById(R.id.search_placeholder)
+        searchPlaceholderImage = findViewById(R.id.search_placeholder_image)
+        searchPlaceholderText = findViewById(R.id.search_placeholder_text)
+        searchUpdateQueryButton = findViewById(R.id.search_update_query_button)
+        searchBar = findViewById(R.id.search_bar)
+        searchToolbar = findViewById(R.id.search_toolbar)
+        clearButton = findViewById(R.id.clear_button)
+        trackRecyclerView = findViewById(R.id.track_recycler_view)
+
+        trackRecyclerView.adapter = trackAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
@@ -75,24 +89,33 @@ class SearchActivity : AppCompatActivity() {
         }
 
         clearButton.setOnClickListener {
+            trackList.clear()
+            trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
         }
 
-        trackRecyclerView.adapter = trackAdapter
-
         searchBar.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (searchBar.text.isNotEmpty()){
+                    searchPlaceholder.visibility = View.GONE
+                    searchUpdateQueryButton.visibility = View.GONE
+                    search(searchBar.text.toString())
+                }
                 true
             }
             false
         }
+
+        searchUpdateQueryButton.setOnClickListener {
+            search(lastQuery)
+        }
     }
 
     fun showPlaceholder(placeholderType: PlaceholderType) {
-        searchPlaceholder.visibility = View.VISIBLE
         trackList.clear()
         trackAdapter.notifyDataSetChanged()
+        searchPlaceholder.visibility = View.VISIBLE
 
         when (placeholderType) {
             PlaceholderType.NOTHING_FOUND -> {
@@ -108,15 +131,18 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun search() {
-        tracksService.getTracks(inputText)
+    private fun search(query: String) {
+        tracksService.getTracks(query)
             .enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(
                     call: Call<TracksResponse>,
                     response: Response<TracksResponse>
                 ) {
+                    lastQuery = searchBar.text.toString()
                     when (response.code()) {
                         200 -> {
+                            searchPlaceholder.visibility = View.GONE
+                            searchUpdateQueryButton.visibility = View.GONE
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 trackList.clear()
                                 trackList.addAll(response.body()?.results!!)
@@ -131,6 +157,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                    lastQuery = searchBar.text.toString()
                     showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
                 }
 
