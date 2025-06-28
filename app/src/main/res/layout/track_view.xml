@@ -8,14 +8,13 @@
     android:background="?attr/colorPrimary"
     android:paddingHorizontal="13dp">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/track_cover"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
-        tools:src="@drawable/album_placeholder">
-
-    </ImageView>
+        app:riv_corner_radius="2dp"
+        tools:src="@drawable/album_placeholder"/>
 
     <FrameLayout
         android:layout_width="250dp"
@@ -47,10 +46,10 @@
                 style="@style/TrackTextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
-                android:maxWidth="173dp"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:foreground="@android:color/transparent"
+                android:maxWidth="173dp"
                 android:maxLines="1"
                 android:padding="0dp"
                 android:textColor="?attr/colorOnPrimaryFixedVariant"
@@ -91,8 +90,8 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_forward_24"
         android:layout_gravity="center_vertical|end"
+        android:src="@drawable/ic_arrow_forward_24"
         app:tint="?attr/colorOnPrimaryFixedVariant">
 
     </ImageView>
