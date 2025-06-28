@@ -1,3 +1,3 @@
 package com.example.playlistmaker
 
-data class TracksResponse (val results: ArrayList<Track>)
+data class TracksResponse (val results: List<Track>)

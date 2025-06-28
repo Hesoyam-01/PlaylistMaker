@@ -17,19 +17,15 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.search.SearchBar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
 
 class SearchActivity : AppCompatActivity() {
     private var inputText: String = INPUT_TEXT_DEF
-    private val trackList = ArrayList<Track>()
+    private val trackList = mutableListOf<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
@@ -97,7 +93,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchBar.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (searchBar.text.isNotEmpty()){
+                if (searchBar.text.isNotEmpty()) {
                     searchPlaceholder.visibility = View.GONE
                     searchUpdateQueryButton.visibility = View.GONE
                     search(searchBar.text.toString())
@@ -138,23 +134,19 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TracksResponse>,
                     response: Response<TracksResponse>
                 ) {
+                    val responseResults = response.body()?.results
                     lastQuery = searchBar.text.toString()
-                    when (response.code()) {
-                        200 -> {
-                            searchPlaceholder.visibility = View.GONE
-                            searchUpdateQueryButton.visibility = View.GONE
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                trackList.clear()
-                                trackList.addAll(response.body()?.results!!)
-                                trackAdapter.notifyDataSetChanged()
-                            } else showPlaceholder(PlaceholderType.NOTHING_FOUND)
-                        }
-
-                        else -> {
-                            showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
-                        }
-                    }
+                    if (response.isSuccessful) {
+                        searchPlaceholder.visibility = View.GONE
+                        searchUpdateQueryButton.visibility = View.GONE
+                        if (!responseResults.isNullOrEmpty()) {
+                            trackList.clear()
+                            trackList.addAll(responseResults)
+                            trackAdapter.notifyDataSetChanged()
+                        } else showPlaceholder(PlaceholderType.NOTHING_FOUND)
+                    } else showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
                 }
+
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
                     lastQuery = searchBar.text.toString()
@@ -164,12 +156,6 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-    interface SearchActivityAPI {
-        @GET("/search?entity=song")
-        fun getTracks(
-            @Query("term") text: String
-        ): Call<TracksResponse>
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -187,7 +173,7 @@ class SearchActivity : AppCompatActivity() {
     }
 }
 
-enum class PlaceholderType() {
+enum class PlaceholderType {
     NOTHING_FOUND,
     CONNECTION_PROBLEMS
 }

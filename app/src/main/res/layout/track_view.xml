@@ -14,9 +14,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         app:riv_corner_radius="2dp"
-        tools:src="@drawable/album_placeholder">
-
-    </com.makeramen.roundedimageview.RoundedImageView>
+        tools:src="@drawable/album_placeholder"/>
 
     <FrameLayout
         android:layout_width="250dp"
