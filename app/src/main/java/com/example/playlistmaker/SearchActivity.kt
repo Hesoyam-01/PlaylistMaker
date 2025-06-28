@@ -144,7 +144,7 @@ class SearchActivity : AppCompatActivity() {
                             trackList.addAll(responseResults)
                             trackAdapter.notifyDataSetChanged()
                         } else showPlaceholder(PlaceholderType.NOTHING_FOUND)
-                    } else showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
+                    }
                 }
 
 
