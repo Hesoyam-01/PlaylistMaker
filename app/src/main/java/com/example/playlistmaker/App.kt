@@ -5,13 +5,14 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 
 class App: Application() {
-    private var darkTheme = false
+    var darkTheme = false
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
         sharedPrefs = getSharedPreferences(SETTINGS_SHARED_PREFS, MODE_PRIVATE)
-        darkTheme = sharedPrefs.getBoolean(SWITCHER_KEY, false)
+        if (sharedPrefs.contains(SWITCHER_KEY)) darkTheme = sharedPrefs.getBoolean(SWITCHER_KEY, false)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         AppCompatDelegate.setDefaultNightMode(
             if (darkTheme) {
@@ -31,11 +32,8 @@ class App: Application() {
             .apply()
 
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
+            if (darkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES
+            else AppCompatDelegate.MODE_NIGHT_NO
         )
 
     }

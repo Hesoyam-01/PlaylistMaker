@@ -26,6 +26,7 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        themeSwitcher.isChecked = (application as App).darkTheme
         themeSwitcher.setOnCheckedChangeListener { switсher, checked -> (applicationContext as App).switchTheme(checked) }
 
         shareAppButton.setOnClickListener {
