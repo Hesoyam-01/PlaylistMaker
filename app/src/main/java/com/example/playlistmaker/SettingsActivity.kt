@@ -26,6 +26,8 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        themeSwitcher.setOnCheckedChangeListener { switсher, checked -> (applicationContext as App).switchTheme(checked) }
+
         shareAppButton.setOnClickListener {
             val shareAppButtonIntent = Intent(ACTION_SEND)
             val shareAppLink = getString(R.string.share_app_link)
