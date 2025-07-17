@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/track_height"
     android:background="?attr/colorPrimary"
-    android:paddingHorizontal="13dp"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingHorizontal="13dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/track_cover"
@@ -15,7 +15,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         app:riv_corner_radius="2dp"
-        tools:src="@drawable/album_placeholder"/>
+        tools:src="@drawable/album_placeholder" />
 
     <FrameLayout
         android:layout_width="250dp"
