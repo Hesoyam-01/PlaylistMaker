@@ -2,6 +2,7 @@ package com.example.playlistmaker
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter(private val trackList: MutableList<Track>) :
@@ -13,6 +14,9 @@ class TrackAdapter(private val trackList: MutableList<Track>) :
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
+        holder.itemView.setOnClickListener {
+            Toast.makeText(holder.itemView.context, "text", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun getItemCount(): Int {
