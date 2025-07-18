@@ -33,10 +33,9 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
     private val trackAdapter = TrackAdapter(trackList, this)
+    private val lastTrackAdapter = TrackAdapter(trackList, this)
 
     private lateinit var lastQuery: String
-
-    private val lastTrackAdapter = TrackAdapter(mutableListOf<Track>(), this)
 
     private lateinit var searchPlaceholder: LinearLayout
     private lateinit var searchPlaceholderImage: ImageView
@@ -44,8 +43,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchUpdateQueryButton: CardView
     private lateinit var searchBar: EditText
     private lateinit var searchToolbar: MaterialToolbar
-    private lateinit var clearButton: Button
+    private lateinit var searchClearButton: Button
+    private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
+    private lateinit var lastTrackRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,20 +58,25 @@ class SearchActivity : AppCompatActivity() {
         searchUpdateQueryButton = findViewById(R.id.search_update_query_button)
         searchBar = findViewById(R.id.search_bar)
         searchToolbar = findViewById(R.id.search_toolbar)
-        clearButton = findViewById(R.id.clear_button)
+        searchClearButton = findViewById(R.id.search_clear_button)
+        lastTracks = findViewById(R.id.last_tracks)
         trackRecyclerView = findViewById(R.id.track_recycler_view)
+        lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
 
         trackRecyclerView.adapter = trackAdapter
+        lastTrackRecyclerView.adapter = lastTrackAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
+        showLastTracks()
+
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = !s.isNullOrEmpty()
+                searchClearButton.isVisible = !s.isNullOrEmpty()
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
             }
 
@@ -86,7 +92,7 @@ class SearchActivity : AppCompatActivity() {
             searchBar.setText(inputText)
         }
 
-        clearButton.setOnClickListener {
+        searchClearButton.setOnClickListener {
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
@@ -110,7 +116,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun showPlaceholder(placeholderType: PlaceholderType) {
+    private fun showPlaceholder(placeholderType: PlaceholderType) {
         trackList.clear()
         trackAdapter.notifyDataSetChanged()
         searchPlaceholder.visibility = View.VISIBLE
@@ -156,6 +162,10 @@ class SearchActivity : AppCompatActivity() {
                 }
 
             })
+    }
+
+    private fun showLastTracks() {
+        lastTracks.visibility = View.VISIBLE
     }
 
 

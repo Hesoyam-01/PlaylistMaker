@@ -11,7 +11,7 @@ import com.google.gson.Gson
 class TrackAdapter(private val trackList: MutableList<Track>, private val context: Context) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    private val lastTrackList = mutableListOf<Track>()
+    val lastTrackList = mutableListOf<Track>()
 
     private val trackSharedPrefs by lazy {
         context.getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)

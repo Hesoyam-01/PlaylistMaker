@@ -48,7 +48,7 @@
             android:textSize="@dimen/small_textSize" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/clear_button"
+            android:id="@+id/search_clear_button"
             style="@style/editTextElementColor"
             android:layout_width="40dp"
             android:layout_height="match_parent"
@@ -95,10 +95,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="24dp"
             android:backgroundTint="?attr/colorOnPrimary"
+            android:foreground="?attr/selectableItemBackground"
             android:visibility="gone"
             app:cardCornerRadius="54dp"
-            app:cardElevation="0dp"
-            android:foreground="?attr/selectableItemBackground">
+            app:cardElevation="0dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,5 +122,33 @@
         android:orientation="vertical"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <LinearLayout
+        android:id="@+id/last_tracks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:gravity="center"
+        android:text="@string/recent_searches"
+        android:textColor="?attr/colorOnPrimary"
+        android:textFontWeight="500"
+        android:textSize="@dimen/medium_textsize" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/last_track_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
 
 </LinearLayout>
