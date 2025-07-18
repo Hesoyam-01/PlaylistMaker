@@ -4,14 +4,15 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 
-class App: Application() {
+class App : Application() {
     var darkTheme = false
-    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var settingsSharedPrefs: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
-        sharedPrefs = getSharedPreferences(SETTINGS_SHARED_PREFS, MODE_PRIVATE)
-        if (sharedPrefs.contains(SWITCHER_KEY)) darkTheme = sharedPrefs.getBoolean(SWITCHER_KEY, false)
+        settingsSharedPrefs = getSharedPreferences(SETTINGS_SHARED_PREFS, MODE_PRIVATE)
+        if (settingsSharedPrefs.contains(SWITCHER_KEY)) darkTheme =
+            settingsSharedPrefs.getBoolean(SWITCHER_KEY, false)
         else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         AppCompatDelegate.setDefaultNightMode(
@@ -26,8 +27,7 @@ class App: Application() {
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
 
-        sharedPrefs
-            .edit()
+        settingsSharedPrefs.edit()
             .putBoolean(SWITCHER_KEY, darkTheme)
             .apply()
 
@@ -39,7 +39,7 @@ class App: Application() {
     }
 
     private companion object {
-        const val SETTINGS_SHARED_PREFS = "setting_shared_prefs"
+        const val SETTINGS_SHARED_PREFS = "settings_shared_prefs"
         const val SWITCHER_KEY = "switcher_key"
     }
 }

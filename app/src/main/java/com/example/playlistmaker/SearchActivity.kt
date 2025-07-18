@@ -32,9 +32,11 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
-    private val trackAdapter = TrackAdapter(trackList)
+    private val trackAdapter = TrackAdapter(trackList, this)
 
     private lateinit var lastQuery: String
+
+    private val lastTrackAdapter = TrackAdapter(mutableListOf<Track>(), this)
 
     private lateinit var searchPlaceholder: LinearLayout
     private lateinit var searchPlaceholderImage: ImageView
