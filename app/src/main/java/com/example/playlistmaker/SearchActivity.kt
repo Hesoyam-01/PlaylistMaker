@@ -42,12 +42,11 @@ class SearchActivity : AppCompatActivity() {
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
     private val trackAdapter = TrackAdapter(trackList) { track ->
         Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
-        updateLastTrackList(track)
+        searchHistory.updateLastTrackList(track)
     }
-    private val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
-        Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
-        updateLastTrackList(track)
-    }
+
+    private lateinit var trackSharedPrefs: SharedPreferences
+    private lateinit var searchHistory: SearchHistory
 
     private lateinit var lastQuery: String
 
@@ -62,17 +61,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var lastTracks: ConstraintLayout
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var lastTrackRecyclerView: RecyclerView
-
-    private val trackSharedPrefs by lazy {
-        getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
-    }
-
-    private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        if (key == LAST_TRACK_LIST_KEY) {
-            loadLastTrackList()
-            showLastTracks()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,22 +78,20 @@ class SearchActivity : AppCompatActivity() {
         trackRecyclerView = findViewById(R.id.track_recycler_view)
         lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
 
+        trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
+        searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) { showLastTracks() }
+
         trackRecyclerView.adapter = trackAdapter
-        lastTrackRecyclerView.adapter = lastTrackAdapter
+        lastTrackRecyclerView.adapter = searchHistory.lastTrackAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        loadLastTrackList()
-        showLastTracks()
-
-        trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
-
         recentClearButton.setOnClickListener {
             lastTrackList.clear()
-            saveLastTrackList()
-            lastTrackAdapter.notifyDataSetChanged()
+            searchHistory.saveLastTrackList()
+            searchHistory.lastTrackAdapter.notifyDataSetChanged()
         }
 
         val textWatcher = object : TextWatcher {
@@ -152,31 +138,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveLastTrackList() {
-        trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, Gson().toJson(lastTrackList))
-            .apply()
-    }
-
-    private fun updateLastTrackList(track: Track) {
-        lastTrackList.removeAll { it.trackId == track.trackId }
-        if (lastTrackList.size >= MAX_TRACK_HISTORY) {
-            lastTrackList.removeAt(9)
-        }
-        lastTrackList.add(0, track)
-        saveLastTrackList()
-    }
-
-    private fun loadLastTrackList() {
-        val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
-        val type = object : TypeToken<MutableList<Track>>() {}.type
-        val loadedTracks = Gson().fromJson<List<Track>>(jsonLastTrackList, type) ?: emptyList()
-        lastTrackList.clear()
-        lastTrackList.addAll(loadedTracks)
-        lastTrackAdapter.updateList(lastTrackList)
-    }
-
-    private fun showLastTracks() {
+    fun showLastTracks() {
         lastTracks.isVisible = lastTrackList.isNotEmpty()
     }
 
@@ -235,9 +197,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val MAX_TRACK_HISTORY = 10
         const val TRACK_SHARED_PREFS = "track_shared_prefs"
-        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
         fun hideKeyboard(view: View) {
