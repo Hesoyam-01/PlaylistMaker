@@ -80,7 +80,9 @@ class SearchActivity : AppCompatActivity() {
 
         trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) {
-            visibilityOfLastTracks()
+            searchBar.setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) visibilityOfLastTracks()
+            }
         }
 
         trackRecyclerView.adapter = trackAdapter
@@ -123,6 +125,7 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
+            visibilityOfLastTracks()
         }
 
         searchBar.setOnEditorActionListener { _, actionId, _ ->
