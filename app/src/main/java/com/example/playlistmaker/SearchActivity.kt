@@ -1,9 +1,11 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -12,11 +14,14 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,14 +31,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private var inputText: String = INPUT_TEXT_DEF
     private val trackList = mutableListOf<Track>()
+    private val lastTrackList = mutableListOf<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
-    private val trackAdapter = TrackAdapter(trackList, this)
-    private val lastTrackAdapter = TrackAdapter(trackList, this)
+    private val trackAdapter = TrackAdapter(trackList) { track ->
+        Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        updateLastTrackList(track)
+        saveLastTrackList()
+    }
+    private val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
+        Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        updateLastTrackList(track)
+        saveLastTrackList()
+    }
 
     private lateinit var lastQuery: String
 
@@ -47,6 +61,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var lastTrackRecyclerView: RecyclerView
+
+    private val trackSharedPrefs by lazy {
+        getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +88,22 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
+        loadLastTrackList()
         showLastTracks()
+
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == LAST_TRACK_LIST_KEY) {
+                val jsonLastTrackList = sharedPreferences?.getString(LAST_TRACK_LIST_KEY, null)
+                if (jsonLastTrackList != null) {
+                    val type = object : TypeToken<MutableList<Track>>() {}.type
+                    lastTrackAdapter.trackList.clear()
+                    lastTrackAdapter.trackList.addAll(Gson().fromJson<MutableList<Track>>(jsonLastTrackList, type))
+                    lastTrackAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+        trackSharedPrefs.registerOnSharedPreferenceChangeListener(listener)
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -114,6 +147,32 @@ class SearchActivity : AppCompatActivity() {
         searchUpdateQueryButton.setOnClickListener {
             search(lastQuery)
         }
+    }
+
+    private fun saveLastTrackList() {
+        trackSharedPrefs.edit()
+            .putString(LAST_TRACK_LIST_KEY, Gson().toJson(lastTrackList))
+            .apply()
+    }
+
+    private fun updateLastTrackList(track: Track) {
+        lastTrackList.removeAll { it.trackId == track.trackId }
+        if (lastTrackList.size >= 10) {
+            lastTrackList.removeAt(9)
+        }
+        lastTrackList.add(0, track)
+        Log.d("index", "${lastTrackList.indexOf(track)}")
+        Log.d("size", "${lastTrackList.size}")
+    }
+
+    private fun loadLastTrackList() {
+        val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
+        val type = object : TypeToken<MutableList<Track>>() {}.type
+        lastTrackList.addAll(Gson().fromJson<MutableList<Track>>(jsonLastTrackList, type))
+    }
+
+    private fun showLastTracks() {
+        lastTracks.visibility = View.VISIBLE
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
@@ -164,10 +223,6 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-    private fun showLastTracks() {
-        lastTracks.visibility = View.VISIBLE
-    }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -175,6 +230,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
+        const val TRACK_SHARED_PREFS = "track_shared_prefs"
+        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
         fun hideKeyboard(view: View) {
