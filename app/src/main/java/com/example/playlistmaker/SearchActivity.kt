@@ -103,8 +103,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
-
-
+                searchPlaceholder.visibility = View.GONE
             }
 
             override fun afterTextChanged(s: Editable?) {

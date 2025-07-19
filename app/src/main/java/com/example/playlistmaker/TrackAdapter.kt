@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 
-class TrackAdapter(var trackList: MutableList<Track>, private val onItemClick: (Track) -> Unit) :
+class TrackAdapter(private var trackList: MutableList<Track>, private val onItemClick: (Track) -> Unit) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
