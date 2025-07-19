@@ -41,12 +41,10 @@ class SearchActivity : AppCompatActivity() {
     private val trackAdapter = TrackAdapter(trackList) { track ->
         Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
         updateLastTrackList(track)
-        saveLastTrackList()
     }
     private val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
         updateLastTrackList(track)
-        saveLastTrackList()
     }
 
     private lateinit var lastQuery: String
@@ -64,6 +62,12 @@ class SearchActivity : AppCompatActivity() {
 
     private val trackSharedPrefs by lazy {
         getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
+    }
+
+    private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        if (key == LAST_TRACK_LIST_KEY) {
+            loadLastTrackList()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,19 +95,7 @@ class SearchActivity : AppCompatActivity() {
         loadLastTrackList()
         showLastTracks()
 
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == LAST_TRACK_LIST_KEY) {
-                val jsonLastTrackList = sharedPreferences?.getString(LAST_TRACK_LIST_KEY, null)
-                if (jsonLastTrackList != null) {
-                    val type = object : TypeToken<MutableList<Track>>() {}.type
-                    lastTrackAdapter.trackList.clear()
-                    lastTrackAdapter.trackList.addAll(Gson().fromJson<MutableList<Track>>(jsonLastTrackList, type))
-                    lastTrackAdapter.notifyDataSetChanged()
-                }
-            }
-        }
-
-        trackSharedPrefs.registerOnSharedPreferenceChangeListener(listener)
+        trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -157,18 +149,20 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateLastTrackList(track: Track) {
         lastTrackList.removeAll { it.trackId == track.trackId }
-        if (lastTrackList.size >= 10) {
+        if (lastTrackList.size >= MAX_TRACK_HISTORY) {
             lastTrackList.removeAt(9)
         }
         lastTrackList.add(0, track)
-        Log.d("index", "${lastTrackList.indexOf(track)}")
-        Log.d("size", "${lastTrackList.size}")
+        saveLastTrackList()
     }
 
     private fun loadLastTrackList() {
         val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
         val type = object : TypeToken<MutableList<Track>>() {}.type
-        lastTrackList.addAll(Gson().fromJson<MutableList<Track>>(jsonLastTrackList, type))
+        val loadedTracks = Gson().fromJson<List<Track>>(jsonLastTrackList, type) ?: emptyList()
+        lastTrackList.clear()
+        lastTrackList.addAll(loadedTracks)
+        lastTrackAdapter.updateList(lastTrackList)
     }
 
     private fun showLastTracks() {
@@ -230,6 +224,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
+        const val MAX_TRACK_HISTORY = 10
         const val TRACK_SHARED_PREFS = "track_shared_prefs"
         const val LAST_TRACK_LIST_KEY = "last_track_list_key"
         const val INPUT_TEXT = "INPUT_TEXT"
