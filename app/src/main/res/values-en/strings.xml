@@ -14,4 +14,5 @@
     <string name="connection_problems">Connection problems\n\nLoading failed. Check your internet connection</string>
     <string name="update">Update</string>
     <string name="recent_searches">Recent searches</string>
+    <string name="clear_recent">Clear recent</string>
 </resources>

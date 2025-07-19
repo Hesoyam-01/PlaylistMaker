@@ -123,32 +123,59 @@
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/last_tracks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/ys_display_medium"
-        android:gravity="center"
-        android:text="@string/recent_searches"
-        android:textColor="?attr/colorOnPrimary"
-        android:textFontWeight="500"
-        android:textSize="@dimen/medium_textsize" />
+        <TextView
+            android:id="@+id/recent_searches"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:gravity="center"
+            android:text="@string/recent_searches"
+            android:textColor="?attr/colorOnPrimary"
+            android:textFontWeight="500"
+            android:textSize="@dimen/medium_textsize"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/last_track_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/last_track_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/recent_searches"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/recent_clear_button"
+            android:layout_width="148dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="?attr/colorOnPrimary"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="54dp"
+            app:cardElevation="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/last_track_recycler_view">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="@string/clear_recent"
+                android:textColor="?attr/colorPrimary"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

@@ -17,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -56,7 +58,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchBar: EditText
     private lateinit var searchToolbar: MaterialToolbar
     private lateinit var searchClearButton: Button
-    private lateinit var lastTracks: LinearLayout
+    private lateinit var recentClearButton: CardView
+    private lateinit var lastTracks: ConstraintLayout
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var lastTrackRecyclerView: RecyclerView
 
@@ -67,6 +70,7 @@ class SearchActivity : AppCompatActivity() {
     private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
         if (key == LAST_TRACK_LIST_KEY) {
             loadLastTrackList()
+            showLastTracks()
         }
     }
 
@@ -81,6 +85,7 @@ class SearchActivity : AppCompatActivity() {
         searchBar = findViewById(R.id.search_bar)
         searchToolbar = findViewById(R.id.search_toolbar)
         searchClearButton = findViewById(R.id.search_clear_button)
+        recentClearButton = findViewById(R.id.recent_clear_button)
         lastTracks = findViewById(R.id.last_tracks)
         trackRecyclerView = findViewById(R.id.track_recycler_view)
         lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
@@ -96,6 +101,12 @@ class SearchActivity : AppCompatActivity() {
         showLastTracks()
 
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
+
+        recentClearButton.setOnClickListener {
+            lastTrackList.clear()
+            saveLastTrackList()
+            lastTrackAdapter.notifyDataSetChanged()
+        }
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -166,7 +177,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showLastTracks() {
-        lastTracks.visibility = View.VISIBLE
+        lastTracks.isVisible = lastTrackList.isNotEmpty()
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
