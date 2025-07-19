@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val lastTrackList: MutableList<Track>,
                     private val context: Context,
-                    private val showLastTracks: () -> Unit) {
+                    private val visibilityOfLastTracks: () -> Unit) {
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         Toast.makeText(context, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
@@ -19,13 +19,13 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
     private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
         if (key == LAST_TRACK_LIST_KEY) {
             loadLastTrackList()
-            showLastTracks()
+            visibilityOfLastTracks()
         }
     }
 
     init {
         loadLastTrackList()
-        showLastTracks()
+        visibilityOfLastTracks()
 
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
     }

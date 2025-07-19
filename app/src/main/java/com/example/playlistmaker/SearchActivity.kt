@@ -79,7 +79,9 @@ class SearchActivity : AppCompatActivity() {
         lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
 
         trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
-        searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) { showLastTracks() }
+        searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) {
+            visibilityOfLastTracks()
+        }
 
         trackRecyclerView.adapter = trackAdapter
         lastTrackRecyclerView.adapter = searchHistory.lastTrackAdapter
@@ -91,6 +93,7 @@ class SearchActivity : AppCompatActivity() {
         recentClearButton.setOnClickListener {
             lastTrackList.clear()
             searchHistory.saveLastTrackList()
+            visibilityOfLastTracks()
             searchHistory.lastTrackAdapter.notifyDataSetChanged()
         }
 
@@ -138,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun showLastTracks() {
+    private fun visibilityOfLastTracks() {
         lastTracks.isVisible = lastTrackList.isNotEmpty()
     }
 
