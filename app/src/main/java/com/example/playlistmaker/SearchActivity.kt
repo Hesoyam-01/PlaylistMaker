@@ -58,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchToolbar: MaterialToolbar
     private lateinit var searchClearButton: Button
     private lateinit var recentClearButton: CardView
-    private lateinit var lastTracks: ConstraintLayout
+    private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var lastTrackRecyclerView: RecyclerView
 
@@ -103,6 +103,8 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
+
+
             }
 
             override fun afterTextChanged(s: Editable?) {
