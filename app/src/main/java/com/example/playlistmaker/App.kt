@@ -28,6 +28,7 @@ class App : Application() {
                 AppCompatDelegate.setDefaultNightMode(mode)
             }
             else -> {
+                darkTheme = isSystemInDarkTheme()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
