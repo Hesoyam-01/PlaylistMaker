@@ -6,7 +6,10 @@ import android.content.Intent.ACTION_SENDTO
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
@@ -14,7 +17,13 @@ import com.google.android.material.textview.MaterialTextView
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
@@ -25,6 +34,9 @@ class SettingsActivity : AppCompatActivity() {
         settingsToolbar.setNavigationOnClickListener {
             finish()
         }
+
+        themeSwitcher.isChecked = (application as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked) }
 
         shareAppButton.setOnClickListener {
             val shareAppButtonIntent = Intent(ACTION_SEND)

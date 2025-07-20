@@ -1,9 +1,11 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -12,11 +14,20 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Constraint
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,13 +37,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
     private var inputText: String = INPUT_TEXT_DEF
     private val trackList = mutableListOf<Track>()
+    private val lastTrackList = mutableListOf<Track>()
     private val iTunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(iTunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
-    private val trackAdapter = TrackAdapter(trackList)
+    private val trackAdapter = TrackAdapter(trackList) { track ->
+        Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        searchHistory.updateLastTrackList(track)
+    }
+
+    private lateinit var trackSharedPrefs: SharedPreferences
+    private lateinit var searchHistory: SearchHistory
 
     private lateinit var lastQuery: String
 
@@ -42,12 +60,22 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchUpdateQueryButton: CardView
     private lateinit var searchBar: EditText
     private lateinit var searchToolbar: MaterialToolbar
-    private lateinit var clearButton: Button
+    private lateinit var searchClearButton: Button
+    private lateinit var recentClearButton: CardView
+    private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
+    private lateinit var lastTrackRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        enableEdgeToEdge()
+        setContentView(R.layout.activity_search)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.search)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         searchPlaceholder = findViewById(R.id.search_placeholder)
         searchPlaceholderImage = findViewById(R.id.search_placeholder_image)
@@ -55,25 +83,48 @@ class SearchActivity : AppCompatActivity() {
         searchUpdateQueryButton = findViewById(R.id.search_update_query_button)
         searchBar = findViewById(R.id.search_bar)
         searchToolbar = findViewById(R.id.search_toolbar)
-        clearButton = findViewById(R.id.clear_button)
+        searchClearButton = findViewById(R.id.search_clear_button)
+        recentClearButton = findViewById(R.id.recent_clear_button)
+        lastTracks = findViewById(R.id.last_tracks)
         trackRecyclerView = findViewById(R.id.track_recycler_view)
+        lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
+
+        trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
+        searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) {
+            searchBar.setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) visibilityOfLastTracks()
+            }
+        }
 
         trackRecyclerView.adapter = trackAdapter
+        lastTrackRecyclerView.adapter = searchHistory.lastTrackAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
+        }
+
+        recentClearButton.setOnClickListener {
+            lastTrackList.clear()
+            searchHistory.saveLastTrackList()
+            visibilityOfLastTracks()
+            searchHistory.lastTrackAdapter.notifyDataSetChanged()
         }
 
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.isVisible = !s.isNullOrEmpty()
+                searchClearButton.isVisible = !s.isNullOrEmpty()
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
+                searchPlaceholder.visibility = View.GONE
             }
 
             override fun afterTextChanged(s: Editable?) {
                 inputText = s.toString()
+                trackList.clear()
+                trackAdapter.notifyDataSetChanged()
+                visibilityOfLastTracks()
+
             }
         }
 
@@ -84,11 +135,12 @@ class SearchActivity : AppCompatActivity() {
             searchBar.setText(inputText)
         }
 
-        clearButton.setOnClickListener {
+        searchClearButton.setOnClickListener {
             trackList.clear()
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
+            visibilityOfLastTracks()
         }
 
         searchBar.setOnEditorActionListener { _, actionId, _ ->
@@ -108,7 +160,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun showPlaceholder(placeholderType: PlaceholderType) {
+    private fun visibilityOfLastTracks() {
+        lastTracks.isVisible = lastTrackList.isNotEmpty()
+    }
+
+    private fun showPlaceholder(placeholderType: PlaceholderType) {
         trackList.clear()
         trackAdapter.notifyDataSetChanged()
         searchPlaceholder.visibility = View.VISIBLE
@@ -163,6 +219,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private companion object {
+        const val TRACK_SHARED_PREFS = "track_shared_prefs"
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
         fun hideKeyboard(view: View) {
