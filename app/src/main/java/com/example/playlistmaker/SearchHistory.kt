@@ -12,7 +12,7 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val visibilityOfLastTracks: () -> Unit) {
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
-        Toast.makeText(context, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Альбом: ${track.collectionName}, Дата релиза: ${track.releaseDate}", Toast.LENGTH_SHORT).show()
         updateLastTrackList(track)
     }
 
