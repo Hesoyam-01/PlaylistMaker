@@ -15,4 +15,9 @@
     <string name="update">Update</string>
     <string name="recent_searches">Recent searches</string>
     <string name="clear_recent">Clear recent</string>
+    <string name="country">Country</string>
+    <string name="genre">Genre</string>
+    <string name="year">Year</string>
+    <string name="album">Album</string>
+    <string name="time">Time</string>
 </resources>
