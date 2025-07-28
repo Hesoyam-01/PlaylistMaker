@@ -1,10 +1,12 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val lastTrackList: MutableList<Track>,
@@ -12,7 +14,16 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val visibilityOfLastTracks: () -> Unit) {
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
-        Toast.makeText(context, "Альбом: ${track.collectionName}, Дата релиза: ${track.releaseDate}", Toast.LENGTH_SHORT).show()
+        val trackIntent = Intent(context, PlayerActivity::class.java)
+        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
+        trackIntent.putExtra("TRACK_NAME", track.trackName)
+        trackIntent.putExtra("ARTIST_NAME", track.artistName)
+        trackIntent.putExtra("TRACK_TIME", SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackIntent.putExtra("ALBUM_NAME", track.collectionName)
+        trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
+        trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
+        trackIntent.putExtra("COUNTRY", track.country)
+        context.startActivity(trackIntent)
         updateLastTrackList(track)
     }
 

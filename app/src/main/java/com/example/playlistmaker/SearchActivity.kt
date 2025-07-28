@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -25,6 +26,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -33,6 +35,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchActivity : AppCompatActivity() {
     private var inputText: String = INPUT_TEXT_DEF
@@ -45,7 +49,16 @@ class SearchActivity : AppCompatActivity() {
         .build()
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
     private val trackAdapter = TrackAdapter(trackList) { track ->
-        Toast.makeText(this, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
+        val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
+        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
+        trackIntent.putExtra("TRACK_NAME", track.trackName)
+        trackIntent.putExtra("ARTIST_NAME", track.artistName)
+        trackIntent.putExtra("TRACK_TIME", SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackIntent.putExtra("ALBUM_NAME", track.collectionName)
+        trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
+        trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
+        trackIntent.putExtra("COUNTRY", track.country)
+        startActivity(trackIntent)
         searchHistory.updateLastTrackList(track)
     }
 
