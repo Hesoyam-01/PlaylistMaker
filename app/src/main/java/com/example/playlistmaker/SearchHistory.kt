@@ -1,19 +1,36 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
-import android.widget.Toast
+import android.os.Handler
+import android.os.Looper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val lastTrackList: MutableList<Track>,
                     private val context: Context,
                     private val visibilityOfLastTracks: () -> Unit) {
 
+    private val handler = Handler(Looper.getMainLooper())
+
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
-        Toast.makeText(context, "Выбран трек: ${track.trackName}", Toast.LENGTH_SHORT).show()
-        updateLastTrackList(track)
+        val trackIntent = Intent(context, PlayerActivity::class.java)
+        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
+        trackIntent.putExtra("TRACK_NAME", track.trackName)
+        trackIntent.putExtra("ARTIST_NAME", track.artistName)
+        trackIntent.putExtra("TRACK_TIME", SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackIntent.putExtra("ALBUM_NAME", track.collectionName)
+        trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
+        trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
+        trackIntent.putExtra("COUNTRY", track.country)
+        trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
+        context.startActivity(trackIntent)
+        val updateHistoryRunnable = Runnable { updateLastTrackList(track) }
+        handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
     private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -58,5 +75,6 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
     private companion object {
         const val MAX_TRACK_HISTORY = 10
         const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val HISTORY_UPDATE_DELAY = 600L
     }
 }

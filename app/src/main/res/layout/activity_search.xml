@@ -60,6 +60,14 @@
             app:iconGravity="textTop" />
     </com.google.android.material.card.MaterialCardView>
 
+    <ProgressBar
+        android:id="@+id/search_progressBar"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="140dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/search_placeholder"
         android:layout_width="wrap_content"
@@ -147,8 +155,8 @@
             android:id="@+id/last_track_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_marginTop="8dp"
+            android:layout_weight="1"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
