@@ -1,7 +1,11 @@
 package com.example.playlistmaker
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -14,10 +18,28 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
 import com.makeramen.roundedimageview.RoundedImageView
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private val handler = Handler(Looper.getMainLooper())
 
+    private lateinit var playStopButton: ImageView
+    private lateinit var elapsedTime: TextView
+    private var previewUrl: String? = ""
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = MEDIA_STATE_DEFAULT
+
+    private val updateElapsedTimeRunnable = object : Runnable {
+        override fun run() {
+            if (playerState == MEDIA_STATE_PLAYING) {
+                elapsedTime.text = SimpleDateFormat("m:ss", Locale.getDefault())
+                    .format(mediaPlayer.currentPosition)
+                handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +49,15 @@ class PlayerActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        previewUrl = intent.getStringExtra("PREVIEW_URL")
+        preparePlayer()
+
+        elapsedTime = findViewById(R.id.elapsed_time)
+        playStopButton = findViewById(R.id.play_stop_button)
+        playStopButton.setOnClickListener {
+            playbackControl()
         }
 
         val yearVisibilityView = findViewById<Group>(R.id.year_visibility)
@@ -63,10 +94,68 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.album_placeholder)
             .into(trackCover)
 
-
     }
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(previewUrl)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playStopButton.isEnabled = true
+            playerState = MEDIA_STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playerState = MEDIA_STATE_PREPARED
+            playStopButton.setImageResource(R.drawable.ic_play_84)
+            elapsedTime.text = "0:00"
+            handler.removeCallbacks(updateElapsedTimeRunnable)
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playerState = MEDIA_STATE_PLAYING
+        playStopButton.setImageResource(R.drawable.ic_stop_84)
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playerState = MEDIA_STATE_PAUSED
+        playStopButton.setImageResource(R.drawable.ic_play_84)
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            MEDIA_STATE_PLAYING -> {
+                pausePlayer()
+                handler.removeCallbacks(updateElapsedTimeRunnable)
+            }
+
+            MEDIA_STATE_PREPARED, MEDIA_STATE_PAUSED -> {
+                startPlayer()
+                handler.postDelayed(updateElapsedTimeRunnable, ELAPSED_TIME_UPDATE_DELAY)
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    private companion object {
+        private const val MEDIA_STATE_DEFAULT = 0
+        private const val MEDIA_STATE_PREPARED = 1
+        private const val MEDIA_STATE_PLAYING = 2
+        private const val MEDIA_STATE_PAUSED = 3
+        private const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
 }
