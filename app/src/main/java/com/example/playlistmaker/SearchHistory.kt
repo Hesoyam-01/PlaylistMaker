@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
@@ -12,6 +14,8 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val lastTrackList: MutableList<Track>,
                     private val context: Context,
                     private val visibilityOfLastTracks: () -> Unit) {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         val trackIntent = Intent(context, PlayerActivity::class.java)
@@ -23,8 +27,10 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
         trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
         trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
         trackIntent.putExtra("COUNTRY", track.country)
+        trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
         context.startActivity(trackIntent)
-        updateLastTrackList(track)
+        val updateHistoryRunnable = Runnable { updateLastTrackList(track) }
+        handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
     private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
@@ -69,5 +75,6 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
     private companion object {
         const val MAX_TRACK_HISTORY = 10
         const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val HISTORY_UPDATE_DELAY = 600L
     }
 }

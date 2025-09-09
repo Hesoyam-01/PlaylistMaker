@@ -91,16 +91,18 @@
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
 
     <ImageView
-        android:id="@+id/play_button"
+        android:id="@+id/play_stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="39dp"
         android:src="@drawable/ic_play_84"
         app:layout_constraintEnd_toEndOf="@id/add_to_favorites_button"
         app:layout_constraintStart_toStartOf="@id/add_to_playlist_button"
-        app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
+        app:layout_constraintTop_toBottomOf="@id/player_artist_name"
+        android:clickable="true"/>
 
     <TextView
+        android:id="@+id/elapsed_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -113,7 +115,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/play_button" />
+        app:layout_constraintTop_toBottomOf="@id/play_stop_button" />
 
     <TextView
         android:id="@+id/country"

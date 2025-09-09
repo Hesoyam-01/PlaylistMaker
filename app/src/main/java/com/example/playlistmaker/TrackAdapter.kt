@@ -1,15 +1,18 @@
 package com.example.playlistmaker
 
-import android.content.Context
-import android.util.Log
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 
-class TrackAdapter(private var trackList: MutableList<Track>, private val onItemClick: (Track) -> Unit) :
+class TrackAdapter(
+    private var trackList: MutableList<Track>,
+    private val onItemClick: (Track) -> Unit
+) :
     RecyclerView.Adapter<TrackViewHolder>() {
+
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
@@ -19,7 +22,7 @@ class TrackAdapter(private var trackList: MutableList<Track>, private val onItem
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
-            onItemClick(trackList[position])
+            if (clickDebounce()) onItemClick(trackList[position])
         }
     }
 
@@ -32,6 +35,19 @@ class TrackAdapter(private var trackList: MutableList<Track>, private val onItem
         notifyDataSetChanged()
     }
 
+    private var isClickAllowed = true
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    private companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
 }
 

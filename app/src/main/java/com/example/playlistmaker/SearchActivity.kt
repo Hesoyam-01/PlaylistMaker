@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,6 +16,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -39,6 +42,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class SearchActivity : AppCompatActivity() {
+    private val handler = Handler(Looper.getMainLooper())
+
     private var inputText: String = INPUT_TEXT_DEF
     private val trackList = mutableListOf<Track>()
     private val lastTrackList = mutableListOf<Track>()
@@ -50,14 +55,21 @@ class SearchActivity : AppCompatActivity() {
     private val tracksService = retrofit.create(SearchActivityAPI::class.java)
     private val trackAdapter = TrackAdapter(trackList) { track ->
         val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
-        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
+        trackIntent.putExtra(
+            "TRACK_COVER",
+            track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+        )
         trackIntent.putExtra("TRACK_NAME", track.trackName)
         trackIntent.putExtra("ARTIST_NAME", track.artistName)
-        trackIntent.putExtra("TRACK_TIME", SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackIntent.putExtra(
+            "TRACK_TIME",
+            SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        )
         trackIntent.putExtra("ALBUM_NAME", track.collectionName)
         trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
         trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
         trackIntent.putExtra("COUNTRY", track.country)
+        trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
         startActivity(trackIntent)
         searchHistory.updateLastTrackList(track)
     }
@@ -78,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
     private lateinit var lastTrackRecyclerView: RecyclerView
+    private lateinit var searchProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +143,7 @@ class SearchActivity : AppCompatActivity() {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE
+                if (searchBar.text.isNotEmpty()) debounceSearch()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -142,6 +156,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchBar.addTextChangedListener(textWatcher)
+        searchProgressBar = findViewById(R.id.search_progressBar)
 
         if (savedInstanceState != null) {
             inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
@@ -154,23 +169,23 @@ class SearchActivity : AppCompatActivity() {
             searchBar.setText("")
             hideKeyboard(searchBar)
             visibilityOfLastTracks()
-        }
-
-        searchBar.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (searchBar.text.isNotEmpty()) {
-                    searchPlaceholder.visibility = View.GONE
-                    searchUpdateQueryButton.visibility = View.GONE
-                    search(searchBar.text.toString())
-                }
-                true
-            }
-            false
+            handler.removeCallbacks(searchRunnable)
         }
 
         searchUpdateQueryButton.setOnClickListener {
             search(lastQuery)
         }
+    }
+
+    private val searchRunnable = Runnable {
+            searchPlaceholder.visibility = View.GONE
+            searchUpdateQueryButton.visibility = View.GONE
+            search(searchBar.text.toString())
+    }
+
+    fun debounceSearch() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
     private fun visibilityOfLastTracks() {
@@ -197,12 +212,14 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search(query: String) {
+        searchProgressBar.visibility = View.VISIBLE
         tracksService.getTracks(query)
             .enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(
                     call: Call<TracksResponse>,
                     response: Response<TracksResponse>
                 ) {
+                    searchProgressBar.visibility = View.GONE
                     val responseResults = response.body()?.results
                     lastQuery = searchBar.text.toString()
                     if (response.isSuccessful) {
@@ -218,13 +235,13 @@ class SearchActivity : AppCompatActivity() {
 
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                    searchProgressBar.visibility = View.GONE
                     lastQuery = searchBar.text.toString()
                     showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
                 }
 
             })
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -235,6 +252,8 @@ class SearchActivity : AppCompatActivity() {
         const val TRACK_SHARED_PREFS = "track_shared_prefs"
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
+
         fun hideKeyboard(view: View) {
             val keyboardService =
                 view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
