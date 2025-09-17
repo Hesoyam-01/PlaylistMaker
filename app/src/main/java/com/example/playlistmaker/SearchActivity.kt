@@ -211,6 +211,11 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacks(searchRunnable)
+    }
+
     private fun search(query: String) {
         searchProgressBar.visibility = View.VISIBLE
         tracksService.getTracks(query)
@@ -242,6 +247,8 @@ class SearchActivity : AppCompatActivity() {
 
             })
     }
+
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

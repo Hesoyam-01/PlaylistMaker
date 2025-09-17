@@ -31,10 +31,12 @@ class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private var playerState = MEDIA_STATE_DEFAULT
 
+    private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
+
     private val updateElapsedTimeRunnable = object : Runnable {
         override fun run() {
             if (playerState == MEDIA_STATE_PLAYING) {
-                elapsedTime.text = SimpleDateFormat("m:ss", Locale.getDefault())
+                elapsedTime.text = dateFormat
                     .format(mediaPlayer.currentPosition)
                 handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
             }
@@ -110,7 +112,7 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playerState = MEDIA_STATE_PREPARED
             playStopButton.setImageResource(R.drawable.ic_play_84)
-            elapsedTime.text = "0:00"
+            elapsedTime.text = dateFormat.format(0)
             handler.removeCallbacks(updateElapsedTimeRunnable)
         }
     }
