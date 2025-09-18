@@ -22,12 +22,12 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         val trackIntent = Intent(context, PlayerActivity::class.java)
-        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
+        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100)
         trackIntent.putExtra("TRACK_NAME", track.trackName)
         trackIntent.putExtra("ARTIST_NAME", track.artistName)
-        trackIntent.putExtra("TRACK_TIME", SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis))
+        trackIntent.putExtra("TRACK_TIME", track.trackTime)
         trackIntent.putExtra("ALBUM_NAME", track.collectionName)
-        trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
+        trackIntent.putExtra("RELEASE_DATE", track.releaseDate)
         trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
         trackIntent.putExtra("COUNTRY", track.country)
         trackIntent.putExtra("PREVIEW_URL", track.previewUrl)

@@ -20,9 +20,9 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     trackName = it.trackName,
                     artistName = it.artistName,
                     trackTime = dateFormat.format(it.trackTimeMillis),
-                    artworkUrl100 = it.artworkUrl100,
+                    artworkUrl100 = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
                     collectionName = it.collectionName,
-                    releaseDate = it.releaseDate,
+                    releaseDate = it.releaseDate.substring(0, 4),
                     primaryGenreName = it.primaryGenreName,
                     country = it.country,
                     previewUrl = it.previewUrl

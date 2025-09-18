@@ -4,11 +4,13 @@ import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.api.TracksRepository
 import java.util.concurrent.Executors
 
-class TracksInteractorImpl(val repository: TracksRepository) : TracksInteractor {
-    val executor = Executors.newCachedThreadPool()
+class TracksInteractorImpl(private val repository: TracksRepository) : TracksInteractor {
+    private val executor = Executors.newCachedThreadPool()
 
-    override fun searchTracks() {
-        repository.searchTracks()
+    override fun searchTracks(query: String, consumer: TracksInteractor.TracksConsumer) {
+        executor.execute {
+            consumer.consume(repository.searchTracks(query))
+        }
    }
 
 }

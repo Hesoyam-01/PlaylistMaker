@@ -23,11 +23,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.network.SearchActivityAPI
 import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -38,32 +40,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
+    private val tracksInteractor = Creator.getTracksInteractor()
+
     private val handler = Handler(Looper.getMainLooper())
 
     private var inputText: String = INPUT_TEXT_DEF
     private val trackList = mutableListOf<Track>()
     private val lastTrackList = mutableListOf<Track>()
-    private val iTunesBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(iTunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val tracksService = retrofit.create(SearchActivityAPI::class.java)
+
     private val trackAdapter = TrackAdapter(trackList) { track ->
         val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
-        trackIntent.putExtra(
-            "TRACK_COVER",
-            track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-        )
+        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100)
         trackIntent.putExtra("TRACK_NAME", track.trackName)
         trackIntent.putExtra("ARTIST_NAME", track.artistName)
-        trackIntent.putExtra(
-            "TRACK_TIME",
-            SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis)
-        )
+        trackIntent.putExtra("TRACK_TIME", track.trackTime)
         trackIntent.putExtra("ALBUM_NAME", track.collectionName)
-        trackIntent.putExtra("RELEASE_DATE", track.releaseDate.substring(0, 4))
+        trackIntent.putExtra("RELEASE_DATE", track.releaseDate)
         trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
         trackIntent.putExtra("COUNTRY", track.country)
         trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
@@ -111,6 +104,9 @@ class SearchActivity : AppCompatActivity() {
         lastTracks = findViewById(R.id.last_tracks)
         trackRecyclerView = findViewById(R.id.track_recycler_view)
         lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
+
+
+
 
         trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
         searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) {
@@ -170,14 +166,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         searchUpdateQueryButton.setOnClickListener {
-            search(lastQuery)
+            tracksInteractor.searchTracks(lastQuery, this)
+            trackAdapter.notifyDataSetChanged()
         }
     }
 
     private val searchRunnable = Runnable {
-            searchPlaceholder.visibility = View.GONE
-            searchUpdateQueryButton.visibility = View.GONE
-            search(searchBar.text.toString())
+        searchPlaceholder.visibility = View.GONE
+        searchUpdateQueryButton.visibility = View.GONE
+        tracksInteractor.searchTracks(searchBar.text.toString(), this)
     }
 
     fun debounceSearch() {
@@ -213,7 +210,7 @@ class SearchActivity : AppCompatActivity() {
         handler.removeCallbacks(searchRunnable)
     }
 
-    private fun search(query: String) {
+    /*private fun search(query: String) {
         searchProgressBar.visibility = View.VISIBLE
         tracksService.searchTracks(query)
             .enqueue(object : Callback<TracksSearchResponse> {
@@ -243,13 +240,26 @@ class SearchActivity : AppCompatActivity() {
                 }
 
             })
-    }
-
+    }*/
 
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_TEXT, inputText)
+    }
+
+    override fun consume(foundTracks: List<Track>) {
+        handler.post {
+            searchProgressBar.visibility = View.GONE
+            trackList.clear()
+            trackList.addAll(foundTracks)
+            trackAdapter.notifyDataSetChanged()
+            if (trackList.isEmpty()) {
+                showPlaceholder(PlaceholderType.NOTHING_FOUND)
+            } else {
+                searchPlaceholder.visibility = View.GONE
+            }
+        }
     }
 
     private companion object {
