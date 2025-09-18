@@ -5,21 +5,24 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
+import com.example.playlistmaker.data.SharedPrefsManager.Companion.TRACK_SHARED_PREFS
+import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.text.SimpleDateFormat
-import java.util.Locale
 
-class SearchHistory(private val trackSharedPrefs: SharedPreferences,
-                    private val lastTrackList: MutableList<Track>,
-                    private val context: Context,
-                    private val visibilityOfLastTracks: () -> Unit) {
+class SearchHistoryManager(
+    private val context: Context,
+    private val visibilityOfLastTracks: () -> Unit
+) : SearchHistory {
 
+    val lastTrackList = mutableListOf<Track>()
     private val handler = Handler(Looper.getMainLooper())
-    val gson = Gson()
+    private val gson = Gson()
+    private val trackSharedPrefs =
+        context.getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         val trackIntent = Intent(context, PlayerActivity::class.java)
@@ -33,16 +36,17 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
         trackIntent.putExtra("COUNTRY", track.country)
         trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
         context.startActivity(trackIntent)
-        val updateHistoryRunnable = Runnable { updateLastTrackList(track) }
+        val updateHistoryRunnable = Runnable { addToLastTrackList(track) }
         handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
-    private val trackSharedPrefsListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        if (key == LAST_TRACK_LIST_KEY) {
-            loadLastTrackList()
-            visibilityOfLastTracks()
+    private val trackSharedPrefsListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == LAST_TRACK_LIST_KEY) {
+                loadLastTrackList()
+                visibilityOfLastTracks()
+            }
         }
-    }
 
     init {
         loadLastTrackList()
@@ -52,13 +56,13 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
     }
 
 
-    fun saveLastTrackList() {
+    override fun saveLastTrackList() {
         trackSharedPrefs.edit()
             .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTrackList))
             .apply()
     }
 
-    fun updateLastTrackList(track: Track) {
+    override fun addToLastTrackList(track: Track) {
         lastTrackList.removeAll { it.trackId == track.trackId }
         if (lastTrackList.size >= MAX_TRACK_HISTORY) {
             lastTrackList.removeAt(9)
@@ -67,7 +71,7 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
         saveLastTrackList()
     }
 
-    private fun loadLastTrackList() {
+    override fun loadLastTrackList() {
         val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
         val type = object : TypeToken<MutableList<Track>>() {}.type
         val loadedTracks = Gson().fromJson<List<Track>>(jsonLastTrackList, type) ?: emptyList()

@@ -25,21 +25,12 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.network.SearchActivityAPI
-import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.SearchHistoryManager
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val tracksInteractor = Creator.getTracksInteractor()
@@ -48,7 +39,6 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
     private var inputText: String = INPUT_TEXT_DEF
     private val trackList = mutableListOf<Track>()
-    private val lastTrackList = mutableListOf<Track>()
 
     private val trackAdapter = TrackAdapter(trackList) { track ->
         val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
@@ -62,11 +52,11 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         trackIntent.putExtra("COUNTRY", track.country)
         trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
         startActivity(trackIntent)
-        searchHistory.updateLastTrackList(track)
+        searchHistory.addToLastTrackList(track)
     }
 
     private lateinit var trackSharedPrefs: SharedPreferences
-    private lateinit var searchHistory: SearchHistory
+    private lateinit var searchHistory: SearchHistoryManager
 
     private lateinit var lastQuery: String
 
@@ -80,7 +70,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private lateinit var recentClearButton: CardView
     private lateinit var lastTracks: LinearLayout
     private lateinit var trackRecyclerView: RecyclerView
-    private lateinit var lastTrackRecyclerView: RecyclerView
+    private lateinit var lastTracksRecyclerView: RecyclerView
     private lateinit var searchProgressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,29 +94,29 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         recentClearButton = findViewById(R.id.recent_clear_button)
         lastTracks = findViewById(R.id.last_tracks)
         trackRecyclerView = findViewById(R.id.track_recycler_view)
-        lastTrackRecyclerView = findViewById(R.id.last_track_recycler_view)
+        lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
 
 
 
         trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
-        searchHistory = SearchHistory(trackSharedPrefs, lastTrackList, this) {
+        searchHistory = SearchHistoryManager(this) {
             searchBar.setOnFocusChangeListener { view, hasFocus ->
-                if (hasFocus) visibilityOfLastTracks()
+                if (hasFocus) showLastTracksList()
             }
         }
 
         trackRecyclerView.adapter = trackAdapter
-        lastTrackRecyclerView.adapter = searchHistory.lastTrackAdapter
+        lastTracksRecyclerView.adapter = searchHistory.lastTrackAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
         recentClearButton.setOnClickListener {
-            lastTrackList.clear()
+            searchHistory.lastTrackList.clear()
             searchHistory.saveLastTrackList()
-            visibilityOfLastTracks()
+            showLastTracksList()
             searchHistory.lastTrackAdapter.notifyDataSetChanged()
         }
 
@@ -145,7 +135,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 inputText = s.toString()
                 trackList.clear()
                 trackAdapter.notifyDataSetChanged()
-                visibilityOfLastTracks()
+                showLastTracksList()
 
 
             }
@@ -164,7 +154,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
-            visibilityOfLastTracks()
+            showLastTracksList()
             handler.removeCallbacks(searchRunnable)
         }
 
@@ -186,8 +176,8 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
-    private fun visibilityOfLastTracks() {
-        lastTracks.isVisible = lastTrackList.isNotEmpty()
+    private fun showLastTracksList() {
+        lastTracks.isVisible = searchHistory.lastTrackList.isNotEmpty()
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
