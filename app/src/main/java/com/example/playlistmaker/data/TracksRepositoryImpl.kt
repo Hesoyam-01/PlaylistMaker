@@ -13,8 +13,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
     override fun searchTracks(query: String): List<Track> {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
-        if (response.resultCode == 200) {
-            return (response as TracksSearchResponse).results.map {
+        return if (response.resultCode == 200) {
+            (response as TracksSearchResponse).results.map {
                 Track(
                     trackId = it.trackId,
                     trackName = it.trackName,
@@ -28,6 +28,6 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     previewUrl = it.previewUrl
                 )
             }
-        }
+        } else emptyList()
     }
 }
