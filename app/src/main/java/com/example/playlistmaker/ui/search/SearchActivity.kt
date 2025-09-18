@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -8,9 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -18,21 +16,20 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet.Constraint
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.playlistmaker.R
+import com.example.playlistmaker.data.network.SearchActivityAPI
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.dto.TracksSearchResponse
+import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -218,11 +215,11 @@ class SearchActivity : AppCompatActivity() {
 
     private fun search(query: String) {
         searchProgressBar.visibility = View.VISIBLE
-        tracksService.getTracks(query)
-            .enqueue(object : Callback<TracksResponse> {
+        tracksService.searchTracks(query)
+            .enqueue(object : Callback<TracksSearchResponse> {
                 override fun onResponse(
-                    call: Call<TracksResponse>,
-                    response: Response<TracksResponse>
+                    call: Call<TracksSearchResponse>,
+                    response: Response<TracksSearchResponse>
                 ) {
                     searchProgressBar.visibility = View.GONE
                     val responseResults = response.body()?.results
@@ -239,7 +236,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
 
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
                     searchProgressBar.visibility = View.GONE
                     lastQuery = searchBar.text.toString()
                     showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)

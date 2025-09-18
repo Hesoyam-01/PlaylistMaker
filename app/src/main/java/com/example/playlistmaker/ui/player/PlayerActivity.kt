@@ -1,11 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -13,11 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
-import com.makeramen.roundedimageview.RoundedImageView
 import java.text.SimpleDateFormat
 import java.util.Locale
 
