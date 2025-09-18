@@ -2,7 +2,6 @@ package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -25,7 +24,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.SearchHistoryManager
+import com.example.playlistmaker.data.SearchHistoryManager
+import com.example.playlistmaker.data.SearchResult
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
@@ -55,9 +55,8 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         searchHistory.addToLastTrackList(track)
     }
 
-    private lateinit var trackSharedPrefs: SharedPreferences
-    private lateinit var searchHistory: SearchHistoryManager
 
+    private lateinit var searchHistory: SearchHistoryManager
     private lateinit var lastQuery: String
 
     private lateinit var searchPlaceholder: LinearLayout
@@ -68,8 +67,8 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private lateinit var searchToolbar: MaterialToolbar
     private lateinit var searchClearButton: Button
     private lateinit var recentClearButton: CardView
-    private lateinit var lastTracks: LinearLayout
-    private lateinit var trackRecyclerView: RecyclerView
+    private lateinit var lastTracksView: LinearLayout
+    private lateinit var tracksRecyclerView: RecyclerView
     private lateinit var lastTracksRecyclerView: RecyclerView
     private lateinit var searchProgressBar: ProgressBar
 
@@ -92,21 +91,20 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         searchToolbar = findViewById(R.id.search_toolbar)
         searchClearButton = findViewById(R.id.search_clear_button)
         recentClearButton = findViewById(R.id.recent_clear_button)
-        lastTracks = findViewById(R.id.last_tracks)
-        trackRecyclerView = findViewById(R.id.track_recycler_view)
+        lastTracksView = findViewById(R.id.last_tracks)
+        tracksRecyclerView = findViewById(R.id.track_recycler_view)
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
 
 
 
-        trackSharedPrefs = getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
         searchHistory = SearchHistoryManager(this) {
             searchBar.setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) showLastTracksList()
             }
         }
 
-        trackRecyclerView.adapter = trackAdapter
+        tracksRecyclerView.adapter = trackAdapter
         lastTracksRecyclerView.adapter = searchHistory.lastTrackAdapter
 
         searchToolbar.setNavigationOnClickListener {
@@ -125,7 +123,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
-                trackRecyclerView.isVisible = !s.isNullOrEmpty()
+                tracksRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE
                 if (searchBar.text.isNotEmpty()) debounceSearch()
                 else handler.removeCallbacks(searchRunnable)
@@ -177,7 +175,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private fun showLastTracksList() {
-        lastTracks.isVisible = searchHistory.lastTrackList.isNotEmpty()
+        lastTracksView.isVisible = searchHistory.lastTrackList.isNotEmpty()
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
@@ -242,22 +240,24 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         outState.putString(INPUT_TEXT, inputText)
     }
 
-    override fun consume(foundTracks: List<Track>) {
+    override fun consume(searchResult: SearchResult) {
         handler.post {
             searchProgressBar.visibility = View.GONE
             trackList.clear()
-            trackList.addAll(foundTracks)
-            trackAdapter.notifyDataSetChanged()
-            if (trackList.isEmpty()) {
-                showPlaceholder(PlaceholderType.NOTHING_FOUND)
-            } else {
-                searchPlaceholder.visibility = View.GONE
+            when (searchResult) {
+                is SearchResult.Success -> {
+                    trackList.addAll(searchResult.tracks)
+                    trackAdapter.notifyDataSetChanged()
+                    if (trackList.isEmpty()) {
+                        showPlaceholder(PlaceholderType.NOTHING_FOUND)
+                    }
+                }
+                is SearchResult.Failure -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
             }
         }
     }
 
     private companion object {
-        const val TRACK_SHARED_PREFS = "track_shared_prefs"
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
         const val SEARCH_DEBOUNCE_DELAY = 2000L

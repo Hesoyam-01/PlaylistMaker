@@ -1,11 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.data
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
-import com.example.playlistmaker.data.SharedPrefsManager.Companion.TRACK_SHARED_PREFS
 import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.player.PlayerActivity
@@ -51,7 +50,6 @@ class SearchHistoryManager(
     init {
         loadLastTrackList()
         visibilityOfLastTracks()
-
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
     }
 
@@ -82,7 +80,8 @@ class SearchHistoryManager(
 
     private companion object {
         const val MAX_TRACK_HISTORY = 10
-        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
         const val HISTORY_UPDATE_DELAY = 600L
+        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val TRACK_SHARED_PREFS = "track_shared_prefs"
     }
 }

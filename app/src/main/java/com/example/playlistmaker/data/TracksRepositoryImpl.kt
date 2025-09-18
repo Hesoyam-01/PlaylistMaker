@@ -11,11 +11,11 @@ import java.util.Locale
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    override fun searchTracks(query: String): List<Track> {
+    override fun searchTracks(query: String): SearchResult {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
         return if (response.resultCode == 200) {
-            (response as TracksSearchResponse).results.map {
+            SearchResult.Success((response as TracksSearchResponse).results.map {
                 Track(
                     trackId = it.trackId,
                     trackName = it.trackName,
@@ -28,7 +28,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                     country = it.country,
                     previewUrl = it.previewUrl
                 )
-            }
-        } else emptyList()
+            })
+        } else if (response.resultCode == 400) SearchResult.Success(emptyList())
+        else SearchResult.Failure(response.resultCode)
     }
 }
