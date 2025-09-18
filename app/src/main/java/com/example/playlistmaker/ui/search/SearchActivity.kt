@@ -30,6 +30,7 @@ import com.example.playlistmaker.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.Call
@@ -137,6 +138,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 trackRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE
                 if (searchBar.text.isNotEmpty()) debounceSearch()
+                else handler.removeCallbacks(searchRunnable)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -144,6 +146,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 trackList.clear()
                 trackAdapter.notifyDataSetChanged()
                 visibilityOfLastTracks()
+
 
             }
         }
@@ -172,6 +175,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private val searchRunnable = Runnable {
+        searchProgressBar.visibility = View.VISIBLE
         searchPlaceholder.visibility = View.GONE
         searchUpdateQueryButton.visibility = View.GONE
         tracksInteractor.searchTracks(searchBar.text.toString(), this)
@@ -276,7 +280,3 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 }
 
-enum class PlaceholderType {
-    NOTHING_FOUND,
-    CONNECTION_PROBLEMS
-}

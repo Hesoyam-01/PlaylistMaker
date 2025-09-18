@@ -19,6 +19,7 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
                     private val visibilityOfLastTracks: () -> Unit) {
 
     private val handler = Handler(Looper.getMainLooper())
+    val gson = Gson()
 
     val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
         val trackIntent = Intent(context, PlayerActivity::class.java)
@@ -53,7 +54,7 @@ class SearchHistory(private val trackSharedPrefs: SharedPreferences,
 
     fun saveLastTrackList() {
         trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, Gson().toJson(lastTrackList))
+            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTrackList))
             .apply()
     }
 
