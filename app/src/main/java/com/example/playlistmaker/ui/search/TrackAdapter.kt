@@ -32,11 +32,6 @@ class TrackAdapter(
         return trackList.size
     }
 
-    fun updateList(newList: MutableList<Track>) {
-        trackList = newList
-        notifyDataSetChanged()
-    }
-
     private var isClickAllowed = true
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed

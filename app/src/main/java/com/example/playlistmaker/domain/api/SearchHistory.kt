@@ -5,7 +5,6 @@ import com.example.playlistmaker.ui.search.TrackAdapter
 
 interface SearchHistory {
     val lastTracksList: MutableList<Track>
-    val lastTrackAdapter: TrackAdapter
     fun saveLastTrackList()
     fun addToLastTrackList(track: Track)
     fun loadLastTrackList()

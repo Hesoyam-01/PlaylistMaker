@@ -33,7 +33,7 @@ import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 
-class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), TracksInteractor.TracksConsumer {
+class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val tracksInteractor = Creator.getTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -42,20 +42,10 @@ class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), Track
     private val trackList = mutableListOf<Track>()
 
     private val trackAdapter = TrackAdapter(trackList) { track ->
-        val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java)
-        trackIntent.putExtra("TRACK_COVER", track.artworkUrl100)
-        trackIntent.putExtra("TRACK_NAME", track.trackName)
-        trackIntent.putExtra("ARTIST_NAME", track.artistName)
-        trackIntent.putExtra("TRACK_TIME", track.trackTime)
-        trackIntent.putExtra("ALBUM_NAME", track.collectionName)
-        trackIntent.putExtra("RELEASE_DATE", track.releaseDate)
-        trackIntent.putExtra("GENRE_NAME", track.primaryGenreName)
-        trackIntent.putExtra("COUNTRY", track.country)
-        trackIntent.putExtra("PREVIEW_URL", track.previewUrl)
-        startActivity(trackIntent)
-        searchHistory.addToLastTrackList(track)
+        openPlayerActivity(track)
     }
 
+    private lateinit var lastTracksAdapter: TrackAdapter
 
     private lateinit var searchHistory: SearchHistory
     private lateinit var lastQuery: String
@@ -96,31 +86,28 @@ class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), Track
         tracksRecyclerView = findViewById(R.id.track_recycler_view)
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
-
         setSearchHistoryImpl(SearchHistoryImpl(this) {
             searchBar.setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) showLastTracksList()
             }
         })
 
-        /*searchHistory = SearchHistoryImpl(this) {
-            searchBar.setOnFocusChangeListener { view, hasFocus ->
-                if (hasFocus) showLastTracksList()
-            }
-        }*/
+        lastTracksAdapter = TrackAdapter(searchHistory.lastTracksList) { track ->
+            openPlayerActivity(track)
+        }
 
         tracksRecyclerView.adapter = trackAdapter
-        lastTracksRecyclerView.adapter = searchHistory.lastTrackAdapter
+        lastTracksRecyclerView.adapter = lastTracksAdapter
 
         searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
         recentClearButton.setOnClickListener {
-            searchHistory.lastTrackList.clear()
+            searchHistory.lastTracksList.clear()
             searchHistory.saveLastTrackList()
             showLastTracksList()
-            searchHistory.lastTrackAdapter.notifyDataSetChanged()
+            lastTracksAdapter.notifyDataSetChanged()
         }
 
         val textWatcher = object : TextWatcher {
@@ -187,6 +174,10 @@ class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), Track
         }
     }
 
+    private fun setSearchHistoryImpl(searchHistory: SearchHistory) {
+        this.searchHistory = searchHistory
+    }
+
     private val searchRunnable = Runnable {
         searchProgressBar.visibility = View.VISIBLE
         searchPlaceholder.visibility = View.GONE
@@ -201,7 +192,27 @@ class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), Track
     }
 
     private fun showLastTracksList() {
-        lastTracksView.isVisible = searchHistory.lastTrackList.isNotEmpty()
+        lastTracksView.isVisible = searchHistory.lastTracksList.isNotEmpty()
+    }
+
+    private fun openPlayerActivity(track: Track) {
+        val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
+            putExtra("TRACK_COVER", track.artworkUrl100)
+            putExtra("TRACK_NAME", track.trackName)
+            putExtra("ARTIST_NAME", track.artistName)
+            putExtra("TRACK_TIME", track.trackTime)
+            putExtra("ALBUM_NAME", track.collectionName)
+            putExtra("RELEASE_DATE", track.releaseDate)
+            putExtra("GENRE_NAME", track.primaryGenreName)
+            putExtra("COUNTRY", track.country)
+            putExtra("PREVIEW_URL", track.previewUrl)
+        }
+        startActivity(trackIntent)
+        val updateHistoryRunnable = Runnable {
+            searchHistory.addToLastTrackList(track)
+            lastTracksAdapter.notifyDataSetChanged()
+        }
+        handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
@@ -237,6 +248,7 @@ class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), Track
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
         const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val HISTORY_UPDATE_DELAY = 600L
 
         fun hideKeyboard(view: View) {
             val keyboardService =
