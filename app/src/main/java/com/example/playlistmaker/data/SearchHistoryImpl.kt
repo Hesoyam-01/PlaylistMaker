@@ -12,18 +12,18 @@ import com.example.playlistmaker.ui.search.TrackAdapter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryManager(
+class SearchHistoryImpl(
     private val context: Context,
     private val visibilityOfLastTracks: () -> Unit
 ) : SearchHistory {
 
-    val lastTrackList = mutableListOf<Track>()
+    override val lastTracksList = mutableListOf<Track>()
     private val handler = Handler(Looper.getMainLooper())
     private val gson = Gson()
     private val trackSharedPrefs =
         context.getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
 
-    val lastTrackAdapter = TrackAdapter(lastTrackList) { track ->
+    val lastTrackAdapter = TrackAdapter(lastTracksList) { track ->
         val trackIntent = Intent(context, PlayerActivity::class.java)
         trackIntent.putExtra("TRACK_COVER", track.artworkUrl100)
         trackIntent.putExtra("TRACK_NAME", track.trackName)
@@ -56,16 +56,16 @@ class SearchHistoryManager(
 
     override fun saveLastTrackList() {
         trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTrackList))
+            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksList))
             .apply()
     }
 
     override fun addToLastTrackList(track: Track) {
-        lastTrackList.removeAll { it.trackId == track.trackId }
-        if (lastTrackList.size >= MAX_TRACK_HISTORY) {
-            lastTrackList.removeAt(9)
+        lastTracksList.removeAll { it.trackId == track.trackId }
+        if (lastTracksList.size >= MAX_TRACK_HISTORY) {
+            lastTracksList.removeAt(9)
         }
-        lastTrackList.add(0, track)
+        lastTracksList.add(0, track)
         saveLastTrackList()
     }
 
@@ -73,9 +73,9 @@ class SearchHistoryManager(
         val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
         val type = object : TypeToken<MutableList<Track>>() {}.type
         val loadedTracks = Gson().fromJson<List<Track>>(jsonLastTrackList, type) ?: emptyList()
-        lastTrackList.clear()
-        lastTrackList.addAll(loadedTracks)
-        lastTrackAdapter.updateList(lastTrackList)
+        lastTracksList.clear()
+        lastTracksList.addAll(loadedTracks)
+        lastTrackAdapter.updateList(lastTracksList)
     }
 
     private companion object {

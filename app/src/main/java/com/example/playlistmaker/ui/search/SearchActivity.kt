@@ -24,15 +24,16 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchHistoryManager
+import com.example.playlistmaker.data.SearchHistoryImpl
 import com.example.playlistmaker.data.SearchResult
+import com.example.playlistmaker.domain.api.SearchHistory
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 
-class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
+class SearchActivity (searchHistory: SearchHistory) : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val tracksInteractor = Creator.getTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -56,7 +57,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
 
-    private lateinit var searchHistory: SearchHistoryManager
+    private lateinit var searchHistory: SearchHistory
     private lateinit var lastQuery: String
 
     private lateinit var searchPlaceholder: LinearLayout
@@ -96,13 +97,17 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
 
-
-
-        searchHistory = SearchHistoryManager(this) {
+        setSearchHistoryImpl(SearchHistoryImpl(this) {
             searchBar.setOnFocusChangeListener { view, hasFocus ->
                 if (hasFocus) showLastTracksList()
             }
-        }
+        })
+
+        /*searchHistory = SearchHistoryImpl(this) {
+            searchBar.setOnFocusChangeListener { view, hasFocus ->
+                if (hasFocus) showLastTracksList()
+            }
+        }*/
 
         tracksRecyclerView.adapter = trackAdapter
         lastTracksRecyclerView.adapter = searchHistory.lastTrackAdapter
@@ -162,11 +167,32 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
     }
 
+    override fun consume(searchResult: SearchResult) {
+        handler.post {
+            searchProgressBar.visibility = View.GONE
+            trackList.clear()
+            when (searchResult) {
+                is SearchResult.Success -> {
+                    searchPlaceholder.visibility = View.GONE
+                    searchUpdateQueryButton.visibility = View.GONE
+                    trackList.addAll(searchResult.tracks)
+                    trackAdapter.notifyDataSetChanged()
+                    if (trackList.isEmpty()) {
+                        showPlaceholder(PlaceholderType.NOTHING_FOUND)
+                    }
+                }
+
+                is SearchResult.Failure -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
+            }
+        }
+    }
+
     private val searchRunnable = Runnable {
         searchProgressBar.visibility = View.VISIBLE
         searchPlaceholder.visibility = View.GONE
         searchUpdateQueryButton.visibility = View.GONE
         tracksInteractor.searchTracks(searchBar.text.toString(), this)
+        lastQuery = searchBar.text.toString()
     }
 
     fun debounceSearch() {
@@ -202,59 +228,9 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         handler.removeCallbacks(searchRunnable)
     }
 
-    /*private fun search(query: String) {
-        searchProgressBar.visibility = View.VISIBLE
-        tracksService.searchTracks(query)
-            .enqueue(object : Callback<TracksSearchResponse> {
-                override fun onResponse(
-                    call: Call<TracksSearchResponse>,
-                    response: Response<TracksSearchResponse>
-                ) {
-                    searchProgressBar.visibility = View.GONE
-                    val responseResults = response.body()?.results
-                    lastQuery = searchBar.text.toString()
-                    if (response.isSuccessful) {
-                        searchPlaceholder.visibility = View.GONE
-                        searchUpdateQueryButton.visibility = View.GONE
-                        if (!responseResults.isNullOrEmpty()) {
-                            trackList.clear()
-                            trackList.addAll(responseResults)
-                            trackAdapter.notifyDataSetChanged()
-                        } else showPlaceholder(PlaceholderType.NOTHING_FOUND)
-                    }
-                }
-
-
-                override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-                    searchProgressBar.visibility = View.GONE
-                    lastQuery = searchBar.text.toString()
-                    showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
-                }
-
-            })
-    }*/
-
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_TEXT, inputText)
-    }
-
-    override fun consume(searchResult: SearchResult) {
-        handler.post {
-            searchProgressBar.visibility = View.GONE
-            trackList.clear()
-            when (searchResult) {
-                is SearchResult.Success -> {
-                    trackList.addAll(searchResult.tracks)
-                    trackAdapter.notifyDataSetChanged()
-                    if (trackList.isEmpty()) {
-                        showPlaceholder(PlaceholderType.NOTHING_FOUND)
-                    }
-                }
-                is SearchResult.Failure -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
-            }
-        }
     }
 
     private companion object {
