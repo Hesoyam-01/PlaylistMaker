@@ -1,18 +1,23 @@
 package com.example.playlistmaker.domain.impl
 
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.domain.models.Track
 
-class SearchHistoryInteractorImpl : SearchHistoryInteractor {
-    override fun saveLastTracksList() {
-        TODO("Not yet implemented")
+class SearchHistoryInteractorImpl (private val repository: SearchHistoryRepository) : SearchHistoryInteractor {
+    override fun getLastTracksList(): MutableList<Track> {
+        return repository.getLastTracksList()
     }
 
-    override fun addToLastTracksList() {
-        TODO("Not yet implemented")
+    override fun saveLastTracksList() {
+        repository.putLastTracksListIntoSharedPrefs()
+    }
+
+    override fun addToLastTracksList(track: Track) {
+        repository.addToLastTracksList(track)
     }
 
     override fun loadLastTracksList() {
-        TODO("Not yet implemented")
+        repository.loadLastTracksListFromSharedPrefs()
     }
-
 }

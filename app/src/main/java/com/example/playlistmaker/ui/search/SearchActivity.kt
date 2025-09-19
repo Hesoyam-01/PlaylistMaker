@@ -24,9 +24,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.SearchResult
-import com.example.playlistmaker.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
@@ -47,7 +46,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
     private lateinit var lastTracksAdapter: TrackAdapter
 
-    private lateinit var searchHistory: SearchHistoryRepository
+    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
     private lateinit var lastQuery: String
 
     private lateinit var searchPlaceholder: LinearLayout
@@ -86,13 +85,13 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         tracksRecyclerView = findViewById(R.id.track_recycler_view)
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
-        setSearchHistoryImpl(Creator.getSearchHistoryRepository(this))
+        setSearchHistoryInteractorImpl(Creator.getSearchHistoryInteractor(this))
         searchBar.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) showLastTracksList()
 
         }
 
-        lastTracksAdapter = TrackAdapter(searchHistory.lastTracksList) { track ->
+        lastTracksAdapter = TrackAdapter(searchHistoryInteractor.getLastTracksList()) { track ->
             startPlayerActivity(track)
         }
 
@@ -104,8 +103,8 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         recentClearButton.setOnClickListener {
-            searchHistory.lastTracksList.clear()
-            searchHistory.saveLastTracksList()
+            searchHistoryInteractor.getLastTracksList().clear()
+            searchHistoryInteractor.saveLastTracksList()
             showLastTracksList()
             lastTracksAdapter.notifyDataSetChanged()
         }
@@ -174,8 +173,8 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
     }
 
-    private fun setSearchHistoryImpl(searchHistory: SearchHistoryRepository) {
-        this.searchHistory = searchHistory
+    private fun setSearchHistoryInteractorImpl(searchHistory: SearchHistoryInteractor) {
+        this.searchHistoryInteractor = searchHistory
     }
 
     private val searchRunnable = Runnable {
@@ -192,7 +191,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private fun showLastTracksList() {
-        lastTracksView.isVisible = searchHistory.lastTracksList.isNotEmpty()
+        lastTracksView.isVisible = searchHistoryInteractor.getLastTracksList().isNotEmpty()
     }
 
     private fun startPlayerActivity(track: Track) {
@@ -209,7 +208,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
         startActivity(trackIntent)
         val updateHistoryRunnable = Runnable {
-            searchHistory.addToLastTracksList(track)
+            searchHistoryInteractor.addToLastTracksList(track)
             lastTracksAdapter.notifyDataSetChanged()
         }
         handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)

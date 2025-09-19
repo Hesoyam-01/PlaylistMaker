@@ -1,56 +1,97 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.data.dto.LastTracksDto
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SearchHistoryRepositoryImpl(
     private val trackSharedPrefs: SharedPreferences
 ) : SearchHistoryRepository {
 
-    override val lastTracksList = mutableListOf<Track>()
+    private val lastTracksDto = LastTracksDto(mutableListOf())
+    private var lastTracks = mutableListOf<Track>()
+
+    private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
+    private val dateFormatFromMssToMillis by lazy { fun(durationStr: String): Long {
+        val date = dateFormatFromMillisToMss.parse(durationStr)
+        return date?.time ?: 0
+    } }
+
     private val gson = Gson()
 
     private val trackSharedPrefsListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == LAST_TRACK_LIST_KEY) {
-                loadLastTracksList()
+                loadLastTracksListFromSharedPrefs()
             }
         }
 
     init {
-        loadLastTracksList()
+        loadLastTracksListFromSharedPrefs()
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
     }
 
 
-    override fun saveLastTracksList() {
+    override fun putLastTracksListIntoSharedPrefs() {
         trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksList))
+            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksDto.list))
             .apply()
     }
 
     override fun addToLastTracksList(track: Track) {
-        lastTracksList.removeAll { it.trackId == track.trackId }
-        if (lastTracksList.size >= MAX_TRACK_HISTORY) {
-            lastTracksList.removeAt(9)
+        val trackDto = TrackDto(trackId = track.trackId,
+            trackName = track.trackName,
+            artistName = track.artistName,
+            trackTimeMillis = dateFormatFromMssToMillis(track.trackTime),
+            artworkUrl100 = track.artworkUrl100,
+            collectionName = track.collectionName,
+            releaseDate = track.releaseDate,
+            primaryGenreName = track.primaryGenreName,
+            country = track.country,
+            previewUrl = track.previewUrl)
+        lastTracksDto.list.removeAll { it.trackId == trackDto.trackId }
+        if (lastTracksDto.list.size >= MAX_TRACK_HISTORY) {
+            lastTracksDto.list.removeAt(9)
         }
-        lastTracksList.add(0, track)
-        saveLastTracksList()
+        lastTracksDto.list.add(0, trackDto)
+        putLastTracksListIntoSharedPrefs()
     }
 
-    override fun loadLastTracksList() {
+    override fun loadLastTracksListFromSharedPrefs() {
         val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
-        val type = object : TypeToken<MutableList<Track>>() {}.type
-        val loadedTracks = gson.fromJson<List<Track>>(jsonLastTrackList, type) ?: emptyList()
-        lastTracksList.clear()
-        lastTracksList.addAll(loadedTracks)
+        val type = object : TypeToken<MutableList<TrackDto>>() {}.type
+        val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()
+        lastTracksDto.list.clear()
+        lastTracksDto.list.addAll(loadedTracks)
+    }
+
+    override fun getLastTracksList(): MutableList<Track> {
+        lastTracks = lastTracksDto.list.map {
+            Track(
+                trackId = it.trackId,
+                trackName = it.trackName,
+                artistName = it.artistName,
+                trackTime = dateFormatFromMillisToMss.format(it.trackTimeMillis),
+                artworkUrl100 = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
+                collectionName = it.collectionName,
+                releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4)
+                    ?: "XXXX",
+                primaryGenreName = it.primaryGenreName,
+                country = it.country,
+                previewUrl = it.previewUrl
+            )
+        }.toMutableList()
+        return lastTracks
     }
 
     private companion object {
-        const val MAX_TRACK_HISTORY = 10
         const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val MAX_TRACK_HISTORY = 10
     }
 }
