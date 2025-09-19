@@ -3,12 +3,12 @@ package com.example.playlistmaker.domain.api
 import com.example.playlistmaker.domain.models.Track
 
 interface SearchHistoryInteractor {
-    fun getLastTracksList() : MutableList<Track>
+    fun getLastTracksList(consumer: SearchHistoryConsumer)
     fun saveLastTracksList()
     fun addToLastTracksList(track: Track)
     fun loadLastTracksList()
 
-    interface Consumer {
-        fun consume()
+    interface SearchHistoryConsumer {
+        fun consume(lastTracksList: MutableList<Track>)
     }
 }
