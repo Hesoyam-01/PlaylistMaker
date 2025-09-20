@@ -3,11 +3,10 @@ package com.example.playlistmaker.domain.api
 import android.content.res.Resources
 
 interface ThemeInteractor {
-    fun getThemeMode() : Int
-    fun isSystemInDarkTheme(): Boolean
-//    fun switchTheme(darkThemeEnabled: Boolean)
+    fun getThemeMode(consumer: ThemeConsumer)
+    fun saveTheme(darkThemeEnabled: Boolean)
 
-    interface Consumer {
+    interface ThemeConsumer {
         fun consume(themeMode: Int)
     }
 }

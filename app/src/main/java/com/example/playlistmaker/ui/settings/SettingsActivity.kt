@@ -8,15 +8,26 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.App
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
+    val themeInteractor = Creator.getThemeInteractor(this)
+
+    private lateinit var settingsToolbar: MaterialToolbar
+    private lateinit var themeSwitcher: SwitchMaterial
+    private lateinit var shareAppButton: MaterialTextView
+    private lateinit var supportButton: MaterialTextView
+    private lateinit var userAgreementButton: MaterialTextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,18 +38,18 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val settingsToolbar = findViewById<MaterialToolbar>(R.id.settings_toolbar)
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
-        val shareAppButton = findViewById<MaterialTextView>(R.id.share_app_button)
-        val supportButton = findViewById<MaterialTextView>(R.id.support_button)
-        val userAgreementButton = findViewById<MaterialTextView>(R.id.user_agreement_button)
+        settingsToolbar = findViewById(R.id.settings_toolbar)
+        themeSwitcher = findViewById(R.id.theme_switcher)
+        shareAppButton = findViewById(R.id.share_app_button)
+        supportButton = findViewById(R.id.support_button)
+        userAgreementButton = findViewById(R.id.user_agreement_button)
 
         settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        themeSwitcher.isChecked = (application as App).darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked) }
+        /*themeSwitcher.isChecked = (application as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked) }*/
 
         shareAppButton.setOnClickListener {
             val shareAppButtonIntent = Intent(ACTION_SEND)
@@ -67,4 +78,13 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(userAgreementButtonIntent)
         }
     }
+
+    override fun consume(themeMode: Int) {
+        themeSwitcher.isChecked = themeMode == AppCompatDelegate.MODE_NIGHT_YES
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> AppCompatDelegate.setDefaultNightMode(themeMode) }
+    }
+
+    /*fun switchTheme(themeMode: Int) : Boolean {
+        if (themeMode == AppCompatDelegate.MODE_NIGHT_YES) AppCompatDelegate.setDefaultNightMode()
+    }*/
 }

@@ -59,12 +59,12 @@ object Creator {
         return context.getSharedPreferences(SETTINGS_SHARED_PREFS, Context.MODE_PRIVATE)
     }
 
-    fun getThemeRepository(context: Context) : ThemeRepository {
-        return ThemeRepositoryImpl(getSettingsSharedPrefs(context))
+    private fun getThemeRepository(context: Context) : ThemeRepository {
+        return ThemeRepositoryImpl(getSettingsSharedPrefs(context), context)
     }
 
     fun getThemeInteractor(context: Context) : ThemeInteractor {
-        return ThemeInteractorImpl(getThemeRepository(context), context)
+        return ThemeInteractorImpl(getThemeRepository(context))
     }
 }
 
