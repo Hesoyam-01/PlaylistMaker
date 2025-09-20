@@ -14,22 +14,27 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
     override fun searchTracks(query: String): SearchResult {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
-        return if (response.resultCode == 200) {
-            SearchResult.Success((response as TracksSearchResponse).results.map {
-                Track(
-                    trackId = it.trackId,
-                    trackName = it.trackName,
-                    artistName = it.artistName,
-                    trackTime = dateFormat.format(it.trackTimeMillis),
-                    artworkUrl100 = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
-                    collectionName = it.collectionName,
-                    releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4) ?: "XXXX",
-                    primaryGenreName = it.primaryGenreName,
-                    country = it.country,
-                    previewUrl = it.previewUrl
-                )
-            })
-        } else if (response.resultCode == 400) SearchResult.Success(emptyList())
-        else SearchResult.Failure(response.resultCode)
+        return when (response.resultCode) {
+            200 -> {
+                SearchResult.Success((response as TracksSearchResponse).results.map {
+                    Track(
+                        trackId = it.trackId,
+                        trackName = it.trackName,
+                        artistName = it.artistName,
+                        trackTime = dateFormat.format(it.trackTimeMillis),
+                        artworkUrl100 = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
+                        collectionName = it.collectionName,
+                        releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4)
+                            ?: "XXXX",
+                        primaryGenreName = it.primaryGenreName,
+                        country = it.country,
+                        previewUrl = it.previewUrl
+                    )
+                }.toMutableList())
+            }
+
+            400 -> SearchResult.Failure(response.resultCode)
+            else -> SearchResult.Failure(response.resultCode)
+        }
     }
 }

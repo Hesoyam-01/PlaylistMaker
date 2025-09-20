@@ -39,7 +39,6 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val handler = Handler(Looper.getMainLooper())
 
     private var inputText: String = INPUT_TEXT_DEF
-    private val trackList = mutableListOf<Track>()
 
     private lateinit var searchHistoryInteractor: SearchHistoryInteractor
 
@@ -82,10 +81,11 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         lastTracksView = findViewById(R.id.last_tracks)
         tracksRecyclerView = findViewById(R.id.track_recycler_view)
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
+        searchProgressBar = findViewById(R.id.search_progressBar)
 
         searchHistoryInteractor = Creator.getSearchHistoryInteractor(this)
 
-        trackAdapter = TrackAdapter(trackList) { track ->
+        trackAdapter = TrackAdapter(mutableListOf()) { track ->
             startPlayerActivity(track)
         }
         lastTracksAdapter = TrackAdapter(searchHistoryInteractor.getLastTracksList()) { track ->
@@ -123,7 +123,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
             override fun afterTextChanged(s: Editable?) {
                 inputText = s.toString()
-                trackList.clear()
+                trackAdapter.clearTrackList()
                 trackAdapter.notifyDataSetChanged()
                 showLastTracksList()
 
@@ -132,7 +132,6 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         searchBar.addTextChangedListener(textWatcher)
-        searchProgressBar = findViewById(R.id.search_progressBar)
 
         if (savedInstanceState != null) {
             inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
@@ -140,7 +139,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         searchClearButton.setOnClickListener {
-            trackList.clear()
+            trackAdapter.clearTrackList()
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
@@ -157,14 +156,14 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     override fun consumeSearchResult(searchResult: SearchResult) {
         handler.post {
             searchProgressBar.visibility = View.GONE
-            trackList.clear()
+            trackAdapter.clearTrackList()
             when (searchResult) {
                 is SearchResult.Success -> {
                     searchPlaceholder.visibility = View.GONE
                     searchUpdateQueryButton.visibility = View.GONE
-                    trackList.addAll(searchResult.tracks)
+                    trackAdapter.updateList(searchResult.tracks)
                     trackAdapter.notifyDataSetChanged()
-                    if (trackList.isEmpty()) {
+                    if (searchResult.tracks.isEmpty()) {
                         showPlaceholder(PlaceholderType.NOTHING_FOUND)
                     }
                 }
@@ -212,7 +211,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
-        trackList.clear()
+        trackAdapter.clearTrackList()
         trackAdapter.notifyDataSetChanged()
         searchPlaceholder.visibility = View.VISIBLE
 

@@ -37,6 +37,10 @@ class TrackAdapter(
         notifyDataSetChanged()
     }
 
+    fun clearTrackList() {
+        trackList.clear()
+    }
+
     private var isClickAllowed = true
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
