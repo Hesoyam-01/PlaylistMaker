@@ -51,4 +51,5 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.roundedimageview)
     implementation(libs.androidx.constraintlayout.v200)
+    implementation (libs.androidx.appcompat.v161)
 }

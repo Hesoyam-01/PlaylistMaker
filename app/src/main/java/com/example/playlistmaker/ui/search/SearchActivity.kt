@@ -35,6 +35,20 @@ import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
+
+    private companion object {
+        const val INPUT_TEXT = "INPUT_TEXT"
+        const val INPUT_TEXT_DEF = ""
+        const val SEARCH_DEBOUNCE_DELAY = 1500L
+        const val HISTORY_UPDATE_DELAY = 600L
+
+        fun hideKeyboard(view: View) {
+            val keyboardService =
+                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
     private val tracksInteractor = Creator.getTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -239,19 +253,6 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(INPUT_TEXT, inputText)
-    }
-
-    private companion object {
-        const val INPUT_TEXT = "INPUT_TEXT"
-        const val INPUT_TEXT_DEF = ""
-        const val SEARCH_DEBOUNCE_DELAY = 1500L
-        const val HISTORY_UPDATE_DELAY = 600L
-
-        fun hideKeyboard(view: View) {
-            val keyboardService =
-                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
-        }
     }
 }
 

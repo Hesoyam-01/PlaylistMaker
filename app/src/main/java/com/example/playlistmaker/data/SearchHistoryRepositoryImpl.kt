@@ -13,6 +13,11 @@ class SearchHistoryRepositoryImpl(
     private val trackSharedPrefs: SharedPreferences
 ) : SearchHistoryRepository {
 
+    private companion object {
+        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val MAX_TRACK_HISTORY = 10
+    }
+
     private val lastTracksDtoList = mutableListOf<TrackDto>()
 
     private val gson = Gson()
@@ -106,8 +111,4 @@ class SearchHistoryRepositoryImpl(
         return trackDto
     }
 
-    private companion object {
-        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
-        const val MAX_TRACK_HISTORY = 10
-    }
 }

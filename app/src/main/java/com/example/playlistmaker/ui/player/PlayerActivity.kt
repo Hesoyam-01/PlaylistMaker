@@ -21,6 +21,14 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
+    private companion object {
+        private const val MEDIA_STATE_DEFAULT = 0
+        private const val MEDIA_STATE_PREPARED = 1
+        private const val MEDIA_STATE_PLAYING = 2
+        private const val MEDIA_STATE_PAUSED = 3
+        private const val ELAPSED_TIME_UPDATE_DELAY = 100L
+    }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var playStopButton: ImageView
@@ -149,13 +157,5 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
-    }
-
-    private companion object {
-        private const val MEDIA_STATE_DEFAULT = 0
-        private const val MEDIA_STATE_PREPARED = 1
-        private const val MEDIA_STATE_PLAYING = 2
-        private const val MEDIA_STATE_PAUSED = 3
-        private const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
 }

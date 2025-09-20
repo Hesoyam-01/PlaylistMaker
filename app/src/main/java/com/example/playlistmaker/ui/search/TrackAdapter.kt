@@ -14,6 +14,10 @@ class TrackAdapter(
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
+    private companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
+
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -50,11 +54,6 @@ class TrackAdapter(
         }
         return current
     }
-
-    private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
 }
 
 
