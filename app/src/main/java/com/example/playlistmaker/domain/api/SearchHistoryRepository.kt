@@ -6,5 +6,6 @@ interface SearchHistoryRepository {
     fun getLastTracksList() : MutableList<Track>
     fun putLastTracksDtoListIntoSharedPrefs()
     fun addToLastTracksDtoList(track: Track)
-    fun loadLastTracksListFromSharedPrefs()
+    fun loadLastTracksListDtoFromSharedPrefs()
+    fun clearLastTracksDtoList()
 }

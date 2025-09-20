@@ -42,6 +42,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val trackList = mutableListOf<Track>()
 
     private lateinit var searchHistoryInteractor: SearchHistoryInteractor
+
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
     private lateinit var lastQuery: String
@@ -83,9 +84,6 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
 
         searchHistoryInteractor = Creator.getSearchHistoryInteractor(this)
-        searchHistoryInteractor.loadLastTracksList()
-
-
 
         trackAdapter = TrackAdapter(trackList) { track ->
             startPlayerActivity(track)
@@ -102,7 +100,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         recentClearButton.setOnClickListener {
-            searchHistoryInteractor.getLastTracksList().clear()
+            searchHistoryInteractor.clearLastTracksList()
             searchHistoryInteractor.saveLastTracksList()
             showLastTracksList()
             lastTracksAdapter.notifyDataSetChanged()

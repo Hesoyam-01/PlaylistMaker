@@ -20,12 +20,12 @@ class SearchHistoryRepositoryImpl(
     private val trackSharedPrefsListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == LAST_TRACK_LIST_KEY) {
-                loadLastTracksListFromSharedPrefs()
+                loadLastTracksListDtoFromSharedPrefs()
             }
         }
 
     init {
-        loadLastTracksListFromSharedPrefs()
+        loadLastTracksListDtoFromSharedPrefs()
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
     }
 
@@ -55,12 +55,16 @@ class SearchHistoryRepositoryImpl(
         putLastTracksDtoListIntoSharedPrefs()
     }
 
-    override fun loadLastTracksListFromSharedPrefs() {
+    override fun loadLastTracksListDtoFromSharedPrefs() {
         val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
         val type = object : TypeToken<MutableList<TrackDto>>() {}.type
         val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()
         lastTracksDtoList.clear()
         lastTracksDtoList.addAll(loadedTracks)
+    }
+
+    override fun clearLastTracksDtoList() {
+        lastTracksDtoList.clear()
     }
 
     override fun getLastTracksList(): MutableList<Track> {

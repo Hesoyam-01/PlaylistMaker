@@ -17,7 +17,7 @@ class SearchHistoryInteractorImpl (private val repository: SearchHistoryReposito
         repository.addToLastTracksDtoList(track)
     }
 
-    override fun loadLastTracksList() {
-        repository.loadLastTracksListFromSharedPrefs()
+    override fun clearLastTracksList() {
+        repository.clearLastTracksDtoList()
     }
 }

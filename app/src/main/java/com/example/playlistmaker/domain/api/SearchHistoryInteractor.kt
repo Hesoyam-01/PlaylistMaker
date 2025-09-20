@@ -6,5 +6,5 @@ interface SearchHistoryInteractor {
     fun getLastTracksList() : MutableList<Track>
     fun saveLastTracksList()
     fun addToLastTracksList(track: Track)
-    fun loadLastTracksList()
+    fun clearLastTracksList()
 }
