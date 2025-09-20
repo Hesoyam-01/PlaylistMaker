@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
+import android.icu.text.StringSearch
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -33,18 +34,18 @@ import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
 
-class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
+class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val tracksInteractor = Creator.getTracksInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
 
     private var inputText: String = INPUT_TEXT_DEF
+    private var lastQuery: String = ""
 
     private lateinit var searchHistoryInteractor: SearchHistoryInteractor
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
-    private lateinit var lastQuery: String
 
     private lateinit var searchPlaceholder: LinearLayout
     private lateinit var searchPlaceholderImage: ImageView
@@ -107,7 +108,8 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) lastTracksView.isVisible = searchHistoryInteractor.getLastTracksList().isNotEmpty()
+            if (hasFocus) lastTracksView.isVisible =
+                searchHistoryInteractor.getLastTracksList().isNotEmpty()
         }
 
         val textWatcher = object : TextWatcher {
@@ -117,6 +119,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 searchClearButton.isVisible = !s.isNullOrEmpty()
                 tracksRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE
+
                 if (searchBar.text.isNotEmpty()) debounceSearch()
                 else handler.removeCallbacks(searchRunnable)
             }
@@ -126,8 +129,6 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 trackAdapter.clearTrackList()
                 trackAdapter.notifyDataSetChanged()
                 showLastTracksList()
-
-
             }
         }
 
@@ -180,6 +181,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         tracksInteractor.searchTracks(searchBar.text.toString(), this)
         lastQuery = searchBar.text.toString()
     }
+
 
     fun debounceSearch() {
         handler.removeCallbacks(searchRunnable)
@@ -242,7 +244,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private companion object {
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
+        const val SEARCH_DEBOUNCE_DELAY = 1500L
         const val HISTORY_UPDATE_DELAY = 600L
 
         fun hideKeyboard(view: View) {
