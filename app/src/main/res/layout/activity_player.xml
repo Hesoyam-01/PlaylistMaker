@@ -31,17 +31,39 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="24dp" />
 
+    <!-- Барьеры для динамического расположения -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/controls_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="elapsed_time" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/metadata_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="time" />
+
+    <!-- Динамическая обложка альбома -->
     <ImageView
         android:id="@+id/player_track_cover"
-        android:layout_width="312dp"
-        android:layout_height="312dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="12dp"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/metadata_barrier"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/player_toolbar"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_max="312dp"
         tools:src="@drawable/album_placeholder" />
 
+    <!-- Остальные элементы остаются без изменений, но добавляются ограничения -->
     <TextView
         android:id="@+id/player_track_name"
         style="@style/ToolbarStyle"
@@ -72,11 +94,12 @@
         app:layout_constraintTop_toBottomOf="@id/player_track_name"
         tools:text="The Beatles" />
 
+    <!-- Кнопки управления -->
     <ImageView
         android:id="@+id/add_to_playlist_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/ic_add_to_playlist_51"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
@@ -85,7 +108,7 @@
         android:id="@+id/add_to_favorites_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/ic_add_to_favorites_51"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
@@ -94,7 +117,7 @@
         android:id="@+id/play_stop_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/ic_play_84"
         app:layout_constraintEnd_toEndOf="@id/add_to_favorites_button"
         app:layout_constraintStart_toStartOf="@id/add_to_playlist_button"
@@ -117,6 +140,7 @@
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/play_stop_button" />
 
+    <!-- Метаданные с динамическим расположением -->
     <TextView
         android:id="@+id/country"
         style="@style/TrackDescriptionStyle"

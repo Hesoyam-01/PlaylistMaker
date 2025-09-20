@@ -82,8 +82,7 @@ class SearchHistoryRepositoryImpl(
                 trackTime = dateFormatFromMillisToMss.format(trackDto.trackTimeMillis),
                 artworkUrl100 = trackDto.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
                 collectionName = trackDto.collectionName,
-                releaseDate = trackDto.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4)
-                    ?: "XXXX",
+                releaseDate = trackDto.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4),
                 primaryGenreName = trackDto.primaryGenreName,
                 country = trackDto.country,
                 previewUrl = trackDto.previewUrl
