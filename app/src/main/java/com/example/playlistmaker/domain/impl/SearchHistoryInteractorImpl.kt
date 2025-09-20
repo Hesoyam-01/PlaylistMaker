@@ -5,16 +5,16 @@ import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 
 class SearchHistoryInteractorImpl (private val repository: SearchHistoryRepository) : SearchHistoryInteractor {
-    override fun getLastTracksList(consumer: SearchHistoryInteractor.SearchHistoryConsumer) {
-        consumer.consume(repository.getLastTracksList())
+    override fun getLastTracksList() : MutableList<Track> {
+        return repository.getLastTracksList()
     }
 
     override fun saveLastTracksList() {
-        repository.putLastTracksListIntoSharedPrefs()
+        repository.putLastTracksDtoListIntoSharedPrefs()
     }
 
     override fun addToLastTracksList(track: Track) {
-        repository.addToLastTracksList(track)
+        repository.addToLastTracksDtoList(track)
     }
 
     override fun loadLastTracksList() {

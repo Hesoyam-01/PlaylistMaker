@@ -28,6 +28,7 @@ import com.example.playlistmaker.data.SearchResult
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
@@ -38,6 +39,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
     private val handler = Handler(Looper.getMainLooper())
 
     private var inputText: String = INPUT_TEXT_DEF
+    private val trackList = mutableListOf<Track>()
 
     private lateinit var searchHistoryInteractor: SearchHistoryInteractor
     private lateinit var trackAdapter: TrackAdapter
@@ -83,15 +85,11 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         searchHistoryInteractor = Creator.getSearchHistoryInteractor(this)
         searchHistoryInteractor.loadLastTracksList()
 
-        searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) showLastTracksList()
 
-        }
 
-        trackAdapter = TrackAdapter(searchHistoryInteractor.getLastTracksList()) { track ->
+        trackAdapter = TrackAdapter(trackList) { track ->
             startPlayerActivity(track)
         }
-
         lastTracksAdapter = TrackAdapter(searchHistoryInteractor.getLastTracksList()) { track ->
             startPlayerActivity(track)
         }
@@ -110,6 +108,10 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
             lastTracksAdapter.notifyDataSetChanged()
         }
 
+        searchBar.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) lastTracksView.isVisible = searchHistoryInteractor.getLastTracksList().isNotEmpty()
+        }
+
         val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -123,7 +125,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
             override fun afterTextChanged(s: Editable?) {
                 inputText = s.toString()
-                searchHistoryInteractor.getLastTracksList().clear()
+                trackList.clear()
                 trackAdapter.notifyDataSetChanged()
                 showLastTracksList()
 
@@ -140,7 +142,7 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
 
         searchClearButton.setOnClickListener {
-            searchHistoryInteractor.getLastTracksList().clear()
+            trackList.clear()
             trackAdapter.notifyDataSetChanged()
             searchBar.setText("")
             hideKeyboard(searchBar)
@@ -154,17 +156,17 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
     }
 
-    override fun consume(searchResult: SearchResult) {
+    override fun consumeSearchResult(searchResult: SearchResult) {
         handler.post {
             searchProgressBar.visibility = View.GONE
-            searchHistoryInteractor.getLastTracksList().clear()
+            trackList.clear()
             when (searchResult) {
                 is SearchResult.Success -> {
                     searchPlaceholder.visibility = View.GONE
                     searchUpdateQueryButton.visibility = View.GONE
-                    searchHistoryInteractor.getLastTracksList().addAll(searchResult.tracks)
+                    trackList.addAll(searchResult.tracks)
                     trackAdapter.notifyDataSetChanged()
-                    if (searchHistoryInteractor.getLastTracksList().isEmpty()) {
+                    if (trackList.isEmpty()) {
                         showPlaceholder(PlaceholderType.NOTHING_FOUND)
                     }
                 }
@@ -206,13 +208,13 @@ class SearchActivity () : AppCompatActivity(), TracksInteractor.TracksConsumer {
         startActivity(trackIntent)
         val updateHistoryRunnable = Runnable {
             searchHistoryInteractor.addToLastTracksList(track)
-            lastTracksAdapter.notifyDataSetChanged()
+            lastTracksAdapter.updateList(searchHistoryInteractor.getLastTracksList())
         }
         handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
-        searchHistoryInteractor.getLastTracksList().clear()
+        trackList.clear()
         trackAdapter.notifyDataSetChanged()
         searchPlaceholder.visibility = View.VISIBLE
 

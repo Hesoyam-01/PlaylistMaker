@@ -1,7 +1,6 @@
 package com.example.playlistmaker.data
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.dto.LastTracksDto
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
@@ -14,14 +13,7 @@ class SearchHistoryRepositoryImpl(
     private val trackSharedPrefs: SharedPreferences
 ) : SearchHistoryRepository {
 
-    private val lastTracksDto = LastTracksDto(mutableListOf())
-    private var lastTracks = mutableListOf<Track>()
-
-    private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
-    private val dateFormatFromMssToMillis by lazy { fun(durationStr: String): Long {
-        val date = dateFormatFromMillisToMss.parse(durationStr)
-        return date?.time ?: 0
-    } }
+    private val lastTracksDtoList = mutableListOf<TrackDto>()
 
     private val gson = Gson()
 
@@ -37,15 +29,67 @@ class SearchHistoryRepositoryImpl(
         trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
     }
 
+    private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
+    private val dateFormatFromMssToMillis by lazy {
+        fun(durationStr: String): Long {
+            val date = dateFormatFromMillisToMss.parse(durationStr)
+            return date?.time ?: 0
+        }
+    }
 
-    override fun putLastTracksListIntoSharedPrefs() {
+
+
+    override fun putLastTracksDtoListIntoSharedPrefs() {
         trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksDto.list))
+            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksDtoList))
             .apply()
     }
 
-    override fun addToLastTracksList(track: Track) {
-        val trackDto = TrackDto(trackId = track.trackId,
+    override fun addToLastTracksDtoList(track: Track) {
+        val trackDto = fromTrackToTrackDto(track)
+        lastTracksDtoList.removeAll { it.trackId == trackDto.trackId }
+        if (lastTracksDtoList.size >= MAX_TRACK_HISTORY) {
+            lastTracksDtoList.removeAt(9)
+        }
+        lastTracksDtoList.add(0, trackDto)
+        putLastTracksDtoListIntoSharedPrefs()
+    }
+
+    override fun loadLastTracksListFromSharedPrefs() {
+        val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
+        val type = object : TypeToken<MutableList<TrackDto>>() {}.type
+        val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()
+        lastTracksDtoList.clear()
+        lastTracksDtoList.addAll(loadedTracks)
+    }
+
+    override fun getLastTracksList(): MutableList<Track> {
+        val lastTracksList = lastTracksDtoList.map { trackDto ->
+            fromTrackDtoToTrack(trackDto)
+        }.toMutableList()
+        return lastTracksList
+    }
+
+    private fun fromTrackDtoToTrack(trackDto: TrackDto): Track {
+        val track = Track(
+                trackId = trackDto.trackId,
+                trackName = trackDto.trackName,
+                artistName = trackDto.artistName,
+                trackTime = dateFormatFromMillisToMss.format(trackDto.trackTimeMillis),
+                artworkUrl100 = trackDto.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
+                collectionName = trackDto.collectionName,
+                releaseDate = trackDto.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4)
+                    ?: "XXXX",
+                primaryGenreName = trackDto.primaryGenreName,
+                country = trackDto.country,
+                previewUrl = trackDto.previewUrl
+            )
+        return track
+    }
+
+    private fun fromTrackToTrackDto(track: Track) : TrackDto {
+        val trackDto = TrackDto(
+            trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
             trackTimeMillis = dateFormatFromMssToMillis(track.trackTime),
@@ -54,40 +98,9 @@ class SearchHistoryRepositoryImpl(
             releaseDate = track.releaseDate,
             primaryGenreName = track.primaryGenreName,
             country = track.country,
-            previewUrl = track.previewUrl)
-        lastTracksDto.list.removeAll { it.trackId == trackDto.trackId }
-        if (lastTracksDto.list.size >= MAX_TRACK_HISTORY) {
-            lastTracksDto.list.removeAt(9)
-        }
-        lastTracksDto.list.add(0, trackDto)
-        putLastTracksListIntoSharedPrefs()
-    }
-
-    override fun loadLastTracksListFromSharedPrefs() {
-        val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
-        val type = object : TypeToken<MutableList<TrackDto>>() {}.type
-        val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()
-        lastTracksDto.list.clear()
-        lastTracksDto.list.addAll(loadedTracks)
-    }
-
-    override fun getLastTracksList(): MutableList<Track> {
-        lastTracks = lastTracksDto.list.map {
-            Track(
-                trackId = it.trackId,
-                trackName = it.trackName,
-                artistName = it.artistName,
-                trackTime = dateFormatFromMillisToMss.format(it.trackTimeMillis),
-                artworkUrl100 = it.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
-                collectionName = it.collectionName,
-                releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4)
-                    ?: "XXXX",
-                primaryGenreName = it.primaryGenreName,
-                country = it.country,
-                previewUrl = it.previewUrl
-            )
-        }.toMutableList()
-        return lastTracks
+            previewUrl = track.previewUrl
+        )
+        return trackDto
     }
 
     private companion object {
