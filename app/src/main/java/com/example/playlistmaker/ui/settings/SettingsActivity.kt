@@ -20,7 +20,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
-    val themeInteractor = Creator.getThemeInteractor(this)
+
+    private lateinit var themeInteractor: ThemeInteractor
 
     private lateinit var settingsToolbar: MaterialToolbar
     private lateinit var themeSwitcher: SwitchMaterial
@@ -38,6 +39,8 @@ class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
             insets
         }
 
+        themeInteractor = Creator.getThemeInteractor(this)
+
         settingsToolbar = findViewById(R.id.settings_toolbar)
         themeSwitcher = findViewById(R.id.theme_switcher)
         shareAppButton = findViewById(R.id.share_app_button)
@@ -48,8 +51,7 @@ class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
             finish()
         }
 
-        /*themeSwitcher.isChecked = (application as App).darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> (applicationContext as App).switchTheme(checked) }*/
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
 
         shareAppButton.setOnClickListener {
             val shareAppButtonIntent = Intent(ACTION_SEND)
@@ -80,11 +82,16 @@ class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
     }
 
     override fun consume(themeMode: Int) {
-        themeSwitcher.isChecked = themeMode == AppCompatDelegate.MODE_NIGHT_YES
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> AppCompatDelegate.setDefaultNightMode(themeMode) }
+        val isDarkThemeEnabled = themeMode == AppCompatDelegate.MODE_NIGHT_YES
+        themeSwitcher.isChecked = isDarkThemeEnabled
     }
 
-    /*fun switchTheme(themeMode: Int) : Boolean {
-        if (themeMode == AppCompatDelegate.MODE_NIGHT_YES) AppCompatDelegate.setDefaultNightMode()
-    }*/
+    private fun switchTheme(darkModeEnabled: Boolean) {
+        if (darkModeEnabled) AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_YES
+        ) else AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
+        themeInteractor.saveTheme(darkModeEnabled)
+    }
 }
