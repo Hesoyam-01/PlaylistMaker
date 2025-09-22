@@ -18,7 +18,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
-class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
+class SettingsActivity : AppCompatActivity() {
 
     private lateinit var themeInteractor: ThemeInteractor
 
@@ -50,6 +50,12 @@ class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
             finish()
         }
 
+        themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
+            override fun consume(themeMode: Int) {
+                val isDarkThemeEnabled = themeMode == AppCompatDelegate.MODE_NIGHT_YES
+                themeSwitcher.isChecked = isDarkThemeEnabled
+            }
+        })
         themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
 
         shareAppButton.setOnClickListener {
@@ -78,11 +84,6 @@ class SettingsActivity : AppCompatActivity(), ThemeInteractor.ThemeConsumer {
             userAgreementButtonIntent.data = Uri.parse(userAgreementLink)
             startActivity(userAgreementButtonIntent)
         }
-    }
-
-    override fun consume(themeMode: Int) {
-        val isDarkThemeEnabled = themeMode == AppCompatDelegate.MODE_NIGHT_YES
-        themeSwitcher.isChecked = isDarkThemeEnabled
     }
 
     private fun switchTheme(darkModeEnabled: Boolean) {
