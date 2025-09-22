@@ -4,6 +4,7 @@ import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.util.Resource
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -11,12 +12,12 @@ import java.util.Locale
 class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    override fun searchTracks(query: String): SearchResult {
+    override fun searchTracks(query: String): Resource<MutableList<Track>> {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
         return when (response.resultCode) {
             200 -> {
-                SearchResult.Success((response as TracksSearchResponse).results.map {
+                Resource.Success((response as TracksSearchResponse).results.map {
                     Track(
                         trackId = it.trackId,
                         trackName = it.trackName,
@@ -32,8 +33,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 }.toMutableList())
             }
 
-            400 -> SearchResult.Failure(response.resultCode)
-            else -> SearchResult.Failure(response.resultCode)
+            400 -> Resource.Error(response.resultCode)
+            else -> Resource.Error(response.resultCode)
         }
     }
 }

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar

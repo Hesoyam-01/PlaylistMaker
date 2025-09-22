@@ -2,7 +2,6 @@ package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
-import android.icu.text.StringSearch
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,13 +22,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.SearchResult
+import com.example.playlistmaker.util.Resource
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.api.TracksInteractor
-import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.google.android.material.appbar.MaterialToolbar
@@ -49,7 +47,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
     }
 
-    private val tracksInteractor = Creator.getTracksInteractor()
+    private val tracksInteractor = Creator.getTracksInteractor(this)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -97,6 +95,11 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         tracksRecyclerView = findViewById(R.id.track_recycler_view)
         lastTracksRecyclerView = findViewById(R.id.last_track_recycler_view)
         searchProgressBar = findViewById(R.id.search_progressBar)
+
+        if (savedInstanceState != null) {
+            inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
+            searchBar.setText(inputText)
+        }
 
         searchHistoryInteractor = Creator.getSearchHistoryInteractor(this)
 
@@ -148,11 +151,6 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
         searchBar.addTextChangedListener(textWatcher)
 
-        if (savedInstanceState != null) {
-            inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
-            searchBar.setText(inputText)
-        }
-
         searchClearButton.setOnClickListener {
             trackAdapter.clearTrackList()
             trackAdapter.notifyDataSetChanged()
@@ -168,22 +166,22 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
         }
     }
 
-    override fun consumeSearchResult(searchResult: SearchResult) {
+    override fun consumeSearchResult(resource: Resource<MutableList<Track>>) {
         handler.post {
             searchProgressBar.visibility = View.GONE
             trackAdapter.clearTrackList()
-            when (searchResult) {
-                is SearchResult.Success -> {
+            when (resource) {
+                is Resource.Success -> {
                     searchPlaceholder.visibility = View.GONE
                     searchUpdateQueryButton.visibility = View.GONE
-                    trackAdapter.updateList(searchResult.tracks)
+                    trackAdapter.updateList(resource.data)
                     trackAdapter.notifyDataSetChanged()
-                    if (searchResult.tracks.isEmpty()) {
+                    if (resource.data.isEmpty()) {
                         showPlaceholder(PlaceholderType.NOTHING_FOUND)
                     }
                 }
 
-                is SearchResult.Failure -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
+                is Resource.Error -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
             }
         }
     }

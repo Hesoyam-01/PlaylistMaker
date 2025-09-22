@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.util
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -16,7 +16,6 @@ import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
-import com.example.playlistmaker.domain.models.Track
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -34,12 +33,12 @@ object Creator {
         return retrofit.create(SearchAPI::class.java)
     }
 
-    private fun getTracksRepository() : TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient(getTrackRetrofitService()))
+    private fun getTracksRepository(context: Context) : TracksRepository {
+        return TracksRepositoryImpl(RetrofitNetworkClient(getTrackRetrofitService(), context))
     }
 
-    fun getTracksInteractor() : TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
+    fun getTracksInteractor(context: Context) : TracksInteractor {
+        return TracksInteractorImpl(getTracksRepository(context))
     }
 
     private fun getTrackSharedPrefs(context: Context) : SharedPreferences {
