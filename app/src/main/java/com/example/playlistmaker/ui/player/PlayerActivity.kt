@@ -1,11 +1,10 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.player
 
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -13,15 +12,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.google.android.material.appbar.MaterialToolbar
-import com.makeramen.roundedimageview.RoundedImageView
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
+
+    private companion object {
+        private const val MEDIA_STATE_DEFAULT = 0
+        private const val MEDIA_STATE_PREPARED = 1
+        private const val MEDIA_STATE_PLAYING = 2
+        private const val MEDIA_STATE_PAUSED = 3
+        private const val ELAPSED_TIME_UPDATE_DELAY = 100L
+    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -31,10 +37,12 @@ class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private var playerState = MEDIA_STATE_DEFAULT
 
+    private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
+
     private val updateElapsedTimeRunnable = object : Runnable {
         override fun run() {
             if (playerState == MEDIA_STATE_PLAYING) {
-                elapsedTime.text = SimpleDateFormat("m:ss", Locale.getDefault())
+                elapsedTime.text = dateFormat
                     .format(mediaPlayer.currentPosition)
                 handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
             }
@@ -110,7 +118,7 @@ class PlayerActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             playerState = MEDIA_STATE_PREPARED
             playStopButton.setImageResource(R.drawable.ic_play_84)
-            elapsedTime.text = "0:00"
+            elapsedTime.text = dateFormat.format(0)
             handler.removeCallbacks(updateElapsedTimeRunnable)
         }
     }
@@ -149,13 +157,5 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
-    }
-
-    private companion object {
-        private const val MEDIA_STATE_DEFAULT = 0
-        private const val MEDIA_STATE_PREPARED = 1
-        private const val MEDIA_STATE_PLAYING = 2
-        private const val MEDIA_STATE_PAUSED = 3
-        private const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
 }

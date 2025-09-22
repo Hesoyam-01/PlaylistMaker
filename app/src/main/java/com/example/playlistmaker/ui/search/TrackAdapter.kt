@@ -1,16 +1,22 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     private var trackList: MutableList<Track>,
     private val onItemClick: (Track) -> Unit
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
+
+    private companion object {
+        const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -35,6 +41,10 @@ class TrackAdapter(
         notifyDataSetChanged()
     }
 
+    fun clearTrackList() {
+        trackList.clear()
+    }
+
     private var isClickAllowed = true
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
@@ -44,11 +54,6 @@ class TrackAdapter(
         }
         return current
     }
-
-    private companion object {
-        const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
 }
 
 
