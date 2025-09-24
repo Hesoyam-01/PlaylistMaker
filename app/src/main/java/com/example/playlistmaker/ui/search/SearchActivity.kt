@@ -53,6 +53,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
 
     private var inputText: String = INPUT_TEXT_DEF
     private var lastQuery: String = ""
+    private lateinit var textWatcher: TextWatcher
 
     private lateinit var searchHistoryInteractor: SearchHistoryInteractor
 
@@ -129,7 +130,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 searchHistoryInteractor.getLastTracksList().isNotEmpty()
         }
 
-        val textWatcher = object : TextWatcher {
+        textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -137,7 +138,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
                 tracksRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE
 
-                if (searchBar.text.isNotEmpty()) debounceSearch()
+                if (!s.isNullOrEmpty()) debounceSearch(s.toString())
                 else handler.removeCallbacks(searchRunnable)
             }
 
@@ -187,15 +188,16 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private val searchRunnable = Runnable {
+        val query = lastQuery
         searchProgressBar.visibility = View.VISIBLE
         searchPlaceholder.visibility = View.GONE
         searchUpdateQueryButton.visibility = View.GONE
-        tracksInteractor.searchTracks(searchBar.text.toString(), this)
-        lastQuery = searchBar.text.toString()
+        tracksInteractor.searchTracks(query, this)
     }
 
 
-    fun debounceSearch() {
+    fun debounceSearch(query: String) {
+        this.lastQuery = query
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
@@ -225,8 +227,6 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     }
 
     private fun showPlaceholder(placeholderType: PlaceholderType) {
-        trackAdapter.clearTrackList()
-        trackAdapter.notifyDataSetChanged()
         searchPlaceholder.visibility = View.VISIBLE
 
         when (placeholderType) {
@@ -246,6 +246,7 @@ class SearchActivity : AppCompatActivity(), TracksInteractor.TracksConsumer {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(searchRunnable)
+        searchBar.removeTextChangedListener(textWatcher)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
