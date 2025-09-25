@@ -33,8 +33,8 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
                 }.toMutableList())
             }
 
-            400 -> Resource.Error(response.resultCode)
-            else -> Resource.Error(response.resultCode)
+            400 -> Resource.Error()
+            else -> Resource.Error()
         }
     }
 }
