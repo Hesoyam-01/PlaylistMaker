@@ -114,12 +114,14 @@ class SearchActivity : AppCompatActivity() {
         binding.recentClearButton.setOnClickListener {
             searchHistoryInteractor.clearLastTracksList()
             searchHistoryInteractor.saveLastTracksList()
-            showLastTracksList()
+//            showLastTracksList()
+            val viewModel = this.viewModel
+            viewModel?.getSearchHistory()
             lastTracksAdapter.notifyDataSetChanged()
         }
 
         binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) binding.lastTracksView.isVisible =
+            if (hasFocus) binding.searchHistoryView.isVisible =
                 searchHistoryInteractor.getLastTracksList().isNotEmpty()
         }
 
@@ -127,18 +129,19 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchClearButton.isVisible = !s.isNullOrEmpty()
+                /*searchClearButton.isVisible = !s.isNullOrEmpty()
                 tracksRecyclerView.isVisible = !s.isNullOrEmpty()
-                searchPlaceholder.visibility = View.GONE
+                searchPlaceholder.visibility = View.GONE*/
 
                 if (!s.isNullOrEmpty()) viewModel?.debounceSearch(s.toString())
 //                else handler.removeCallbacks(searchRunnable)
+
             }
 
             override fun afterTextChanged(s: Editable?) {
                 inputText = s.toString()
                 trackAdapter.clearTrackList()
-                showLastTracksList()
+                viewModel!!.getSearchHistory()
             }
         }
 
@@ -147,13 +150,16 @@ class SearchActivity : AppCompatActivity() {
         binding.searchClearButton.setOnClickListener {
             trackAdapter.clearTrackList()
             binding.searchBar.setText("")
-            hideKeyboard(searchBar)
-            showLastTracksList()
-            handler.removeCallbacks(searchRunnable)
+            hideKeyboard(binding.searchBar)
+//            showLastTracksList()
+            val viewModel = this.viewModel
+            viewModel?.getSearchHistory()
+//            handler.removeCallbacks(searchRunnable)
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
-            tracksInteractor.searchTracks(lastQuery, this)
+            val viewModel = this.viewModel
+            viewModel?.debounceSearch(lastQuery)
             trackAdapter.notifyDataSetChanged()
         }
     }
@@ -228,7 +234,12 @@ class SearchActivity : AppCompatActivity() {
     }*/
 
     private fun showSearchHistory(lastTracksList: MutableList<Track>) {
-        binding.lastTracksRecyclerView.visibility = View.VISIBLE
+        binding.apply {
+            searchPlaceholder.visibility = View.GONE
+            searchUpdateQueryButton.visibility = View.GONE
+            tracksRecyclerView.visibility = View.GONE
+            lastTracksRecyclerView.visibility = View.VISIBLE
+        }
         lastTracksAdapter.updateList(lastTracksList)
     }
 
@@ -237,6 +248,7 @@ class SearchActivity : AppCompatActivity() {
             searchProgressBar.visibility = View.GONE
             searchPlaceholder.visibility = View.GONE
             searchUpdateQueryButton.visibility = View.GONE
+            lastTracksRecyclerView.visibility = View.GONE
             tracksRecyclerView.visibility = View.VISIBLE
         }
         trackAdapter.updateList(tracksList)
@@ -281,6 +293,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showLoading() {
         binding.apply {
+            searchHistoryView.visibility = View.GONE
             tracksRecyclerView.visibility = View.GONE
             searchPlaceholder.visibility = View.GONE
             searchProgressBar.visibility = View.VISIBLE

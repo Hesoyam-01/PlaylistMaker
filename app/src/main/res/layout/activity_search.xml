@@ -133,7 +133,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
-        android:id="@+id/last_tracks_view"
+        android:id="@+id/search_history_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

@@ -46,16 +46,21 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
     fun observeState(): LiveData<SearchActivityState> = stateLiveData
 
     fun getSearchHistory() {
-        val lastTracksList = searchHistoryInteractor.getLastTracksList()
-        renderState(
-            SearchActivityState.SearchHistory(lastTracksList)
-        )
+        handler.post {
+            val lastTracksList = searchHistoryInteractor.getLastTracksList()
+            renderState(
+                SearchActivityState.SearchHistory(lastTracksList)
+            )
+        }
     }
 
     fun debounceSearch(query: String) {
+        if (lastQuery == query) {
+            return
+        }
         this.lastQuery = query
         val searchRunnable = Runnable { searchRequest(query) }
-        handler.removeCallbacks(searchRunnable)
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
         val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
         handler.postAtTime(
             searchRunnable,
@@ -74,14 +79,13 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
                     handler.post {
                         when (resource) {
                             is Resource.Success -> {
-                                renderState(
-                                    SearchActivityState.FoundTracks(resource.data)
-                                )
                                 if (resource.data.isEmpty()) {
                                     renderState(
                                         SearchActivityState.Empty
                                     )
-                                }
+                                } else renderState(
+                                    SearchActivityState.FoundTracks(resource.data)
+                                )
                             }
 
                             is Resource.Error -> {
@@ -98,5 +102,10 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
 
     private fun renderState(state: SearchActivityState) {
         stateLiveData.postValue(state)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
     }
 }

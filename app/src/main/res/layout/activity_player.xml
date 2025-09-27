@@ -201,7 +201,7 @@
                 tools:text="1965" />
 
             <androidx.constraintlayout.widget.Group
-                android:id="@+id/year_visibility"
+                android:id="@+id/year_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="year, year_info" />
@@ -229,7 +229,7 @@
                 tools:text="Yesterday (Remastered 2009)" />
 
             <androidx.constraintlayout.widget.Group
-                android:id="@+id/album_visibility"
+                android:id="@+id/album_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:constraint_referenced_ids="album, album_info" />
