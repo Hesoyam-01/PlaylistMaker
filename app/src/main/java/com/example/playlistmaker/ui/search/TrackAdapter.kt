@@ -20,10 +20,7 @@ class TrackAdapter(
 
     private val handler = Handler(Looper.getMainLooper())
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
-        return TrackViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -43,6 +40,7 @@ class TrackAdapter(
 
     fun clearTrackList() {
         trackList.clear()
+        notifyDataSetChanged()
     }
 
     private var isClickAllowed = true

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.settings
 
+import android.app.Activity
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.ACTION_SENDTO
@@ -13,52 +14,43 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.api.ThemeInteractor
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textview.MaterialTextView
 
 class SettingsActivity : AppCompatActivity() {
-
     private lateinit var themeInteractor: ThemeInteractor
 
-    private lateinit var settingsToolbar: MaterialToolbar
-    private lateinit var themeSwitcher: SwitchMaterial
-    private lateinit var shareAppButton: MaterialTextView
-    private lateinit var supportButton: MaterialTextView
-    private lateinit var userAgreementButton: MaterialTextView
+    private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_settings)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        themeInteractor = Creator.getThemeInteractor(this)
+        themeInteractor = Creator.provideThemeInteractor(this)
 
-        settingsToolbar = findViewById(R.id.settings_toolbar)
-        themeSwitcher = findViewById(R.id.theme_switcher)
-        shareAppButton = findViewById(R.id.share_app_button)
-        supportButton = findViewById(R.id.support_button)
-        userAgreementButton = findViewById(R.id.user_agreement_button)
-
-        settingsToolbar.setNavigationOnClickListener {
+        binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 
         themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
             override fun consume(themeMode: Int) {
                 val isDarkThemeEnabled = themeMode == AppCompatDelegate.MODE_NIGHT_YES
-                themeSwitcher.isChecked = isDarkThemeEnabled
+                binding.themeSwitcher.isChecked = isDarkThemeEnabled
             }
         })
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
 
-        shareAppButton.setOnClickListener {
+        binding.shareAppButton.setOnClickListener {
             val shareAppButtonIntent = Intent(ACTION_SEND)
             val shareAppLink = getString(R.string.share_app_link)
             shareAppButtonIntent.type = "text/plain"
@@ -66,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(shareAppButtonIntent)
         }
 
-        supportButton.setOnClickListener {
+        binding.supportButton.setOnClickListener {
             val supportButtonIntent = Intent(ACTION_SENDTO)
             val supportSubject = getString(R.string.support_subject)
             val supportMessage = getString(R.string.support_message)
@@ -78,7 +70,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(supportButtonIntent)
         }
 
-        userAgreementButton.setOnClickListener {
+        binding.userAgreementButton.setOnClickListener {
             val userAgreementButtonIntent = Intent(ACTION_VIEW)
             val userAgreementLink = getString(R.string.user_agreement_link)
             userAgreementButtonIntent.data = Uri.parse(userAgreementLink)

@@ -9,7 +9,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val themeInteractor = Creator.getThemeInteractor(this)
+        val themeInteractor = Creator.provideThemeInteractor(this)
         themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
             override fun consume(themeMode: Int) {
                 AppCompatDelegate.setDefaultNightMode(themeMode)

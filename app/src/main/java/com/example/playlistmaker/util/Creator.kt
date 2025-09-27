@@ -37,7 +37,7 @@ object Creator {
         return TracksRepositoryImpl(RetrofitNetworkClient(getTrackRetrofitService(), context))
     }
 
-    fun getTracksInteractor(context: Context) : TracksInteractor {
+    fun provideTracksInteractor(context: Context) : TracksInteractor {
         return TracksInteractorImpl(getTracksRepository(context))
     }
 
@@ -49,7 +49,7 @@ object Creator {
         return SearchHistoryRepositoryImpl(getTrackSharedPrefs(context))
     }
 
-    fun getSearchHistoryInteractor(context: Context) : SearchHistoryInteractor {
+    fun provideSearchHistoryInteractor(context: Context) : SearchHistoryInteractor {
         return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
     }
 
@@ -61,7 +61,7 @@ object Creator {
         return ThemeRepositoryImpl(getSettingsSharedPrefs(context), context)
     }
 
-    fun getThemeInteractor(context: Context) : ThemeInteractor {
+    fun provideThemeInteractor(context: Context) : ThemeInteractor {
         return ThemeInteractorImpl(getThemeRepository(context))
     }
 }

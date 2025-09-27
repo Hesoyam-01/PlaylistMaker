@@ -7,6 +7,6 @@ interface TracksInteractor {
     fun searchTracks(query: String, consumer: TracksConsumer)
 
     interface TracksConsumer {
-        fun consumeSearchResult(resource: Resource<MutableList<Track>>)
+        fun consume(resource: Resource<MutableList<Track>>)
     }
 }

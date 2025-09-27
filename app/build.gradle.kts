@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -52,4 +56,7 @@ dependencies {
     implementation(libs.roundedimageview)
     implementation(libs.androidx.constraintlayout.v200)
     implementation (libs.androidx.appcompat.v161)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.activity.ktx)
 }
