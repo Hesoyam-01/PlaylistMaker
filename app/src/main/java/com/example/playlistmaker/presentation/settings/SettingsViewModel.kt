@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
-import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.util.Creator
 
 class SettingsViewModel(context: Context) : ViewModel() {
@@ -24,9 +23,16 @@ class SettingsViewModel(context: Context) : ViewModel() {
         }
     }
     private val themeInteractor = Creator.provideThemeInteractor(context)
+    private val sharingInteractor = Creator.provideSharingInteractor(context)
 
     private val stateLiveData = MutableLiveData<SettingsState>()
     fun observeSettingsState(): LiveData<SettingsState> = stateLiveData
+
+    fun switchTheme(switchOn: Boolean) {
+        if (switchOn) renderState(SettingsState.DarkTheme)
+        else renderState(SettingsState.LightTheme)
+        themeInteractor.saveTheme(switchOn)
+    }
 
     fun getThemeMode() {
         themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
@@ -40,5 +46,17 @@ class SettingsViewModel(context: Context) : ViewModel() {
 
     private fun renderState(state: SettingsState) {
         stateLiveData.postValue(state)
+    }
+
+    fun shareApp() {
+        sharingInteractor.shareApp()
+    }
+
+    fun openSupport() {
+        sharingInteractor.openSupport()
+    }
+
+    fun openTerms() {
+        sharingInteractor.openTerms()
     }
 }

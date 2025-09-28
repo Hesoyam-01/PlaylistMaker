@@ -9,18 +9,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
-import com.example.playlistmaker.domain.api.settings.ThemeInteractor
-import com.example.playlistmaker.domain.api.sharing.SharingInteractor
-import com.example.playlistmaker.presentation.search.SearchViewModel
+import com.example.playlistmaker.presentation.settings.SettingsState
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
-import com.example.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var themeInteractor: ThemeInteractor
-    private lateinit var sharingInteractor: SharingInteractor
-
-    private val viewModel: SettingsViewModel? = null
-
+    private var viewModel: SettingsViewModel? = null
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,46 +26,54 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        themeInteractor = Creator.provideThemeInteractor(this)
-        sharingInteractor = Creator.provideSharingInteractor(this)
-
         viewModel = ViewModelProvider(
             this,
-            SearchViewModel.getFactory()
-        )[SearchViewModel::class.java]
+            SettingsViewModel.getFactory()
+        )[SettingsViewModel::class.java]
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
         }
 
-        themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
-            override fun consume(themeMode: Int) {
-                val isDarkThemeEnabled = themeMode == AppCompatDelegate.MODE_NIGHT_YES
-                binding.themeSwitcher.isChecked = isDarkThemeEnabled
-            }
-        })
-        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
+        viewModel?.observeSettingsState()?.observe(this) {
+            render(it)
+        }
+
+        viewModel?.getThemeMode()
+
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> viewModel?.switchTheme(checked) }
 
         binding.shareAppButton.setOnClickListener {
-            sharingInteractor.shareApp()
+            viewModel?.shareApp()
         }
 
         binding.supportButton.setOnClickListener {
-            sharingInteractor.openSupport()
+            viewModel?.openSupport()
         }
 
         binding.userAgreementButton.setOnClickListener {
-            sharingInteractor.openTerms()
+            viewModel?.openTerms()
         }
     }
 
-    private fun switchTheme(darkModeEnabled: Boolean) {
-        if (darkModeEnabled) AppCompatDelegate.setDefaultNightMode(
-            AppCompatDelegate.MODE_NIGHT_YES
-        ) else AppCompatDelegate.setDefaultNightMode(
+    private fun render(state: SettingsState) {
+        when (state) {
+            is SettingsState.LightTheme -> setLightTheme()
+            is SettingsState.DarkTheme -> setDarkTheme()
+        }
+    }
+
+    private fun setLightTheme() {
+        AppCompatDelegate.setDefaultNightMode(
             AppCompatDelegate.MODE_NIGHT_NO
         )
-        themeInteractor.saveTheme(darkModeEnabled)
+        binding.themeSwitcher.isChecked = false
+    }
+
+    private fun setDarkTheme() {
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_YES
+        )
+        binding.themeSwitcher.isChecked = true
     }
 }

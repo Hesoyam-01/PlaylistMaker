@@ -15,8 +15,11 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun shareApp() {
         val shareAppButtonIntent = Intent(ACTION_SEND)
         val shareAppLink = getString(context, R.string.share_app_link)
-        shareAppButtonIntent.type = "text/plain"
-        shareAppButtonIntent.putExtra(Intent.EXTRA_TEXT, shareAppLink)
+        shareAppButtonIntent.apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareAppLink)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(shareAppButtonIntent)
     }
 
@@ -25,17 +28,23 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         val supportSubject = emailData.supportSubject
         val supportMessage = emailData.supportMessage
         val supportEmail = emailData.supportEmail
-        supportButtonIntent.data = Uri.parse("mailto:")
-        supportButtonIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
-        supportButtonIntent.putExtra(Intent.EXTRA_SUBJECT, supportSubject)
-        supportButtonIntent.putExtra(Intent.EXTRA_TEXT, supportMessage)
+        supportButtonIntent.apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
+            putExtra(Intent.EXTRA_SUBJECT, supportSubject)
+            putExtra(Intent.EXTRA_TEXT, supportMessage)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(supportButtonIntent)
     }
 
     override fun openTerms() {
         val userAgreementButtonIntent = Intent(ACTION_VIEW)
         val userAgreementLink = getString(context, R.string.user_agreement_link)
-        userAgreementButtonIntent.data = Uri.parse(userAgreementLink)
+        userAgreementButtonIntent.apply {
+            data = Uri.parse(userAgreementLink)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
         context.startActivity(userAgreementButtonIntent)
     }
 
