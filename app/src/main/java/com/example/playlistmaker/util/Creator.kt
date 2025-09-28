@@ -1,7 +1,6 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
 import com.example.playlistmaker.data.impl.search.TracksRepositoryImpl
@@ -31,8 +30,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object Creator {
+    private const val SETTINGS_PREFS = "settings_prefs"
+    private const val THEME_KEY = "theme_key"
 
-    private const val SETTINGS_SHARED_PREFS = "settings_shared_prefs"
+    private const val SEARCH_HISTORY_PREFS = "search_history_prefs"
     private const val SEARCH_HISTORY_KEY = "search_history_key"
 
     private fun getTrackRetrofitService(): SearchAPI {
@@ -56,6 +57,7 @@ object Creator {
         return SearchHistoryRepositoryImpl(
             PrefsStorageClient(
                 context,
+                SEARCH_HISTORY_PREFS,
                 SEARCH_HISTORY_KEY,
                 object : TypeToken<MutableList<TrackDto>>() {}.type
             )
@@ -66,12 +68,15 @@ object Creator {
         return SearchHistoryInteractorImpl(getSearchHistoryRepository(context))
     }
 
-    private fun getSettingsSharedPrefs(context: Context): SharedPreferences {
-        return context.getSharedPreferences(SETTINGS_SHARED_PREFS, Context.MODE_PRIVATE)
-    }
-
     private fun getThemeRepository(context: Context): ThemeRepository {
-        return ThemeRepositoryImpl(getSettingsSharedPrefs(context), context)
+        return ThemeRepositoryImpl(
+            PrefsStorageClient(
+                context,
+                SETTINGS_PREFS,
+                THEME_KEY,
+                object : TypeToken<Boolean>() {}.type
+            ), context
+        )
     }
 
     fun provideThemeInteractor(context: Context): ThemeInteractor {

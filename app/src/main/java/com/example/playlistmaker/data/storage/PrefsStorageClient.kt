@@ -8,10 +8,11 @@ import java.lang.reflect.Type
 
 class PrefsStorageClient<T>(
     context: Context,
+    prefsKey: String,
     private val dataKey: String,
     private val type: Type) : StorageClient<T> {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences("PLAYLIST_MAKER", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = context.getSharedPreferences(prefsKey, Context.MODE_PRIVATE)
     private val gson = Gson()
 
     override fun storeData(data: T) {
@@ -30,5 +31,4 @@ class PrefsStorageClient<T>(
     override fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         prefs.registerOnSharedPreferenceChangeListener(listener)
     }
-
 }

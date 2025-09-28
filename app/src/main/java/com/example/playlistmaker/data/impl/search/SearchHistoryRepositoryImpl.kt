@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.impl.search
 
-import android.content.SharedPreferences
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
@@ -12,24 +11,14 @@ import java.util.Locale
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<MutableList<TrackDto>>
 ) : SearchHistoryRepository {
-
     private companion object {
-        const val SEARCH_HISTORY_KEY = "search_history_key"
         const val MAX_TRACK_HISTORY = 10
     }
 
     private val lastTracksDtoList = mutableListOf<TrackDto>()
 
-    private val trackSharedPrefsListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == SEARCH_HISTORY_KEY) {
-                loadLastTracksListDtoFromSharedPrefs()
-            }
-        }
-
     init {
-        loadLastTracksListDtoFromSharedPrefs()
-        storage.registerListener(trackSharedPrefsListener)
+        loadLastTracksDtoList()
     }
 
     private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
@@ -40,10 +29,9 @@ class SearchHistoryRepositoryImpl(
         }
     }
 
-
-
-    override fun putLastTracksDtoListIntoSharedPrefs() {
+    override fun saveLastTracksDtoList() {
         storage.storeData(lastTracksDtoList)
+        loadLastTracksDtoList()
     }
 
     override fun addToLastTracksDtoList(track: Track) {
@@ -53,17 +41,17 @@ class SearchHistoryRepositoryImpl(
             lastTracksDtoList.removeAt(9)
         }
         lastTracksDtoList.add(0, trackDto)
-        putLastTracksDtoListIntoSharedPrefs()
+        saveLastTracksDtoList()
     }
 
-    override fun loadLastTracksListDtoFromSharedPrefs() {
+    override fun loadLastTracksDtoList() {
         lastTracksDtoList.clear()
         storage.getData()?.let { lastTracksDtoList.addAll(it) }
     }
 
     override fun clearLastTracksDtoList() {
         lastTracksDtoList.clear()
-        putLastTracksDtoListIntoSharedPrefs()
+        saveLastTracksDtoList()
     }
 
     override fun getSearchHistory(): Resource<MutableList<Track>> {

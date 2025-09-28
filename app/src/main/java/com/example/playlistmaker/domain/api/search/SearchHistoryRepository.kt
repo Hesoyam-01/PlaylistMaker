@@ -5,8 +5,8 @@ import com.example.playlistmaker.util.Resource
 
 interface SearchHistoryRepository {
     fun getSearchHistory() : Resource<MutableList<Track>>
-    fun putLastTracksDtoListIntoSharedPrefs()
+    fun saveLastTracksDtoList()
     fun addToLastTracksDtoList(track: Track)
-    fun loadLastTracksListDtoFromSharedPrefs()
+    fun loadLastTracksDtoList()
     fun clearLastTracksDtoList()
 }
