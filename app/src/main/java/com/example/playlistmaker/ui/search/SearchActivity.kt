@@ -7,33 +7,23 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.SearchActivity.SearchActivityViewModel
+import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
-import com.example.playlistmaker.ui.search.models.SearchActivityState
+import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.util.Creator
-import com.google.android.material.appbar.MaterialToolbar
 
 class SearchActivity : AppCompatActivity() {
 
@@ -57,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private var inputText: String = INPUT_TEXT_DEF
     private var lastQuery: String = ""
 
-    private var viewModel: SearchActivityViewModel? = null
+    private var viewModel: SearchViewModel? = null
 
     private lateinit var textWatcher: TextWatcher
 
@@ -100,8 +90,8 @@ class SearchActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(
             this,
-            SearchActivityViewModel.getFactory()
-        )[SearchActivityViewModel::class.java]
+            SearchViewModel.getFactory()
+        )[SearchViewModel::class.java]
 
         viewModel?.observeState()?.observe(this) {
             render(it)
@@ -219,13 +209,13 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }
 
-    private fun render(state: SearchActivityState) {
+    private fun render(state: SearchState) {
         when (state) {
-            is SearchActivityState.SearchHistory -> showSearchHistory(state.lastTracksList)
-            is SearchActivityState.FoundTracks -> showFoundTracks(state.tracksList)
-            is SearchActivityState.Empty -> showEmpty()
-            is SearchActivityState.Error -> showError()
-            is SearchActivityState.Loading -> showLoading()
+            is SearchState.SearchHistory -> showSearchHistory(state.lastTracksList)
+            is SearchState.FoundTracks -> showFoundTracks(state.tracksList)
+            is SearchState.Empty -> showEmpty()
+            is SearchState.Error -> showError()
+            is SearchState.Loading -> showLoading()
         }
     }
 

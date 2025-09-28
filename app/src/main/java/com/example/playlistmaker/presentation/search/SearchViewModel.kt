@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.SearchActivity
+package com.example.playlistmaker.presentation.search
 
 import android.content.Context
 import android.os.Handler
@@ -14,11 +14,10 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.search.models.SearchActivityState
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
 
-class SearchActivityViewModel(context: Context) : ViewModel() {
+class SearchViewModel(context: Context) : ViewModel() {
     companion object {
         private const val INPUT_TEXT = "INPUT_TEXT"
         private const val INPUT_TEXT_DEF = ""
@@ -29,7 +28,7 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
         fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = (this[APPLICATION_KEY] as App)
-                SearchActivityViewModel(app)
+                SearchViewModel(app)
             }
         }
     }
@@ -42,14 +41,14 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
     private var inputText: String = INPUT_TEXT_DEF
     private var lastQuery: String = ""
 
-    private val stateLiveData = MutableLiveData<SearchActivityState>()
-    fun observeState(): LiveData<SearchActivityState> = stateLiveData
+    private val stateLiveData = MutableLiveData<SearchState>()
+    fun observeState(): LiveData<SearchState> = stateLiveData
 
     fun getSearchHistory() {
         handler.post {
             val lastTracksList = searchHistoryInteractor.getLastTracksList()
             renderState(
-                SearchActivityState.SearchHistory(lastTracksList)
+                SearchState.SearchHistory(lastTracksList)
             )
         }
     }
@@ -72,7 +71,7 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
     private fun searchRequest(query: String) {
         if (query.isNotEmpty()) {
             renderState(
-                SearchActivityState.Loading
+                SearchState.Loading
             )
             tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
                 override fun consume(resource: Resource<MutableList<Track>>) {
@@ -81,16 +80,16 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
                             is Resource.Success -> {
                                 if (resource.data.isEmpty()) {
                                     renderState(
-                                        SearchActivityState.Empty
+                                        SearchState.Empty
                                     )
                                 } else renderState(
-                                    SearchActivityState.FoundTracks(resource.data)
+                                    SearchState.FoundTracks(resource.data)
                                 )
                             }
 
                             is Resource.Error -> {
                                 renderState(
-                                    SearchActivityState.Error
+                                    SearchState.Error
                                 )
                             }
                         }
@@ -100,7 +99,7 @@ class SearchActivityViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private fun renderState(state: SearchActivityState) {
+    private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
     }
 
