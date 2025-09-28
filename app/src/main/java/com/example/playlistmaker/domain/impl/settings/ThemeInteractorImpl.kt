@@ -1,7 +1,7 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.domain.impl.settings
 
-import com.example.playlistmaker.domain.api.ThemeInteractor
-import com.example.playlistmaker.domain.api.ThemeRepository
+import com.example.playlistmaker.domain.api.settings.ThemeInteractor
+import com.example.playlistmaker.domain.api.settings.ThemeRepository
 
 class ThemeInteractorImpl(
     private val repository: ThemeRepository,

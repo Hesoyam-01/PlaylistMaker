@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.api
+package com.example.playlistmaker.domain.api.settings
 
 interface ThemeInteractor {
     fun getThemeMode(consumer: ThemeConsumer)

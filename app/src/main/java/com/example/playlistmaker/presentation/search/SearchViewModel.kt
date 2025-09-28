@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.api.search.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
@@ -55,8 +54,7 @@ class SearchViewModel(context: Context) : ViewModel() {
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clearSearchHistory()
-        val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
-        searchHistoryLiveData.postValue(lastTracksList)
+        searchHistoryLiveData.postValue(mutableListOf())
     }
 
     fun getSearchHistory() {
@@ -65,7 +63,7 @@ class SearchViewModel(context: Context) : ViewModel() {
         searchHistoryLiveData.postValue(lastTracksList)
         if (lastTracksList.isNotEmpty()) {
             renderState(
-                SearchState.SearchHistory(lastTracksList)
+                SearchState.SearchHistory
             )
         }
     }

@@ -3,11 +3,8 @@ package com.example.playlistmaker.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -18,14 +15,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.models.PlaceholderType
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
-import com.example.playlistmaker.presentation.search.SearchState
-import com.example.playlistmaker.util.Creator
-import com.example.playlistmaker.util.Resource
 
 class SearchActivity : AppCompatActivity() {
     private var viewModel: SearchViewModel? = null
@@ -68,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
         viewModel?.observeState()?.observe(this) {
             render(it)
         }
-
         viewModel?.observeSearchHistory()?.observe(this) {
             lastTracksAdapter.updateList(it)
         }
@@ -110,7 +103,6 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.clearTrackList()
             binding.searchBar.setText("")
             hideKeyboard(binding.searchBar)
-            viewModel?.getSearchHistory()
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
@@ -136,7 +128,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchState) {
         when (state) {
-            is SearchState.SearchHistory -> showSearchHistory(state.lastTracksList)
+            is SearchState.SearchHistory -> showSearchHistory()
             is SearchState.FoundTracks -> showFoundTracks(state.tracksList)
             is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
@@ -144,7 +136,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSearchHistory(lastTracksList: MutableList<Track>) {
+    private fun showSearchHistory() {
         binding.apply {
             searchPlaceholder.visibility = View.GONE
             searchUpdateQueryButton.visibility = View.GONE

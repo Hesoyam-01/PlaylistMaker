@@ -1,10 +1,10 @@
-package com.example.playlistmaker.data
+package com.example.playlistmaker.data.settings.impl
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.domain.api.ThemeRepository
+import com.example.playlistmaker.domain.api.settings.ThemeRepository
 
 class ThemeRepositoryImpl(
     private val settingsSharedPrefs: SharedPreferences,
