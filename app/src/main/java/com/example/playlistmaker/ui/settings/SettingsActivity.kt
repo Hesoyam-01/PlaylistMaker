@@ -14,10 +14,13 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
+import com.example.playlistmaker.domain.api.sharing.SharingInteractor
+import com.example.playlistmaker.domain.impl.sharing.SharingInteractorImpl
 import com.example.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var themeInteractor: ThemeInteractor
+    private lateinit var sharingInteractor: SharingInteractor
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -33,6 +36,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         themeInteractor = Creator.provideThemeInteractor(this)
+        sharingInteractor = Creator.provideSharingInteractor(this)
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
@@ -47,30 +51,15 @@ class SettingsActivity : AppCompatActivity() {
         binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> switchTheme(checked) }
 
         binding.shareAppButton.setOnClickListener {
-            val shareAppButtonIntent = Intent(ACTION_SEND)
-            val shareAppLink = getString(R.string.share_app_link)
-            shareAppButtonIntent.type = "text/plain"
-            shareAppButtonIntent.putExtra(Intent.EXTRA_TEXT, shareAppLink)
-            startActivity(shareAppButtonIntent)
+            sharingInteractor.shareApp()
         }
 
         binding.supportButton.setOnClickListener {
-            val supportButtonIntent = Intent(ACTION_SENDTO)
-            val supportSubject = getString(R.string.support_subject)
-            val supportMessage = getString(R.string.support_message)
-            val supportEmail = getString(R.string.support_email)
-            supportButtonIntent.data = Uri.parse("mailto:")
-            supportButtonIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
-            supportButtonIntent.putExtra(Intent.EXTRA_SUBJECT, supportSubject)
-            supportButtonIntent.putExtra(Intent.EXTRA_TEXT, supportMessage)
-            startActivity(supportButtonIntent)
+            sharingInteractor.openSupport()
         }
 
         binding.userAgreementButton.setOnClickListener {
-            val userAgreementButtonIntent = Intent(ACTION_VIEW)
-            val userAgreementLink = getString(R.string.user_agreement_link)
-            userAgreementButtonIntent.data = Uri.parse(userAgreementLink)
-            startActivity(userAgreementButtonIntent)
+            sharingInteractor.openTerms()
         }
     }
 

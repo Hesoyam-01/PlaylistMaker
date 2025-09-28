@@ -13,7 +13,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.api.search.TracksInteractor
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
 

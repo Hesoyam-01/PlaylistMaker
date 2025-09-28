@@ -1,17 +1,12 @@
 package com.example.playlistmaker.ui.search
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackViewBinding
-import com.example.playlistmaker.domain.models.Track
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.playlistmaker.domain.models.search.Track
 
 class TrackViewHolder (private val binding: TrackViewBinding) : RecyclerView.ViewHolder(binding.root) {
     companion object {

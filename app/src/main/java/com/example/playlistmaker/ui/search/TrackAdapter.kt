@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.search.Track
 
 class TrackAdapter(
     private val onItemClick: (Track) -> Unit

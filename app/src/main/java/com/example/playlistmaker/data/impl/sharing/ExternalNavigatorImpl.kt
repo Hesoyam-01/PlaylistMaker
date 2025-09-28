@@ -1,0 +1,49 @@
+package com.example.playlistmaker.data.impl.sharing
+
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.ACTION_SEND
+import android.content.Intent.ACTION_SENDTO
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
+import androidx.core.content.ContextCompat.getString
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.models.sharing.EmailData
+
+class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
+    override fun shareApp() {
+        val shareAppButtonIntent = Intent(ACTION_SEND)
+        val shareAppLink = getString(context, R.string.share_app_link)
+        shareAppButtonIntent.type = "text/plain"
+        shareAppButtonIntent.putExtra(Intent.EXTRA_TEXT, shareAppLink)
+        context.startActivity(shareAppButtonIntent)
+    }
+
+    override fun openEmail(emailData: EmailData) {
+        val supportButtonIntent = Intent(ACTION_SENDTO)
+        val supportSubject = emailData.supportSubject
+        val supportMessage = emailData.supportMessage
+        val supportEmail = emailData.supportEmail
+        supportButtonIntent.data = Uri.parse("mailto:")
+        supportButtonIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
+        supportButtonIntent.putExtra(Intent.EXTRA_SUBJECT, supportSubject)
+        supportButtonIntent.putExtra(Intent.EXTRA_TEXT, supportMessage)
+        context.startActivity(supportButtonIntent)
+    }
+
+    override fun openTerms() {
+        val userAgreementButtonIntent = Intent(ACTION_VIEW)
+        val userAgreementLink = getString(context, R.string.user_agreement_link)
+        userAgreementButtonIntent.data = Uri.parse(userAgreementLink)
+        context.startActivity(userAgreementButtonIntent)
+    }
+
+    override fun getSupportEmailData(): EmailData {
+        return EmailData(
+            context.getString(R.string.support_subject),
+            context.getString(R.string.support_message),
+            context.getString(R.string.support_email)
+        )
+    }
+}
