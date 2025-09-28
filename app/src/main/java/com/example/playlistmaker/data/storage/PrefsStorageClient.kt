@@ -27,8 +27,4 @@ class PrefsStorageClient<T>(
             gson.fromJson(dataJson, type)
         }
     }
-
-    override fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        prefs.registerOnSharedPreferenceChangeListener(listener)
-    }
 }
