@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.settings
 
-import android.app.Activity
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.ACTION_SENDTO
@@ -12,13 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.api.ThemeInteractor
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.android.material.textview.MaterialTextView
+import com.example.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var themeInteractor: ThemeInteractor

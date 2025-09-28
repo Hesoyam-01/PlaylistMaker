@@ -5,8 +5,10 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.data.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.ThemeRepositoryImpl
 import com.example.playlistmaker.data.TracksRepositoryImpl
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
+import com.example.playlistmaker.data.storage.PrefsStorageClient
 import com.example.playlistmaker.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.ThemeInteractor
@@ -16,6 +18,7 @@ import com.example.playlistmaker.domain.api.TracksRepository
 import com.example.playlistmaker.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.ThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.TracksInteractorImpl
+import com.google.gson.reflect.TypeToken
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -41,12 +44,17 @@ object Creator {
         return TracksInteractorImpl(getTracksRepository(context))
     }
 
-    private fun getTrackSharedPrefs(context: Context) : SharedPreferences {
+    /*private fun getTrackSharedPrefs(context: Context) : SharedPreferences {
         return context.getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
-    }
+    }*/
 
     private fun getSearchHistoryRepository(context: Context) : SearchHistoryRepository {
-        return SearchHistoryRepositoryImpl(getTrackSharedPrefs(context))
+        return SearchHistoryRepositoryImpl(
+            PrefsStorageClient(
+            context,
+            "HISTORY",
+            object : TypeToken<MutableList<TrackDto>>() {}.type)
+        )
     }
 
     fun provideSearchHistoryInteractor(context: Context) : SearchHistoryInteractor {

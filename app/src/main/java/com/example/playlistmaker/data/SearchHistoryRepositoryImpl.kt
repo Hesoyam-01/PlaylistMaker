@@ -4,17 +4,17 @@ import android.content.SharedPreferences
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.util.Resource
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class SearchHistoryRepositoryImpl(
-    private val trackSharedPrefs: SharedPreferences
+    private val storage: StorageClient<MutableList<TrackDto>>
 ) : SearchHistoryRepository {
 
     private companion object {
-        const val LAST_TRACK_LIST_KEY = "last_track_list_key"
+        const val SEARCH_HISTORY_KEY = "search_history_key"
         const val MAX_TRACK_HISTORY = 10
     }
 
@@ -24,14 +24,14 @@ class SearchHistoryRepositoryImpl(
 
     private val trackSharedPrefsListener =
         SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == LAST_TRACK_LIST_KEY) {
+            if (key == SEARCH_HISTORY_KEY) {
                 loadLastTracksListDtoFromSharedPrefs()
             }
         }
 
     init {
         loadLastTracksListDtoFromSharedPrefs()
-        trackSharedPrefs.registerOnSharedPreferenceChangeListener(trackSharedPrefsListener)
+        storage.registerListener(trackSharedPrefsListener)
     }
 
     private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
@@ -45,9 +45,10 @@ class SearchHistoryRepositoryImpl(
 
 
     override fun putLastTracksDtoListIntoSharedPrefs() {
-        trackSharedPrefs.edit()
-            .putString(LAST_TRACK_LIST_KEY, gson.toJson(lastTracksDtoList))
-            .apply()
+        /*trackSharedPrefs.edit()
+            .putString(SEARCH_HISTORY_KEY, gson.toJson(lastTracksDtoList))
+            .apply()*/
+        storage.storeData(lastTracksDtoList)
     }
 
     override fun addToLastTracksDtoList(track: Track) {
@@ -61,22 +62,22 @@ class SearchHistoryRepositoryImpl(
     }
 
     override fun loadLastTracksListDtoFromSharedPrefs() {
-        val jsonLastTrackList = trackSharedPrefs.getString(LAST_TRACK_LIST_KEY, null)
+        /*val jsonLastTrackList = trackSharedPrefs.getString(SEARCH_HISTORY_KEY, null)
         val type = object : TypeToken<MutableList<TrackDto>>() {}.type
-        val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()
+        val loadedTracks = gson.fromJson<List<TrackDto>>(jsonLastTrackList, type) ?: emptyList()*/
         lastTracksDtoList.clear()
-        lastTracksDtoList.addAll(loadedTracks)
+        storage.getData()?.let { lastTracksDtoList.addAll(it) }
     }
 
     override fun clearLastTracksDtoList() {
         lastTracksDtoList.clear()
     }
 
-    override fun getLastTracksList(): MutableList<Track> {
+    override fun getSearchHistory(): Resource<MutableList<Track>> {
         val lastTracksList = lastTracksDtoList.map { trackDto ->
             fromTrackDtoToTrack(trackDto)
         }.toMutableList()
-        return lastTracksList
+        return Resource.Success(lastTracksList)
     }
 
     private fun fromTrackDtoToTrack(trackDto: TrackDto): Track {

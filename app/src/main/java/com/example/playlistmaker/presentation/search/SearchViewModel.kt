@@ -46,7 +46,7 @@ class SearchViewModel(context: Context) : ViewModel() {
 
     fun getSearchHistory() {
         handler.post {
-            val lastTracksList = searchHistoryInteractor.getLastTracksList()
+            val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
             renderState(
                 SearchState.SearchHistory(lastTracksList)
             )

@@ -24,6 +24,7 @@ import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.util.Resource
 
 class SearchActivity : AppCompatActivity() {
 
@@ -79,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter = TrackAdapter(mutableListOf()) { track ->
             startPlayerActivity(track)
         }
-        lastTracksAdapter = TrackAdapter(searchHistoryInteractor.getLastTracksList()) { track ->
+        lastTracksAdapter = TrackAdapter((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()) { track ->
             startPlayerActivity(track)
         }
 
@@ -102,8 +103,9 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.recentClearButton.setOnClickListener {
-            searchHistoryInteractor.clearLastTracksList()
-            searchHistoryInteractor.saveLastTracksList()
+            searchHistoryInteractor.clearSearchHistory()
+            searchHistoryInteractor.saveSearchHistory()
+            binding.searchHistoryView.visibility = View.GONE
 //            showLastTracksList()
             val viewModel = this.viewModel
             viewModel?.getSearchHistory()
@@ -112,7 +114,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus) binding.searchHistoryView.isVisible =
-                searchHistoryInteractor.getLastTracksList().isNotEmpty()
+                ((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()).isNotEmpty()
         }
 
         textWatcher = object : TextWatcher {
@@ -203,8 +205,8 @@ class SearchActivity : AppCompatActivity() {
         }
         startActivity(trackIntent)
         val updateHistoryRunnable = Runnable {
-            searchHistoryInteractor.addToLastTracksList(track)
-            lastTracksAdapter.updateList(searchHistoryInteractor.getLastTracksList())
+            searchHistoryInteractor.addToSearchHistory(track)
+            lastTracksAdapter.updateList((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf())
         }
         handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
     }

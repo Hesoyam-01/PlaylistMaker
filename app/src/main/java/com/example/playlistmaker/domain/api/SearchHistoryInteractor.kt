@@ -1,10 +1,11 @@
 package com.example.playlistmaker.domain.api
 
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.util.Resource
 
 interface SearchHistoryInteractor {
-    fun getLastTracksList() : MutableList<Track>
-    fun saveLastTracksList()
-    fun addToLastTracksList(track: Track)
-    fun clearLastTracksList()
+    fun getSearchHistory() : Resource<MutableList<Track>>
+    fun saveSearchHistory()
+    fun addToSearchHistory(track: Track)
+    fun clearSearchHistory()
 }
