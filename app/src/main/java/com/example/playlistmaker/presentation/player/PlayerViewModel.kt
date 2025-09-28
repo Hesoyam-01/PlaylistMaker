@@ -27,8 +27,8 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
         }
     }
 
-    private val playerStateLiveData = MutableLiveData(MEDIA_STATE_DEFAULT)
-    fun observePlayerState(): LiveData<Int> = playerStateLiveData
+    private val stateLiveData = MutableLiveData(MEDIA_STATE_DEFAULT)
+    fun observePlayerState(): LiveData<Int> = stateLiveData
 
     private val elapsedTimeLiveData = MutableLiveData("0:00")
     fun observeElapsedTime(): LiveData<String> = elapsedTimeLiveData
@@ -45,7 +45,7 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
 
     private val updateElapsedTimeRunnable = object : Runnable {
         override fun run() {
-            if (playerStateLiveData.value == MEDIA_STATE_PLAYING) {
+            if (stateLiveData.value == MEDIA_STATE_PLAYING) {
                 elapsedTimeLiveData.postValue(dateFormat
                     .format(mediaPlayer.currentPosition))
                 handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
@@ -57,10 +57,10 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playerStateLiveData.postValue(MEDIA_STATE_PREPARED)
+            stateLiveData.postValue(MEDIA_STATE_PREPARED)
         }
         mediaPlayer.setOnCompletionListener {
-            playerStateLiveData.postValue(MEDIA_STATE_PREPARED)
+            stateLiveData.postValue(MEDIA_STATE_PREPARED)
             elapsedTimeLiveData.value = dateFormat.format(0)
             handler.removeCallbacks(updateElapsedTimeRunnable)
         }
@@ -68,16 +68,16 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playerStateLiveData.postValue(MEDIA_STATE_PLAYING)
+        stateLiveData.postValue(MEDIA_STATE_PLAYING)
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        playerStateLiveData.postValue(MEDIA_STATE_PAUSED)
+        stateLiveData.postValue(MEDIA_STATE_PAUSED)
     }
 
     fun playbackControl() {
-        when (playerStateLiveData.value) {
+        when (stateLiveData.value) {
             MEDIA_STATE_PLAYING -> {
                 pausePlayer()
                 handler.removeCallbacks(updateElapsedTimeRunnable)

@@ -42,6 +42,11 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModel.getFactory()
+        )[SearchViewModel::class.java]
+
         trackAdapter = TrackAdapter { track ->
             startPlayerActivity(track)
         }
@@ -54,12 +59,7 @@ class SearchActivity : AppCompatActivity() {
             lastTracksRecyclerView.adapter = lastTracksAdapter
         }
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getFactory()
-        )[SearchViewModel::class.java]
-
-        viewModel?.observeState()?.observe(this) {
+        viewModel?.observeSearchState()?.observe(this) {
             render(it)
         }
         viewModel?.observeSearchHistory()?.observe(this) {

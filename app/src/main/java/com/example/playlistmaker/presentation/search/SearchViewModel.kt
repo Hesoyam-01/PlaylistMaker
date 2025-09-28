@@ -39,7 +39,7 @@ class SearchViewModel(context: Context) : ViewModel() {
     private var lastQuery: String = ""
 
     private val stateLiveData = MutableLiveData<SearchState>()
-    fun observeState(): LiveData<SearchState> = stateLiveData
+    fun observeSearchState(): LiveData<SearchState> = stateLiveData
 
     private val searchHistoryLiveData = MutableLiveData<MutableList<Track>>()
     fun observeSearchHistory(): LiveData<MutableList<Track>> = searchHistoryLiveData

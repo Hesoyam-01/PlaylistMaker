@@ -43,12 +43,12 @@ class PlayerActivity : AppCompatActivity() {
             binding.elapsedTime.text = it
         }
 
-        binding.playStopButton.setOnClickListener {
-            viewModel.playbackControl()
-        }
-
         binding.playerToolbar.setNavigationOnClickListener {
             finish()
+        }
+
+        binding.playStopButton.setOnClickListener {
+            viewModel.playbackControl()
         }
 
         if (intent.getStringExtra("RELEASE_DATE") == null) binding.yearView.visibility = View.GONE

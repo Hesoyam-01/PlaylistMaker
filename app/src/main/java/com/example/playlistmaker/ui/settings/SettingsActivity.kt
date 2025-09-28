@@ -1,26 +1,25 @@
 package com.example.playlistmaker.ui.settings
 
-import android.content.Intent
-import android.content.Intent.ACTION_SEND
-import android.content.Intent.ACTION_SENDTO
-import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
 import com.example.playlistmaker.domain.api.sharing.SharingInteractor
-import com.example.playlistmaker.domain.impl.sharing.SharingInteractorImpl
+import com.example.playlistmaker.presentation.search.SearchViewModel
+import com.example.playlistmaker.presentation.settings.SettingsViewModel
 import com.example.playlistmaker.util.Creator
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var themeInteractor: ThemeInteractor
     private lateinit var sharingInteractor: SharingInteractor
+
+    private val viewModel: SettingsViewModel? = null
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -37,6 +36,11 @@ class SettingsActivity : AppCompatActivity() {
 
         themeInteractor = Creator.provideThemeInteractor(this)
         sharingInteractor = Creator.provideSharingInteractor(this)
+
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModel.getFactory()
+        )[SearchViewModel::class.java]
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()
