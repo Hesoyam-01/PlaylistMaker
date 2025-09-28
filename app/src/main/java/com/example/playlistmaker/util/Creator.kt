@@ -6,10 +6,13 @@ import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
 import com.example.playlistmaker.data.impl.search.TracksRepositoryImpl
 import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.impl.main.MainNavigatorImpl
 import com.example.playlistmaker.data.impl.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient
+import com.example.playlistmaker.domain.api.main.MainInteractor
+import com.example.playlistmaker.domain.api.main.MainNavigator
 import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
@@ -18,6 +21,7 @@ import com.example.playlistmaker.domain.api.search.TracksInteractor
 import com.example.playlistmaker.domain.api.search.TracksRepository
 import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.api.sharing.SharingInteractor
+import com.example.playlistmaker.domain.impl.main.MainInteractorImpl
 import com.example.playlistmaker.domain.impl.search.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.settings.ThemeInteractorImpl
 import com.example.playlistmaker.domain.impl.search.TracksInteractorImpl
@@ -80,5 +84,13 @@ object Creator {
 
     fun provideSharingInteractor(context: Context): SharingInteractor {
         return SharingInteractorImpl(getExternalNavigator(context))
+    }
+
+    private fun getMainNavigator(context: Context): MainNavigator {
+        return MainNavigatorImpl(context)
+    }
+
+    fun provideMainInteractor(context: Context): MainInteractor {
+        return MainInteractorImpl(getMainNavigator(context))
     }
 }

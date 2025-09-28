@@ -11,6 +11,6 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
         executor.execute {
             consumer.consume(repository.searchTracks(query))
         }
-   }
+    }
 
 }
