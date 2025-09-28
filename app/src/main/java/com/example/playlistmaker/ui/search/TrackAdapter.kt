@@ -9,7 +9,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
 class TrackAdapter(
-    private var trackList: MutableList<Track>,
     private val onItemClick: (Track) -> Unit
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
@@ -17,6 +16,8 @@ class TrackAdapter(
     private companion object {
         const val CLICK_DEBOUNCE_DELAY = 1000L
     }
+
+    private val trackList: MutableList<Track> = mutableListOf()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -34,7 +35,8 @@ class TrackAdapter(
     }
 
     fun updateList(newList: MutableList<Track>) {
-        trackList = newList
+        trackList.clear()
+        trackList.addAll(newList)
         notifyDataSetChanged()
     }
 

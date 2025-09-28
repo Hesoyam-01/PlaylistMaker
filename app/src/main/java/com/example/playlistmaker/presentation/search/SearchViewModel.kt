@@ -20,8 +20,6 @@ import com.example.playlistmaker.util.Resource
 
 class SearchViewModel(context: Context) : ViewModel() {
     companion object {
-        private const val INPUT_TEXT = "INPUT_TEXT"
-        private const val INPUT_TEXT_DEF = ""
         private const val SEARCH_DEBOUNCE_DELAY = 1500L
         private const val HISTORY_UPDATE_DELAY = 600L
         private val SEARCH_REQUEST_TOKEN = Any()
@@ -39,22 +37,37 @@ class SearchViewModel(context: Context) : ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private var inputText: String = INPUT_TEXT_DEF
     private var lastQuery: String = ""
 
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeState(): LiveData<SearchState> = stateLiveData
 
+    private val searchHistoryLiveData = MutableLiveData<MutableList<Track>>()
+    fun observeSearchHistory(): LiveData<MutableList<Track>> = searchHistoryLiveData
+
+    fun addToSearchHistory(track: Track) {
+        handler.postDelayed({
+            searchHistoryInteractor.addToSearchHistory(track)
+            val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
+            searchHistoryLiveData.postValue(lastTracksList)
+        }, HISTORY_UPDATE_DELAY)
+    }
+
+    fun clearSearchHistory() {
+        searchHistoryInteractor.clearSearchHistory()
+        val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
+        searchHistoryLiveData.postValue(lastTracksList)
+    }
+
     fun getSearchHistory() {
         val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
             ?: mutableListOf()
-        Log.d("SearchViewModel", "История поиска: $lastTracksList")
+        searchHistoryLiveData.postValue(lastTracksList)
         if (lastTracksList.isNotEmpty()) {
             renderState(
                 SearchState.SearchHistory(lastTracksList)
             )
         }
-
     }
 
     fun debounceSearch(query: String) {

@@ -5,7 +5,6 @@ import com.example.playlistmaker.util.Resource
 
 interface SearchHistoryInteractor {
     fun getSearchHistory() : Resource<MutableList<Track>>
-    fun saveSearchHistory()
     fun addToSearchHistory(track: Track)
     fun clearSearchHistory()
 }

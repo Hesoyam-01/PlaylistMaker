@@ -5,7 +5,6 @@ import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.util.Resource
-import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -63,6 +62,7 @@ class SearchHistoryRepositoryImpl(
 
     override fun clearLastTracksDtoList() {
         lastTracksDtoList.clear()
+        putLastTracksDtoListIntoSharedPrefs()
     }
 
     override fun getSearchHistory(): Resource<MutableList<Track>> {

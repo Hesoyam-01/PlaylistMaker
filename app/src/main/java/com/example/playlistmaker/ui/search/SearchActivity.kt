@@ -28,29 +28,9 @@ import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
 
 class SearchActivity : AppCompatActivity() {
-
-    private companion object {
-        const val INPUT_TEXT = "INPUT_TEXT"
-        const val INPUT_TEXT_DEF = ""
-        const val HISTORY_UPDATE_DELAY = 600L
-
-        fun hideKeyboard(view: View) {
-            val keyboardService =
-                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
-
-    private val handler = Handler(Looper.getMainLooper())
-
-    private var inputText: String = INPUT_TEXT_DEF
-    private var lastQuery: String = ""
-
     private var viewModel: SearchViewModel? = null
 
     private lateinit var textWatcher: TextWatcher
-
-    private lateinit var searchHistoryInteractor: SearchHistoryInteractor
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
@@ -68,17 +48,10 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        /*if (savedInstanceState != null) {
-            inputText = savedInstanceState.getString(INPUT_TEXT, inputText)
-            searchBar.setText(inputText)
-        }*/
-
-        searchHistoryInteractor = Creator.provideSearchHistoryInteractor(this)
-
-        trackAdapter = TrackAdapter(mutableListOf()) { track ->
+        trackAdapter = TrackAdapter { track ->
             startPlayerActivity(track)
         }
-        lastTracksAdapter = TrackAdapter((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()) { track ->
+        lastTracksAdapter = TrackAdapter { track ->
             startPlayerActivity(track)
         }
 
@@ -96,19 +69,21 @@ class SearchActivity : AppCompatActivity() {
             render(it)
         }
 
+        viewModel?.observeSearchHistory()?.observe(this) {
+            lastTracksAdapter.updateList(it)
+        }
+
         binding.searchToolbar.setNavigationOnClickListener {
             finish()
         }
 
         binding.recentClearButton.setOnClickListener {
-            searchHistoryInteractor.clearSearchHistory()
-            searchHistoryInteractor.saveSearchHistory()
+            viewModel?.clearSearchHistory()
             binding.searchHistoryView.visibility = View.GONE
         }
 
         binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) binding.searchHistoryView.isVisible =
-                ((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()).isNotEmpty()
+            if (hasFocus) viewModel?.getSearchHistory()
         }
 
         textWatcher = object : TextWatcher {
@@ -116,19 +91,16 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
-                /*tracksRecyclerView.isVisible = !s.isNullOrEmpty()
-                searchPlaceholder.visibility = View.GONE*/
 
                 viewModel?.debounceSearch(
                     s?.toString() ?: ""
                 )
+                if (s.isNullOrEmpty()) viewModel?.getSearchHistory()
 
             }
 
             override fun afterTextChanged(s: Editable?) {
-                inputText = s.toString()
                 trackAdapter.clearTrackList()
-                viewModel?.getSearchHistory()
             }
         }
 
@@ -138,50 +110,13 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.clearTrackList()
             binding.searchBar.setText("")
             hideKeyboard(binding.searchBar)
-//            showLastTracksList()
             viewModel?.getSearchHistory()
-//            handler.removeCallbacks(searchRunnable)
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
             viewModel?.repeatLastSearch()
         }
     }
-
-    /* override fun consume(resource: Resource<MutableList<Track>>) {
-         handler.post {
-             searchProgressBar.visibility = View.GONE
-             trackAdapter.clearTrackList()
-             when (resource) {
-                 is Resource.Success -> {
-                     searchPlaceholder.visibility = View.GONE
-                     searchUpdateQueryButton.visibility = View.GONE
-                     trackAdapter.updateList(resource.data)
-                     trackAdapter.notifyDataSetChanged()
-                     if (resource.data.isEmpty()) {
-                         showPlaceholder(PlaceholderType.NOTHING_FOUND)
-                     }
-                 }
-
-                 is Resource.Error -> showPlaceholder(PlaceholderType.CONNECTION_PROBLEMS)
-             }
-         }
-     }
-
-     private val searchRunnable = Runnable {
-         val query = lastQuery
-         searchProgressBar.visibility = View.VISIBLE
-         searchPlaceholder.visibility = View.GONE
-         searchUpdateQueryButton.visibility = View.GONE
-         tracksInteractor.searchTracks(query, this)
-     }
-
-
-     fun debounceSearch(query: String) {
-         this.lastQuery = query
-         handler.removeCallbacks(searchRunnable)
-         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-     }*/
 
     private fun startPlayerActivity(track: Track) {
         val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
@@ -196,11 +131,7 @@ class SearchActivity : AppCompatActivity() {
             putExtra("PREVIEW_URL", track.previewUrl)
         }
         startActivity(trackIntent)
-        val updateHistoryRunnable = Runnable {
-            searchHistoryInteractor.addToSearchHistory(track)
-            lastTracksAdapter.updateList((searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf())
-        }
-        handler.postDelayed(updateHistoryRunnable, HISTORY_UPDATE_DELAY)
+        viewModel?.addToSearchHistory(track)
     }
 
     private fun render(state: SearchState) {
@@ -213,10 +144,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun showLastTracksList() {
-        lastTracksView.isVisible = searchHistoryInteractor.getLastTracksList().isNotEmpty()
-    }*/
-
     private fun showSearchHistory(lastTracksList: MutableList<Track>) {
         binding.apply {
             searchPlaceholder.visibility = View.GONE
@@ -224,7 +151,6 @@ class SearchActivity : AppCompatActivity() {
             tracksRecyclerView.visibility = View.GONE
             searchHistoryView.visibility = View.VISIBLE
         }
-        lastTracksAdapter.updateList(lastTracksList)
     }
 
     private fun showFoundTracks(tracksList: MutableList<Track>) {
@@ -284,15 +210,16 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun hideKeyboard(view: View) {
+        val keyboardService =
+            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-//        handler.removeCallbacks(searchRunnable)
         binding.searchBar.removeTextChangedListener(textWatcher)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(INPUT_TEXT, inputText)
-    }
 }
 

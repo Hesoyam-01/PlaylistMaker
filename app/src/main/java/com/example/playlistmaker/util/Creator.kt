@@ -48,7 +48,7 @@ object Creator {
         return SearchHistoryRepositoryImpl(
             PrefsStorageClient(
             context,
-            "SEARCH_HISTORY_KEY",
+            "search_history_key",
             object : TypeToken<MutableList<TrackDto>>() {}.type)
         )
     }

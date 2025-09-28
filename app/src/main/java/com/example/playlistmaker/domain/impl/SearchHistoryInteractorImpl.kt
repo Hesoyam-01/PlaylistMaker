@@ -10,10 +10,6 @@ class SearchHistoryInteractorImpl (private val repository: SearchHistoryReposito
         return repository.getSearchHistory()
     }
 
-    override fun saveSearchHistory() {
-        repository.putLastTracksDtoListIntoSharedPrefs()
-    }
-
     override fun addToSearchHistory(track: Track) {
         repository.addToLastTracksDtoList(track)
     }
