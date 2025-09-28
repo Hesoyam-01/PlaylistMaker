@@ -2,10 +2,10 @@ package com.example.playlistmaker.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.search.impl.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.settings.impl.ThemeRepositoryImpl
-import com.example.playlistmaker.data.search.impl.TracksRepositoryImpl
-import com.example.playlistmaker.data.search.dto.TrackDto
+import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
+import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
+import com.example.playlistmaker.data.impl.search.TracksRepositoryImpl
+import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient

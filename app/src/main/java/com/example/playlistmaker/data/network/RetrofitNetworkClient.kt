@@ -4,8 +4,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.playlistmaker.data.client.NetworkClient
-import com.example.playlistmaker.data.search.dto.Response
-import com.example.playlistmaker.data.search.dto.TracksSearchRequest
+import com.example.playlistmaker.data.dto.Response
+import com.example.playlistmaker.data.dto.TracksSearchRequest
 
 class RetrofitNetworkClient(private val tracksService: SearchAPI, private val context: Context) :
     NetworkClient {
