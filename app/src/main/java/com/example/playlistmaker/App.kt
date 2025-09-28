@@ -6,7 +6,6 @@ import com.example.playlistmaker.domain.api.settings.ThemeInteractor
 import com.example.playlistmaker.util.Creator
 
 class App : Application() {
-
     override fun onCreate() {
         super.onCreate()
         val themeInteractor = Creator.provideThemeInteractor(this)
