@@ -44,15 +44,11 @@ object Creator {
         return TracksInteractorImpl(getTracksRepository(context))
     }
 
-    /*private fun getTrackSharedPrefs(context: Context) : SharedPreferences {
-        return context.getSharedPreferences(TRACK_SHARED_PREFS, Context.MODE_PRIVATE)
-    }*/
-
     private fun getSearchHistoryRepository(context: Context) : SearchHistoryRepository {
         return SearchHistoryRepositoryImpl(
             PrefsStorageClient(
             context,
-            "HISTORY",
+            "SEARCH_HISTORY_KEY",
             object : TypeToken<MutableList<TrackDto>>() {}.type)
         )
     }

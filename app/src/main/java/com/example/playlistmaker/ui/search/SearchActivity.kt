@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -31,7 +32,6 @@ class SearchActivity : AppCompatActivity() {
     private companion object {
         const val INPUT_TEXT = "INPUT_TEXT"
         const val INPUT_TEXT_DEF = ""
-        const val SEARCH_DEBOUNCE_DELAY = 1500L
         const val HISTORY_UPDATE_DELAY = 600L
 
         fun hideKeyboard(view: View) {
@@ -40,8 +40,6 @@ class SearchActivity : AppCompatActivity() {
             keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
-
-    private val tracksInteractor = Creator.provideTracksInteractor(this)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -106,10 +104,6 @@ class SearchActivity : AppCompatActivity() {
             searchHistoryInteractor.clearSearchHistory()
             searchHistoryInteractor.saveSearchHistory()
             binding.searchHistoryView.visibility = View.GONE
-//            showLastTracksList()
-            val viewModel = this.viewModel
-            viewModel?.getSearchHistory()
-            lastTracksAdapter.notifyDataSetChanged()
         }
 
         binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
@@ -121,19 +115,20 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                /*searchClearButton.isVisible = !s.isNullOrEmpty()
-                tracksRecyclerView.isVisible = !s.isNullOrEmpty()
+                binding.searchClearButton.isVisible = !s.isNullOrEmpty()
+                /*tracksRecyclerView.isVisible = !s.isNullOrEmpty()
                 searchPlaceholder.visibility = View.GONE*/
 
-                if (!s.isNullOrEmpty()) viewModel?.debounceSearch(s.toString())
-//                else handler.removeCallbacks(searchRunnable)
+                viewModel?.debounceSearch(
+                    s?.toString() ?: ""
+                )
 
             }
 
             override fun afterTextChanged(s: Editable?) {
                 inputText = s.toString()
                 trackAdapter.clearTrackList()
-                viewModel!!.getSearchHistory()
+                viewModel?.getSearchHistory()
             }
         }
 
@@ -144,15 +139,12 @@ class SearchActivity : AppCompatActivity() {
             binding.searchBar.setText("")
             hideKeyboard(binding.searchBar)
 //            showLastTracksList()
-            val viewModel = this.viewModel
             viewModel?.getSearchHistory()
 //            handler.removeCallbacks(searchRunnable)
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
-            val viewModel = this.viewModel
-            viewModel?.debounceSearch(lastQuery)
-            trackAdapter.notifyDataSetChanged()
+            viewModel?.repeatLastSearch()
         }
     }
 
@@ -230,7 +222,7 @@ class SearchActivity : AppCompatActivity() {
             searchPlaceholder.visibility = View.GONE
             searchUpdateQueryButton.visibility = View.GONE
             tracksRecyclerView.visibility = View.GONE
-            lastTracksRecyclerView.visibility = View.VISIBLE
+            searchHistoryView.visibility = View.VISIBLE
         }
         lastTracksAdapter.updateList(lastTracksList)
     }
@@ -240,7 +232,7 @@ class SearchActivity : AppCompatActivity() {
             searchProgressBar.visibility = View.GONE
             searchPlaceholder.visibility = View.GONE
             searchUpdateQueryButton.visibility = View.GONE
-            lastTracksRecyclerView.visibility = View.GONE
+            searchHistoryView.visibility = View.GONE
             tracksRecyclerView.visibility = View.VISIBLE
         }
         trackAdapter.updateList(tracksList)

@@ -11,7 +11,7 @@ class PrefsStorageClient<T>(
     private val dataKey: String,
     private val type: Type) : StorageClient<T> {
 
-    private val prefs: SharedPreferences = context.getSharedPreferences("MOVIES_SEARCH", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = context.getSharedPreferences("", Context.MODE_PRIVATE)
     private val gson = Gson()
 
     override fun storeData(data: T) {

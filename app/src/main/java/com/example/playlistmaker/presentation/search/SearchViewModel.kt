@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,18 +46,18 @@ class SearchViewModel(context: Context) : ViewModel() {
     fun observeState(): LiveData<SearchState> = stateLiveData
 
     fun getSearchHistory() {
-        handler.post {
-            val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
+        val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
+            ?: mutableListOf()
+        Log.d("SearchViewModel", "История поиска: $lastTracksList")
+        if (lastTracksList.isNotEmpty()) {
             renderState(
                 SearchState.SearchHistory(lastTracksList)
             )
         }
+
     }
 
     fun debounceSearch(query: String) {
-        if (lastQuery == query) {
-            return
-        }
         this.lastQuery = query
         val searchRunnable = Runnable { searchRequest(query) }
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
@@ -97,6 +98,10 @@ class SearchViewModel(context: Context) : ViewModel() {
                 }
             })
         }
+    }
+
+    fun repeatLastSearch() {
+        debounceSearch(lastQuery)
     }
 
     private fun renderState(state: SearchState) {
