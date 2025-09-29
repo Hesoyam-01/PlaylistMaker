@@ -22,7 +22,12 @@ import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
-    private var viewModel: SearchViewModel? = null
+    private val viewModel: SearchViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SearchViewModel.getFactory()
+        )[SearchViewModel::class.java]
+    }
 
     private lateinit var textWatcher: TextWatcher
 
@@ -41,11 +46,6 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getFactory()
-        )[SearchViewModel::class.java]
 
         trackAdapter = TrackAdapter { track ->
             startPlayerActivity(track)

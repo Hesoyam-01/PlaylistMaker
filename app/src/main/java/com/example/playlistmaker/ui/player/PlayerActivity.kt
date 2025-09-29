@@ -14,7 +14,17 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 
 class PlayerActivity : AppCompatActivity() {
-    private lateinit var viewModel: PlayerViewModel
+    private val previewUrl: String by lazy {
+        intent.getStringExtra("PREVIEW_URL") ?: ""
+    }
+
+    private val viewModel: PlayerViewModel by lazy {
+        ViewModelProvider(
+            this,
+            PlayerViewModel.getFactory(previewUrl)
+        )[PlayerViewModel::class.java]
+    }
+
     private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +37,6 @@ class PlayerActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val previewUrl = intent.getStringExtra("PREVIEW_URL") ?: ""
-
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory(previewUrl)
-        )[PlayerViewModel::class.java]
 
         viewModel.observePlayerState().observe(this) {
             changePlayStopButton(it == PlayerViewModel.MEDIA_STATE_PLAYING)
