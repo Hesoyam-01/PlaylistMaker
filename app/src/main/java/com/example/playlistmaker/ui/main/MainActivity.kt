@@ -6,7 +6,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivityMainBinding
-import com.example.playlistmaker.presentation.MainViewModel
+import com.example.playlistmaker.presentation.main.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by lazy {

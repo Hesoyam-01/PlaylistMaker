@@ -15,7 +15,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.models.search.PlaceholderType
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
@@ -28,7 +27,6 @@ class SearchActivity : AppCompatActivity() {
             SearchViewModel.getFactory()
         )[SearchViewModel::class.java]
     }
-
     private lateinit var textWatcher: TextWatcher
 
     private lateinit var trackAdapter: TrackAdapter

@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.presentation.player.MediaState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 
 class PlayerActivity : AppCompatActivity() {
@@ -24,7 +25,6 @@ class PlayerActivity : AppCompatActivity() {
             PlayerViewModel.getFactory(previewUrl)
         )[PlayerViewModel::class.java]
     }
-
     private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.observePlayerState().observe(this) {
-            changePlayStopButton(it == PlayerViewModel.MEDIA_STATE_PLAYING)
+            changePlayStopButton(it == MediaState.PLAYING)
         }
 
         viewModel.observeElapsedTime().observe(this) {

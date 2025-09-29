@@ -12,7 +12,12 @@ import com.example.playlistmaker.presentation.settings.SettingsState
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private var viewModel: SettingsViewModel? = null
+    private val viewModel: SettingsViewModel by lazy {
+        ViewModelProvider(
+            this,
+            SettingsViewModel.getFactory()
+        )[SettingsViewModel::class.java]
+    }
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,10 +30,6 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getFactory()
-        )[SettingsViewModel::class.java]
 
         binding.settingsToolbar.setNavigationOnClickListener {
             finish()

@@ -14,10 +14,6 @@ import java.util.Locale
 
 class PlayerViewModel(private val previewUrl: String) : ViewModel() {
     companion object {
-        const val MEDIA_STATE_DEFAULT = 0
-        const val MEDIA_STATE_PREPARED = 1
-        const val MEDIA_STATE_PLAYING = 2
-        const val MEDIA_STATE_PAUSED = 3
         const val ELAPSED_TIME_UPDATE_DELAY = 100L
 
         fun getFactory(previewUrl: String): ViewModelProvider.Factory = viewModelFactory {
@@ -27,13 +23,17 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
         }
     }
 
-    private val stateLiveData = MutableLiveData(MEDIA_STATE_DEFAULT)
-    fun observePlayerState(): LiveData<Int> = stateLiveData
+    /*private val stateLiveData = MutableLiveData(MediaState.DEFAULT)
+    fun observePlayerState(): LiveData<MediaState> = stateLiveData
 
     private val elapsedTimeLiveData = MutableLiveData("0:00")
-    fun observeElapsedTime(): LiveData<String> = elapsedTimeLiveData
+    fun observeElapsedTime(): LiveData<String> = elapsedTimeLiveData*/
+
+    private val stateLiveData = MutableLiveData<PlayerState>()
+    fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
     private var mediaPlayer = MediaPlayer()
+    private var mediaState = MediaState.DEFAULT
 
     init {
         preparePlayer()
@@ -45,9 +45,12 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
 
     private val updateElapsedTimeRunnable = object : Runnable {
         override fun run() {
-            if (stateLiveData.value == MEDIA_STATE_PLAYING) {
-                elapsedTimeLiveData.postValue(dateFormat
-                    .format(mediaPlayer.currentPosition))
+            if (mediaState == MediaState.PLAYING) {
+                /*elapsedTimeLiveData.postValue(
+                    dateFormat
+                        .format(mediaPlayer.currentPosition)
+                )*/
+                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaPlayer.currentPosition)))
                 handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
             }
         }
@@ -57,10 +60,10 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            stateLiveData.postValue(MEDIA_STATE_PREPARED)
+            stateLiveData.postValue(MediaState.PREPARED)
         }
         mediaPlayer.setOnCompletionListener {
-            stateLiveData.postValue(MEDIA_STATE_PREPARED)
+            stateLiveData.postValue(MediaState.PREPARED)
             elapsedTimeLiveData.value = dateFormat.format(0)
             handler.removeCallbacks(updateElapsedTimeRunnable)
         }
@@ -68,28 +71,30 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
 
     private fun startPlayer() {
         mediaPlayer.start()
-        stateLiveData.postValue(MEDIA_STATE_PLAYING)
+        mediaState = MediaState.PLAYING
+        stateLiveData.postValue(MediaState.PLAYING)
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        stateLiveData.postValue(MEDIA_STATE_PAUSED)
+        mediaState = MediaState.PAUSED
+        stateLiveData.postValue(MediaState.PAUSED)
     }
 
     fun playbackControl() {
-        when (stateLiveData.value) {
-            MEDIA_STATE_PLAYING -> {
+        when (mediaState) {
+            MediaState.PLAYING -> {
                 pausePlayer()
                 handler.removeCallbacks(updateElapsedTimeRunnable)
             }
 
-            MEDIA_STATE_PREPARED, MEDIA_STATE_PAUSED -> {
+            MediaState.PREPARED, MediaState.PAUSED -> {
                 startPlayer()
                 handler.postDelayed(
                     updateElapsedTimeRunnable,
                     ELAPSED_TIME_UPDATE_DELAY
                 )
-            }
+            } else -> {}
         }
     }
 

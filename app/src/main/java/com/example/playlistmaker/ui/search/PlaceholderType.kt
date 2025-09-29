@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.models.search
+package com.example.playlistmaker.ui.search
 
 enum class PlaceholderType {
     NOTHING_FOUND,
