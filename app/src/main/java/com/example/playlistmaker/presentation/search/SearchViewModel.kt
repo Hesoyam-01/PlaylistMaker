@@ -54,14 +54,12 @@ class SearchViewModel(context: Context) : ViewModel() {
     }
 
     fun getSearchHistory() {
-//        handler.postDelayed({
-            val lastTracksList =
-                (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
-                    ?: mutableListOf()
-            renderState(
-                SearchState.SearchHistory(lastTracksList)
-            )
-//        }, HISTORY_UPDATE_DELAY)
+        val lastTracksList =
+            (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
+                ?: mutableListOf()
+        renderState(
+            SearchState.SearchHistory(lastTracksList)
+        )
     }
 
     fun debounceSearch(query: String) {

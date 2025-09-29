@@ -86,6 +86,16 @@ class SearchActivity : AppCompatActivity() {
             if (hasFocus) viewModel.getSearchHistory()
         }
 
+        binding.searchClearButton.setOnClickListener {
+            trackAdapter.clearTrackList()
+            binding.searchBar.setText("")
+            hideKeyboard(binding.searchBar)
+        }
+
+        binding.searchUpdateQueryButton.setOnClickListener {
+            viewModel.repeatLastSearch()
+        }
+
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -105,16 +115,6 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchBar.addTextChangedListener(textWatcher)
-
-        binding.searchClearButton.setOnClickListener {
-            trackAdapter.clearTrackList()
-            binding.searchBar.setText("")
-            hideKeyboard(binding.searchBar)
-        }
-
-        binding.searchUpdateQueryButton.setOnClickListener {
-            viewModel.repeatLastSearch()
-        }
     }
 
     private fun startPlayerActivity(track: Track) {
