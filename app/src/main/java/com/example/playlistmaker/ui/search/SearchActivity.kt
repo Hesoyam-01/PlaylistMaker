@@ -57,11 +57,8 @@ class SearchActivity : AppCompatActivity() {
             lastTracksRecyclerView.adapter = lastTracksAdapter
         }
 
-        viewModel?.observeSearchState()?.observe(this) {
+        viewModel.observeSearchState().observe(this) {
             render(it)
-        }
-        viewModel?.observeSearchHistory()?.observe(this) {
-            lastTracksAdapter.updateList(it)
         }
 
         binding.searchToolbar.setNavigationOnClickListener {
@@ -69,12 +66,12 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.recentClearButton.setOnClickListener {
-            viewModel?.clearSearchHistory()
+            viewModel.clearSearchHistory()
             binding.searchHistoryView.visibility = View.GONE
         }
 
         binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) viewModel?.getSearchHistory()
+            if (hasFocus) viewModel.getSearchHistory()
         }
 
         textWatcher = object : TextWatcher {
@@ -83,10 +80,10 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
-                viewModel?.debounceSearch(
+                viewModel.debounceSearch(
                     s?.toString() ?: ""
                 )
-                if (s.isNullOrEmpty()) viewModel?.getSearchHistory()
+                if (s.isNullOrEmpty()) viewModel.getSearchHistory()
 
             }
 
@@ -104,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
-            viewModel?.repeatLastSearch()
+            viewModel.repeatLastSearch()
         }
     }
 
@@ -121,12 +118,12 @@ class SearchActivity : AppCompatActivity() {
             putExtra("PREVIEW_URL", track.previewUrl)
         }
         startActivity(trackIntent)
-        viewModel?.addToSearchHistory(track)
+        viewModel.addToSearchHistory(track)
     }
 
     private fun render(state: SearchState) {
         when (state) {
-            is SearchState.SearchHistory -> showSearchHistory()
+            is SearchState.SearchHistory -> showSearchHistory(state.lastTracksList)
             is SearchState.FoundTracks -> showFoundTracks(state.tracksList)
             is SearchState.Empty -> showEmpty()
             is SearchState.Error -> showError()
@@ -134,12 +131,15 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSearchHistory() {
-        binding.apply {
-            searchPlaceholder.visibility = View.GONE
-            searchUpdateQueryButton.visibility = View.GONE
-            tracksRecyclerView.visibility = View.GONE
-            searchHistoryView.visibility = View.VISIBLE
+    private fun showSearchHistory(lastTracksList: MutableList<Track>) {
+        if (lastTracksList.isNotEmpty()) {
+            binding.apply {
+                searchPlaceholder.visibility = View.GONE
+                searchUpdateQueryButton.visibility = View.GONE
+                tracksRecyclerView.visibility = View.GONE
+                searchHistoryView.visibility = View.VISIBLE
+            }
+            lastTracksAdapter.updateList(lastTracksList)
         }
     }
 

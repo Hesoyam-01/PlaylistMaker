@@ -41,31 +41,27 @@ class SearchViewModel(context: Context) : ViewModel() {
     private val stateLiveData = MutableLiveData<SearchState>()
     fun observeSearchState(): LiveData<SearchState> = stateLiveData
 
-    private val searchHistoryLiveData = MutableLiveData<MutableList<Track>>()
-    fun observeSearchHistory(): LiveData<MutableList<Track>> = searchHistoryLiveData
-
     fun addToSearchHistory(track: Track) {
         handler.postDelayed({
             searchHistoryInteractor.addToSearchHistory(track)
-            val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data ?: mutableListOf()
-            searchHistoryLiveData.postValue(lastTracksList)
+                (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
+                    ?: mutableListOf()
         }, HISTORY_UPDATE_DELAY)
     }
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clearSearchHistory()
-        searchHistoryLiveData.postValue(mutableListOf())
+        renderState(
+            SearchState.SearchHistory(mutableListOf())
+        )
     }
 
     fun getSearchHistory() {
         val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
             ?: mutableListOf()
-        searchHistoryLiveData.postValue(lastTracksList)
-        if (lastTracksList.isNotEmpty()) {
-            renderState(
-                SearchState.SearchHistory
-            )
-        }
+        renderState(
+            SearchState.SearchHistory(lastTracksList)
+        )
     }
 
     fun debounceSearch(query: String) {

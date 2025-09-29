@@ -22,13 +22,6 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
             }
         }
     }
-
-    /*private val stateLiveData = MutableLiveData(MediaState.DEFAULT)
-    fun observePlayerState(): LiveData<MediaState> = stateLiveData
-
-    private val elapsedTimeLiveData = MutableLiveData("0:00")
-    fun observeElapsedTime(): LiveData<String> = elapsedTimeLiveData*/
-
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
@@ -43,55 +36,51 @@ class PlayerViewModel(private val previewUrl: String) : ViewModel() {
 
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    private val updateElapsedTimeRunnable = object : Runnable {
-        override fun run() {
-            if (mediaState == MediaState.PLAYING) {
-                /*elapsedTimeLiveData.postValue(
-                    dateFormat
-                        .format(mediaPlayer.currentPosition)
-                )*/
-                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaPlayer.currentPosition)))
-                handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
-            }
-        }
-    }
-
     private fun preparePlayer() {
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            stateLiveData.postValue(MediaState.PREPARED)
+            mediaState = MediaState.PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            stateLiveData.postValue(MediaState.PREPARED)
-            elapsedTimeLiveData.value = dateFormat.format(0)
-            handler.removeCallbacks(updateElapsedTimeRunnable)
+            mediaState = MediaState.PREPARED
+            stateLiveData.postValue(PlayerState(false, dateFormat.format(0)))
+            handler.removeCallbacks(progressTrackRunnable)
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
         mediaState = MediaState.PLAYING
-        stateLiveData.postValue(MediaState.PLAYING)
+        stateLiveData.postValue(PlayerState(true, dateFormat.format(0)))
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
         mediaState = MediaState.PAUSED
-        stateLiveData.postValue(MediaState.PAUSED)
+        stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaPlayer.currentPosition)))
+    }
+
+    private val progressTrackRunnable = object : Runnable {
+        override fun run() {
+            if (mediaState == MediaState.PLAYING) {
+                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaPlayer.currentPosition)))
+                handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
+            }
+        }
     }
 
     fun playbackControl() {
         when (mediaState) {
             MediaState.PLAYING -> {
                 pausePlayer()
-                handler.removeCallbacks(updateElapsedTimeRunnable)
+                handler.removeCallbacks(progressTrackRunnable)
             }
 
             MediaState.PREPARED, MediaState.PAUSED -> {
                 startPlayer()
                 handler.postDelayed(
-                    updateElapsedTimeRunnable,
+                    progressTrackRunnable,
                     ELAPSED_TIME_UPDATE_DELAY
                 )
             } else -> {}

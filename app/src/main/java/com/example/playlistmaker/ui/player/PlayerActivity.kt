@@ -39,11 +39,8 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.observePlayerState().observe(this) {
-            changePlayStopButton(it == MediaState.PLAYING)
-        }
-
-        viewModel.observeElapsedTime().observe(this) {
-            binding.elapsedTime.text = it
+            changePlayStopButton(it.isPlaying)
+            binding.elapsedTime.text = it.elapsedTime
         }
 
         binding.playerToolbar.setNavigationOnClickListener {

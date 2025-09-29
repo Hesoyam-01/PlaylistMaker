@@ -9,10 +9,11 @@ sealed interface SearchState {
         val tracksList: MutableList<Track>
     ) : SearchState
 
-    data object SearchHistory : SearchState
+    data class SearchHistory(
+        val lastTracksList: MutableList<Track>
+    ) : SearchState
 
     data object Error : SearchState
 
     data object Empty : SearchState
-
 }
