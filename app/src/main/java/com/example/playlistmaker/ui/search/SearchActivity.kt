@@ -90,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
             trackAdapter.clearTrackList()
             binding.searchBar.setText("")
             hideKeyboard(binding.searchBar)
+            viewModel.getSearchHistory()
         }
 
         binding.searchUpdateQueryButton.setOnClickListener {
@@ -222,6 +223,5 @@ class SearchActivity : AppCompatActivity() {
         super.onDestroy()
         binding.searchBar.removeTextChangedListener(textWatcher)
     }
-
 }
 
