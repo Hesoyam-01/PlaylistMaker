@@ -112,6 +112,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 trackAdapter.clearTrackList()
+                binding.searchPlaceholder.visibility = View.GONE
             }
         }
 
@@ -192,6 +193,7 @@ class SearchActivity : AppCompatActivity() {
         binding.apply {
             tracksRecyclerView.visibility = View.GONE
             searchProgressBar.visibility = View.GONE
+            searchUpdateQueryButton.visibility = View.GONE
         }
         showPlaceholder(PlaceholderType.NOTHING_FOUND)
     }
