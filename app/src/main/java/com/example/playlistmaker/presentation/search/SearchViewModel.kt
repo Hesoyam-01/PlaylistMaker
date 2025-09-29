@@ -20,7 +20,6 @@ import com.example.playlistmaker.util.Resource
 class SearchViewModel(context: Context) : ViewModel() {
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 1500L
-        private const val HISTORY_UPDATE_DELAY = 600L
         private val SEARCH_REQUEST_TOKEN = Any()
 
         fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
@@ -42,11 +41,9 @@ class SearchViewModel(context: Context) : ViewModel() {
     fun observeSearchState(): LiveData<SearchState> = stateLiveData
 
     fun addToSearchHistory(track: Track) {
-        handler.postDelayed({
-            searchHistoryInteractor.addToSearchHistory(track)
-                (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
-                    ?: mutableListOf()
-        }, HISTORY_UPDATE_DELAY)
+        searchHistoryInteractor.addToSearchHistory(track)
+        (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
+            ?: mutableListOf()
     }
 
     fun clearSearchHistory() {
@@ -57,11 +54,14 @@ class SearchViewModel(context: Context) : ViewModel() {
     }
 
     fun getSearchHistory() {
-        val lastTracksList = (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
-            ?: mutableListOf()
-        renderState(
-            SearchState.SearchHistory(lastTracksList)
-        )
+//        handler.postDelayed({
+            val lastTracksList =
+                (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
+                    ?: mutableListOf()
+            renderState(
+                SearchState.SearchHistory(lastTracksList)
+            )
+//        }, HISTORY_UPDATE_DELAY)
     }
 
     fun debounceSearch(query: String) {

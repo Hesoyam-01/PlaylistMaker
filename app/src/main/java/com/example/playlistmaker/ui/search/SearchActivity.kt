@@ -3,6 +3,8 @@ package com.example.playlistmaker.ui.search
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -21,13 +23,20 @@ import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerActivity
 
 class SearchActivity : AppCompatActivity() {
+    private companion object {
+        private const val HISTORY_UPDATE_DELAY = 600L
+    }
+
     private val viewModel: SearchViewModel by lazy {
         ViewModelProvider(
             this,
             SearchViewModel.getFactory()
         )[SearchViewModel::class.java]
     }
+
     private lateinit var textWatcher: TextWatcher
+
+    private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
@@ -50,6 +59,9 @@ class SearchActivity : AppCompatActivity() {
         }
         lastTracksAdapter = TrackAdapter { track ->
             startPlayerActivity(track)
+            handler.postDelayed({
+                viewModel.getSearchHistory()
+            }, HISTORY_UPDATE_DELAY)
         }
 
         binding.apply {
