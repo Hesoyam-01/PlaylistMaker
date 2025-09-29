@@ -16,7 +16,6 @@ import com.example.playlistmaker.domain.api.search.TracksInteractor
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
-import java.net.UnknownHostException
 
 class SearchViewModel(context: Context) : ViewModel() {
     companion object {
@@ -80,33 +79,30 @@ class SearchViewModel(context: Context) : ViewModel() {
             renderState(
                 SearchState.Loading
             )
-            try {
-                tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
-                    override fun consume(resource: Resource<MutableList<Track>>) {
-                        handler.post {
-                            when (resource) {
-                                is Resource.Success -> {
-                                    if (resource.data.isEmpty()) {
-                                        renderState(
-                                            SearchState.Empty
-                                        )
-                                    } else renderState(
-                                        SearchState.FoundTracks(resource.data)
-                                    )
-                                }
-
-                                is Resource.Error -> {
+            tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
+                override fun consume(resource: Resource<MutableList<Track>>) {
+                    handler.post {
+                        when (resource) {
+                            is Resource.Success -> {
+                                if (resource.data.isEmpty()) {
                                     renderState(
-                                        SearchState.Error
+                                        SearchState.Empty
                                     )
-                                }
+                                } else renderState(
+                                    SearchState.FoundTracks(resource.data)
+                                )
+                            }
+
+                            is Resource.Error -> {
+                                renderState(
+                                    SearchState.Error
+                                )
                             }
                         }
                     }
-                })
-            } catch (e: UnknownHostException) {
-                renderState(SearchState.Error)
-            }
+                }
+            })
+
         }
     }
 
