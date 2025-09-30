@@ -102,7 +102,6 @@ class SearchViewModel(context: Context) : ViewModel() {
                     }
                 }
             })
-
         }
     }
 
