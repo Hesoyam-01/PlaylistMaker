@@ -1,39 +1,44 @@
 package com.example.playlistmaker.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.R
-import com.example.playlistmaker.ui.search.SearchActivity
-import com.example.playlistmaker.ui.settings.SettingsActivity
-import com.example.playlistmaker.ui.library.LibraryActivity
-import com.google.android.material.button.MaterialButton
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.databinding.ActivityMainBinding
+import com.example.playlistmaker.presentation.main.MainViewModel
 
 class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModel by lazy {
+        ViewModelProvider(
+            this,
+            MainViewModel.getFactory()
+        )[MainViewModel::class.java]
+    }
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-        val searchButton = findViewById<MaterialButton>(R.id.search_button)
-        val libraryButton = findViewById<MaterialButton>(R.id.library_button)
-        val settingsButton = findViewById<MaterialButton>(R.id.settings_button)
-
-        searchButton.setOnClickListener {
-            val searchButtonIntent = Intent(this@MainActivity, SearchActivity::class.java)
-            startActivity(searchButtonIntent)
+        binding.searchButton.setOnClickListener {
+            viewModel?.openSearch()
         }
 
 
-        libraryButton.setOnClickListener {
-            val libraryButtonIntent = Intent(this@MainActivity, LibraryActivity::class.java)
-            startActivity(libraryButtonIntent)
+        binding.libraryButton.setOnClickListener {
+            viewModel?.openLibrary()
         }
 
 
-        settingsButton.setOnClickListener {
-            val settingsButtonIntent = Intent(this@MainActivity, SettingsActivity::class.java)
-            startActivity(settingsButtonIntent)
+        binding.settingsButton.setOnClickListener {
+            viewModel?.openSettings()
         }
 
     }

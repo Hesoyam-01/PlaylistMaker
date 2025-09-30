@@ -124,7 +124,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/track_recycler_view"
+        android:id="@+id/tracks_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="12dp"
@@ -133,7 +133,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
-        android:id="@+id/last_tracks"
+        android:id="@+id/search_history_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -152,7 +152,7 @@
             android:textSize="@dimen/medium_textsize" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/last_track_recycler_view"
+            android:id="@+id/last_tracks_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"

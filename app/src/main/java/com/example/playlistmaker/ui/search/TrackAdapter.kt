@@ -2,14 +2,11 @@ package com.example.playlistmaker.ui.search
 
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.domain.models.search.Track
 
 class TrackAdapter(
-    private var trackList: MutableList<Track>,
     private val onItemClick: (Track) -> Unit
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
@@ -18,12 +15,11 @@ class TrackAdapter(
         const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
+    private val trackList: MutableList<Track> = mutableListOf()
+
     private val handler = Handler(Looper.getMainLooper())
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
-        return TrackViewHolder(view)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder.from(parent)
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -37,12 +33,14 @@ class TrackAdapter(
     }
 
     fun updateList(newList: MutableList<Track>) {
-        trackList = newList
+        trackList.clear()
+        trackList.addAll(newList)
         notifyDataSetChanged()
     }
 
     fun clearTrackList() {
         trackList.clear()
+        notifyDataSetChanged()
     }
 
     private var isClickAllowed = true

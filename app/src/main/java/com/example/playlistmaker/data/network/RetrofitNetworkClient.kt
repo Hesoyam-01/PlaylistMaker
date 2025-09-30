@@ -1,25 +1,50 @@
 package com.example.playlistmaker.data.network
 
-import com.example.playlistmaker.data.NetworkClient
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TracksSearchRequest
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import java.net.UnknownHostException
 
-class RetrofitNetworkClient(private val tracksService: SearchAPI) : NetworkClient {
+class RetrofitNetworkClient(private val tracksService: SearchAPI, private val context: Context) :
+    NetworkClient {
     override fun doRequest(dto: Any): Response {
-        return try {
-            if (dto is TracksSearchRequest) {
-                val resp = tracksService.searchTracks(dto.query).execute()
+        try {
+            return when {
+                !isConnected() -> {
+                    Response().apply { resultCode = -1 }
+                }
 
-                val body = resp.body() ?: Response()
+                dto is TracksSearchRequest -> {
+                    val resp = tracksService.searchTracks(dto.query).execute()
+                    val body = resp.body() ?: Response()
+                    body.apply { resultCode = 200 }
+                }
 
-                body.apply { resultCode = resp.code() }
-            } else {
-                Response().apply { resultCode = 400 }
+                else -> {
+                    Response().apply { resultCode = 400 }
+                }
             }
-        } catch (e: Exception) {
-            return Response().apply { resultCode = 500 }
+        } catch (e: UnknownHostException) {
+            return Response().apply { resultCode = -1 }
         }
+    }
+
+    private fun isConnected(): Boolean {
+        val connectivityManager = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
+            }
+        }
+        return false
     }
 }
