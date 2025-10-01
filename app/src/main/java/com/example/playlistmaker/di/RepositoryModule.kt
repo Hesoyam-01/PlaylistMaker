@@ -1,8 +1,10 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.impl.player.MediaRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchRepositoryImpl
 import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
+import com.example.playlistmaker.domain.api.player.MediaRepository
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.search.SearchRepository
 import com.example.playlistmaker.domain.api.settings.ThemeRepository
@@ -14,6 +16,10 @@ val repositoryModule = module {
 
     single<SearchRepository> {
         SearchRepositoryImpl(get())
+    }
+
+    single<MediaRepository> {
+        MediaRepositoryImpl(get())
     }
 
     single<SearchHistoryRepository> {

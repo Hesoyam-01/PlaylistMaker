@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
@@ -37,6 +38,10 @@ val dataModule = module {
         RetrofitNetworkClient(get(), androidContext())
     }
 
+    factory {
+        MediaPlayer()
+    }
+
     factory { Gson() }
 
     single {
@@ -54,7 +59,8 @@ val dataModule = module {
     }
 
     single<StorageClient<Boolean>>(named("themeStorage")) {
-        PrefsStorageClient(get(),
+        PrefsStorageClient(
+            get(),
             get(),
             "theme_key",
             object : TypeToken<Boolean>() {}.type)

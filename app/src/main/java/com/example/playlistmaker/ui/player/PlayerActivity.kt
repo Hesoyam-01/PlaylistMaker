@@ -6,24 +6,23 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.presentation.player.PlayerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
     private val previewUrl: String by lazy {
         intent.getStringExtra("PREVIEW_URL") ?: ""
     }
 
-    private val viewModel: PlayerViewModel by lazy {
-        ViewModelProvider(
-            this,
-            PlayerViewModel.getFactory(previewUrl)
-        )[PlayerViewModel::class.java]
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(previewUrl)
     }
+
     private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.main.MainViewModel
+import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -20,8 +21,7 @@ val viewModelModule = module {
         SettingsViewModel(get(), get())
     }
 
-    /*viewModel {
-        PlayerViewModel(get())
-    }*/
-
+    viewModel { params ->
+        PlayerViewModel(params.get(), get())
+    }
 }
