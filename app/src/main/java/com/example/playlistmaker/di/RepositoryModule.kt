@@ -18,7 +18,7 @@ val repositoryModule = module {
         SearchRepositoryImpl(get())
     }
 
-    single<MediaRepository> {
+    factory<MediaRepository> {
         MediaRepositoryImpl(get())
     }
 

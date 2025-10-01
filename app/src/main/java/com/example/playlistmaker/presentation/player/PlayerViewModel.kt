@@ -23,6 +23,10 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     init {
         mediaRepository.observeMediaState().observeForever {
             mediaState = it
+            if (mediaState == MediaState.PREPARED) {
+                stateLiveData.postValue(PlayerState(false, dateFormat.format(0)))
+                handler.removeCallbacks(progressTrackRunnable)
+            }
         }
         mediaRepository.prepare(previewUrl)
     }
@@ -47,7 +51,7 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     /*private fun startPlayer() {
         mediaPlayer.start()
         mediaState = MediaState.PLAYING
-        stateLiveData.postValue(PlayerState(true, dateFormat.format(0)))
+        stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaPlayer.currentPosition)))
     }*/
 
     /*private fun pausePlayer() {
@@ -70,12 +74,13 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
         when (mediaState) {
             MediaState.PLAYING -> {
                 mediaRepository.pause()
-                stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaPlayer.currentPosition)))
+                stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaRepository.getCurrentPosition())))
                 handler.removeCallbacks(progressTrackRunnable)
             }
 
             MediaState.PREPARED, MediaState.PAUSED -> {
                 mediaRepository.play()
+                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaRepository.getCurrentPosition())))
                 handler.postDelayed(
                     progressTrackRunnable,
                     ELAPSED_TIME_UPDATE_DELAY
@@ -86,6 +91,7 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
 
     fun onPause() {
         mediaRepository.pause()
+        stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaRepository.getCurrentPosition())))
     }
 
     override fun onCleared() {
