@@ -4,17 +4,9 @@ import android.content.Context
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
-import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
-import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient
-import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
-import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
-import com.example.playlistmaker.domain.api.settings.ThemeInteractor
-import com.example.playlistmaker.domain.api.settings.ThemeRepository
-import com.example.playlistmaker.domain.impl.search.SearchHistoryInteractorImpl
-import com.example.playlistmaker.domain.impl.settings.ThemeInteractorImpl
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.android.ext.koin.androidContext
@@ -58,22 +50,6 @@ val dataModule = module {
 
     single<NetworkClient> {
         RetrofitNetworkClient(get(), androidContext())
-    }
-
-    single<ThemeRepository> {
-        ThemeRepositoryImpl(get(named("themeStorage")), androidContext())
-    }
-
-    single<ThemeInteractor> {
-        ThemeInteractorImpl(get())
-    }
-
-    single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named("searchHistoryStorage")))
-    }
-
-    single<SearchHistoryInteractor> {
-        SearchHistoryInteractorImpl(get())
     }
 
 }
