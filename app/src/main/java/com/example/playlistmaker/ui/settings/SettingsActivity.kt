@@ -6,18 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.presentation.settings.SettingsState
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
-    private val viewModel: SettingsViewModel by lazy {
-        ViewModelProvider(
-            this,
-            SettingsViewModel.getFactory()
-        )[SettingsViewModel::class.java]
-    }
+    private val viewModel: SettingsViewModel by viewModel()
+
     private lateinit var binding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,24 +31,24 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        viewModel?.observeSettingsState()?.observe(this) {
+        viewModel.observeSettingsState().observe(this) {
             render(it)
         }
 
-        viewModel?.getThemeMode()
+        viewModel.getThemeMode()
 
-        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> viewModel?.switchTheme(checked) }
+        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked -> viewModel.switchTheme(checked) }
 
         binding.shareAppButton.setOnClickListener {
-            viewModel?.shareApp()
+            viewModel.shareApp()
         }
 
         binding.supportButton.setOnClickListener {
-            viewModel?.openSupport()
+            viewModel.openSupport()
         }
 
         binding.userAgreementButton.setOnClickListener {
-            viewModel?.openTerms()
+            viewModel.openTerms()
         }
     }
 

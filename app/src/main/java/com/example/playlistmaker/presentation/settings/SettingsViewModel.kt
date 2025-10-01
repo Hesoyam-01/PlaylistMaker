@@ -5,24 +5,23 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
 import com.example.playlistmaker.util.Creator
 
-class SettingsViewModel(context: Context) : ViewModel() {
-    companion object {
+class SettingsViewModel(
+    private val themeInteractor: ThemeInteractor,
+    context: Context) :
+    ViewModel() {
+    /*companion object {
         fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val app = (this[APPLICATION_KEY] as App)
                 SettingsViewModel(app)
             }
         }
-    }
-    private val themeInteractor = Creator.provideThemeInteractor(context)
+    }*/
+
+    //    private val themeInteractor = Creator.provideThemeInteractor(context)
     private val sharingInteractor = Creator.provideSharingInteractor(context)
 
     private val stateLiveData = MutableLiveData<SettingsState>()
