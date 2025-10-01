@@ -2,7 +2,6 @@ package com.example.playlistmaker.presentation.player
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -35,30 +34,6 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
 
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    /*private fun preparePlayer() {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            mediaState = MediaState.PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            mediaState = MediaState.PREPARED
-            stateLiveData.postValue(PlayerState(false, dateFormat.format(0)))
-            handler.removeCallbacks(progressTrackRunnable)
-        }
-    }*/
-
-    /*private fun startPlayer() {
-        mediaPlayer.start()
-        mediaState = MediaState.PLAYING
-        stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaPlayer.currentPosition)))
-    }*/
-
-    /*private fun pausePlayer() {
-        mediaPlayer.pause()
-        mediaState = MediaState.PAUSED
-        stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaPlayer.currentPosition)))
-    }*/
 
     private val progressTrackRunnable = object : Runnable {
         override fun run() {
@@ -70,7 +45,6 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     }
 
     fun playbackControl() {
-        Log.d("state", mediaState.toString())
         when (mediaState) {
             MediaState.PLAYING -> {
                 mediaRepository.pause()
