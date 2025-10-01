@@ -7,14 +7,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.presentation.main.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(
-            this,
-            MainViewModel.getFactory()
-        )[MainViewModel::class.java]
-    }
+    private val viewModel: MainViewModel by viewModel()
+
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,17 +25,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.searchButton.setOnClickListener {
-            viewModel?.openSearch()
+            viewModel.openSearch()
         }
 
 
         binding.libraryButton.setOnClickListener {
-            viewModel?.openLibrary()
+            viewModel.openLibrary()
         }
 
 
         binding.settingsButton.setOnClickListener {
-            viewModel?.openSettings()
+            viewModel.openSettings()
         }
 
     }

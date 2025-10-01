@@ -1,28 +1,16 @@
 package com.example.playlistmaker.presentation.settings
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
-import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.domain.api.sharing.SharingInteractor
 
 class SettingsViewModel(
     private val themeInteractor: ThemeInteractor,
-    context: Context) :
+    private val sharingInteractor: SharingInteractor) :
     ViewModel() {
-    /*companion object {
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = (this[APPLICATION_KEY] as App)
-                SettingsViewModel(app)
-            }
-        }
-    }*/
-
-    //    private val themeInteractor = Creator.provideThemeInteractor(context)
-    private val sharingInteractor = Creator.provideSharingInteractor(context)
 
     private val stateLiveData = MutableLiveData<SettingsState>()
     fun observeSettingsState(): LiveData<SettingsState> = stateLiveData

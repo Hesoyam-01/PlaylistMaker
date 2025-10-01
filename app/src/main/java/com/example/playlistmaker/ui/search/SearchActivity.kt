@@ -29,9 +29,9 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    private lateinit var textWatcher: TextWatcher
-
     private val handler = Handler(Looper.getMainLooper())
+
+    private lateinit var textWatcher: TextWatcher
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter

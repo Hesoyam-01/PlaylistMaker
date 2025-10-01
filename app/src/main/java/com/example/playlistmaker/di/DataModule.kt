@@ -4,9 +4,13 @@ import android.content.Context
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
+import com.example.playlistmaker.data.impl.main.MainNavigatorImpl
+import com.example.playlistmaker.data.impl.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient
+import com.example.playlistmaker.domain.api.main.MainNavigator
+import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +21,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
 
+    single<MainNavigator> {
+        MainNavigatorImpl(androidContext())
+    }
+
     single<SearchAPI> {
         Retrofit.Builder()
             .baseUrl("https://itunes.apple.com")
@@ -25,12 +33,16 @@ val dataModule = module {
             .create(SearchAPI::class.java)
     }
 
+    single<NetworkClient> {
+        RetrofitNetworkClient(get(), androidContext())
+    }
+
+    factory { Gson() }
+
     single {
         androidContext()
             .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
     }
-
-    factory { Gson() }
 
     single<StorageClient<MutableList<TrackDto>>>(named("searchHistoryStorage")) {
         PrefsStorageClient(
@@ -48,8 +60,8 @@ val dataModule = module {
             object : TypeToken<Boolean>() {}.type)
     }
 
-    single<NetworkClient> {
-        RetrofitNetworkClient(get(), androidContext())
+    single<ExternalNavigator> {
+        ExternalNavigatorImpl(androidContext())
     }
 
 }
