@@ -20,6 +20,14 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+object StorageKeys {
+    const val PREFS_NAME = "local_storage"
+    const val SEARCH_HISTORY_NAME = "searchHistoryStorage"
+    const val SEARCH_HISTORY_KEY = "search_history_key"
+    const val THEME_NAME = "themeStorage"
+    const val THEME_KEY = "theme_key"
+}
+
 val dataModule = module {
 
     single<MainNavigator> {
@@ -46,23 +54,23 @@ val dataModule = module {
 
     single {
         androidContext()
-            .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
+            .getSharedPreferences(StorageKeys.PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    single<StorageClient<MutableList<TrackDto>>>(named("searchHistoryStorage")) {
+    single<StorageClient<MutableList<TrackDto>>>(named(StorageKeys.SEARCH_HISTORY_NAME)) {
         PrefsStorageClient(
             get(),
             get(),
-            "search_history_key",
+            StorageKeys.SEARCH_HISTORY_KEY,
             object : TypeToken<MutableList<TrackDto>>() {}.type
         )
     }
 
-    single<StorageClient<Boolean>>(named("themeStorage")) {
+    single<StorageClient<Boolean>>(named(StorageKeys.THEME_NAME)) {
         PrefsStorageClient(
             get(),
             get(),
-            "theme_key",
+            StorageKeys.THEME_KEY,
             object : TypeToken<Boolean>() {}.type)
     }
 
