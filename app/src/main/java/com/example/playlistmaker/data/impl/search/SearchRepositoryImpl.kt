@@ -3,14 +3,14 @@ package com.example.playlistmaker.data.impl.search
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.dto.TracksSearchResponse
-import com.example.playlistmaker.domain.api.search.TracksRepository
+import com.example.playlistmaker.domain.api.search.SearchRepository
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.util.Resource
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
     override fun searchTracks(query: String): Resource<MutableList<Track>> {

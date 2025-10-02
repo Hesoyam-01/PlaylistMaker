@@ -1,37 +1,24 @@
 package com.example.playlistmaker.presentation.search
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.App
-import com.example.playlistmaker.domain.api.search.TracksInteractor
+import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
+import com.example.playlistmaker.domain.api.search.SearchInteractor
 import com.example.playlistmaker.domain.models.search.Track
-import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.util.Resource
 
-class SearchViewModel(context: Context) : ViewModel() {
+class SearchViewModel(
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val searchInteractor: SearchInteractor
+) : ViewModel() {
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 1500L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = (this[APPLICATION_KEY] as App)
-                SearchViewModel(app)
-            }
-        }
     }
-
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor(context)
-    private val tracksInteractor = Creator.provideTracksInteractor(context)
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -79,7 +66,7 @@ class SearchViewModel(context: Context) : ViewModel() {
             renderState(
                 SearchState.Loading
             )
-            tracksInteractor.searchTracks(query, object : TracksInteractor.TracksConsumer {
+            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
                 override fun consume(resource: Resource<MutableList<Track>>) {
                     handler.post {
                         when (resource) {

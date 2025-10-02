@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.player
+package com.example.playlistmaker.domain.models.player
 
 enum class MediaState {
     DEFAULT,
