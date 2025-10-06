@@ -5,12 +5,12 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.domain.api.player.MediaRepository
+import com.example.playlistmaker.domain.api.player.MediaInteractor
 import com.example.playlistmaker.domain.models.player.MediaState
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepository) : ViewModel() {
+class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInteractor) : ViewModel() {
     companion object {
         const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
@@ -20,14 +20,14 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     private var mediaState = MediaState.DEFAULT
 
     init {
-        mediaRepository.observeMediaState().observeForever {
+        mediaInteractor.observeMediaState().observeForever {
             mediaState = it
             if (mediaState == MediaState.PREPARED) {
                 stateLiveData.postValue(PlayerState(false, dateFormat.format(0)))
                 handler.removeCallbacks(progressTrackRunnable)
             }
         }
-        mediaRepository.prepare(previewUrl)
+        mediaInteractor.prepare(previewUrl)
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -38,7 +38,7 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     private val progressTrackRunnable = object : Runnable {
         override fun run() {
             if (mediaState == MediaState.PLAYING) {
-                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaRepository.getCurrentPosition())))
+                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaInteractor.getCurrentPosition())))
                 handler.postDelayed(this, ELAPSED_TIME_UPDATE_DELAY)
             }
         }
@@ -47,14 +47,14 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     fun playbackControl() {
         when (mediaState) {
             MediaState.PLAYING -> {
-                mediaRepository.pause()
-                stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaRepository.getCurrentPosition())))
+                mediaInteractor.pause()
+                stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaInteractor.getCurrentPosition())))
                 handler.removeCallbacks(progressTrackRunnable)
             }
 
             MediaState.PREPARED, MediaState.PAUSED -> {
-                mediaRepository.play()
-                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaRepository.getCurrentPosition())))
+                mediaInteractor.play()
+                stateLiveData.postValue(PlayerState(true, dateFormat.format(mediaInteractor.getCurrentPosition())))
                 handler.postDelayed(
                     progressTrackRunnable,
                     ELAPSED_TIME_UPDATE_DELAY
@@ -64,12 +64,12 @@ class PlayerViewModel(previewUrl: String, private val mediaRepository: MediaRepo
     }
 
     fun onPause() {
-        mediaRepository.pause()
-        stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaRepository.getCurrentPosition())))
+        mediaInteractor.pause()
+        stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaInteractor.getCurrentPosition())))
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaRepository.release()
+        mediaInteractor.release()
     }
 }
