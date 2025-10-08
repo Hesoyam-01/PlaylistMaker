@@ -19,6 +19,7 @@ class MediaRepositoryImpl(private val mediaPlayer: MediaPlayer) : MediaRepositor
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnCompletionListener {
             mediaStateLiveData.postValue(MediaState.PREPARED)
+            mediaPlayer.seekTo(0)
         }
     }
 

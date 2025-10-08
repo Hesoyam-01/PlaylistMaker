@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.player.MediaInteractor
 import com.example.playlistmaker.domain.models.player.MediaState
@@ -19,14 +20,16 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
 
     private var mediaState = MediaState.DEFAULT
 
-    init {
-        mediaInteractor.observeMediaState().observeForever {
-            mediaState = it
-            if (mediaState == MediaState.PREPARED) {
-                stateLiveData.postValue(PlayerState(false, dateFormat.format(0)))
-                handler.removeCallbacks(progressTrackRunnable)
-            }
+    private val mediaStateObserver = Observer<MediaState> {
+        mediaState = it
+        if (mediaState == MediaState.PREPARED) {
+            stateLiveData.postValue(PlayerState(false, dateFormat.format(mediaInteractor.getCurrentPosition())))
+            handler.removeCallbacks(progressTrackRunnable)
         }
+    }
+
+    init {
+        mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
         mediaInteractor.prepare(previewUrl)
     }
 
@@ -70,6 +73,7 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
 
     override fun onCleared() {
         super.onCleared()
+        mediaInteractor.observeMediaState().removeObserver(mediaStateObserver)
         mediaInteractor.release()
     }
 }
