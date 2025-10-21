@@ -15,6 +15,7 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
     companion object {
         const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
+
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
