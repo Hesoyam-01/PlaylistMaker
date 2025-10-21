@@ -12,10 +12,10 @@ import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
     companion object {
-        fun newInstance() = FavoritesFragment()
+        fun newInstance() = PlaylistsFragment()
     }
 
-    private val viewModel: PlaylistsFragmentViewModel by viewModel() {
+    private val viewModel: PlaylistsFragmentViewModel by viewModel {
         parametersOf(true)
     }
 
@@ -32,7 +32,7 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
-            if (it) binding.favoritesEmptyPlaceholder.visibility = View.VISIBLE
+            if (it) binding.playlistsEmptyPlaceholder.visibility = View.VISIBLE
         }
     }
 }

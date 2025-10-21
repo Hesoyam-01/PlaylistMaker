@@ -7,7 +7,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityLibraryBinding
-import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class LibraryActivity : AppCompatActivity() {
@@ -24,6 +23,10 @@ class LibraryActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.libraryToolbar.setNavigationOnClickListener {
+            finish()
         }
 
         binding.viewPager.adapter = LibraryViewPagerAdapter(supportFragmentManager, lifecycle)

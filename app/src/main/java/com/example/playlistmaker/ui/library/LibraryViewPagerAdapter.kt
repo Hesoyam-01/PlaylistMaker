@@ -13,6 +13,9 @@ class LibraryViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifec
     }
 
     override fun createFragment(position: Int): Fragment {
-        return FavoritesFragment.newInstance()
+        return when (position) {
+            0 -> FavoritesFragment.newInstance()
+            else -> PlaylistsFragment.newInstance()
+        }
     }
 }

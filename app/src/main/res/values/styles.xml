@@ -62,10 +62,17 @@
         <item name="android:paddingHorizontal">@dimen/default_padding</item>
         <item name="android:layout_marginBottom">17dp</item>
         <item name="fontFamily">@font/ys_display_regular</item>
-        <item name="fontWeight">400</item>
+        <item name="android:textFontWeight">400</item>
         <item name="android:textSize">13sp</item>
         <item name="android:layout_width">124dp</item>
         <item name="android:layout_height">15dp</item>
+    </style>
+
+    <style name="TabTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
 </resources>

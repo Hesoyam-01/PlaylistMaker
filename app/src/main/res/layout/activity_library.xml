@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/settings_toolbar"
+        android:id="@+id/library_toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
@@ -21,12 +21,16 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@android:color/transparent"
+        app:tabIndicatorAnimationMode="fade"
+        app:tabIndicatorColor="?attr/colorOnPrimary"
+        app:tabRippleColor="@null"
+        app:tabTextAppearance="@style/TabTextStyle"
         app:tabTextColor="?attr/colorOnPrimary" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

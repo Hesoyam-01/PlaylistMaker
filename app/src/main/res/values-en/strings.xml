@@ -23,4 +23,6 @@
     <string name="favorites">Favorites</string>
     <string name="playlists">Playlists</string>
     <string name="empty_library">Your library is empty</string>
+    <string name="empty_playlists">No playlists created yet</string>
+    <string name="new_playlist">New playlist</string>
 </resources>

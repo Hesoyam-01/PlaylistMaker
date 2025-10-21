@@ -12,10 +12,10 @@ import org.koin.core.parameter.parametersOf
 
 class FavoritesFragment : Fragment() {
     companion object {
-        fun newInstance(favoritesList: Boolean) = FavoritesFragment()
+        fun newInstance() = FavoritesFragment()
     }
 
-    private val viewModel: FavoritesFragmentViewModel by viewModel() {
+    private val viewModel: FavoritesFragmentViewModel by viewModel {
         parametersOf(true)
     }
 
