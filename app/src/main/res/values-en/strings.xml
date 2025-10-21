@@ -20,4 +20,7 @@
     <string name="year">Year</string>
     <string name="album">Album</string>
     <string name="time">Time</string>
+    <string name="favorites">Favorites</string>
+    <string name="playlists">Playlists</string>
+    <string name="empty_library">Your library is empty</string>
 </resources>
