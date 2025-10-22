@@ -7,7 +7,6 @@ import com.example.playlistmaker.domain.api.player.MediaRepository
 import com.example.playlistmaker.domain.models.player.MediaState
 
 class MediaRepositoryImpl(private val mediaPlayer: MediaPlayer) : MediaRepository {
-
     private val mediaStateLiveData = MutableLiveData<MediaState>()
     override fun getMediaStateLiveData(): LiveData<MediaState> = mediaStateLiveData
 

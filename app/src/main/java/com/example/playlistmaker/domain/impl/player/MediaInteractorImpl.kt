@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.domain.impl.player
 
 import androidx.lifecycle.LiveData
 import com.example.playlistmaker.domain.api.player.MediaInteractor

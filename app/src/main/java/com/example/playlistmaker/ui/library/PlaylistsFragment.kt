@@ -11,10 +11,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
-    companion object {
-        fun newInstance() = PlaylistsFragment()
-    }
-
     private val viewModel: PlaylistsFragmentViewModel by viewModel {
         parametersOf(true)
     }
@@ -34,5 +30,9 @@ class PlaylistsFragment : Fragment() {
         viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
             if (it) binding.playlistsEmptyPlaceholder.visibility = View.VISIBLE
         }
+    }
+
+    companion object {
+        fun newInstance() = PlaylistsFragment()
     }
 }

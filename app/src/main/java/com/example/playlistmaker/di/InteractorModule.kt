@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.search.SearchInteractor
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
 import com.example.playlistmaker.domain.api.sharing.SharingInteractor
-import com.example.playlistmaker.domain.impl.MediaInteractorImpl
+import com.example.playlistmaker.domain.impl.player.MediaInteractorImpl
 import com.example.playlistmaker.domain.impl.main.MainInteractorImpl
 import com.example.playlistmaker.domain.impl.search.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.search.SearchInteractorImpl
