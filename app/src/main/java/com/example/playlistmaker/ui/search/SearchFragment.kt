@@ -33,8 +33,6 @@ class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
-    private var hasFocus = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,12 +70,7 @@ class SearchFragment : Fragment() {
         }
 
         binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                if (binding.searchBar.text.isNullOrEmpty()) viewModel.getSearchHistory()
-                this.hasFocus = true
-            } else {
-                this.hasFocus = false
-            }
+            if (binding.searchBar.text.isNullOrEmpty() and hasFocus) viewModel.getSearchHistory()
         }
 
         binding.searchClearButton.setOnClickListener {
@@ -97,7 +90,7 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
-                if (hasFocus) {
+                if (binding.searchBar.hasFocus()) {
                     viewModel.debounceSearch(
                         s?.toString() ?: ""
                     )
