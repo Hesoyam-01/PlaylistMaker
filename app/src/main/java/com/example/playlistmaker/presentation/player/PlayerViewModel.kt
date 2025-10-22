@@ -12,15 +12,10 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInteractor) : ViewModel() {
-    companion object {
-        const val ELAPSED_TIME_UPDATE_DELAY = 100L
-    }
-
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
     private var mediaState = MediaState.DEFAULT
-
     private val mediaStateObserver = Observer<MediaState> {
         mediaState = it
         if (mediaState == MediaState.PREPARED) {
@@ -29,15 +24,14 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         }
     }
 
-    init {
-        mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
-        mediaInteractor.prepare(previewUrl)
-    }
-
     private val handler = Handler(Looper.getMainLooper())
 
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
+    init {
+        mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
+        mediaInteractor.prepare(previewUrl)
+    }
 
     private val progressTrackRunnable = object : Runnable {
         override fun run() {
@@ -76,5 +70,9 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         super.onCleared()
         mediaInteractor.observeMediaState().removeObserver(mediaStateObserver)
         mediaInteractor.release()
+    }
+
+    companion object {
+        const val ELAPSED_TIME_UPDATE_DELAY = 100L
     }
 }

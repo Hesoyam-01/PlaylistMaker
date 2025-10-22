@@ -23,10 +23,6 @@ import com.example.playlistmaker.ui.player.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
-    private companion object {
-        private const val HISTORY_UPDATE_DELAY = 600L
-    }
-
     private val viewModel: SearchViewModel by viewModel()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -219,6 +215,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         binding.searchBar.removeTextChangedListener(textWatcher)
+    }
+
+    private companion object {
+        private const val HISTORY_UPDATE_DELAY = 600L
     }
 }
 

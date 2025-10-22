@@ -15,11 +15,6 @@ class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
     private val searchInteractor: SearchInteractor
 ) : ViewModel() {
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 1500L
-        private val SEARCH_REQUEST_TOKEN = Any()
-    }
-
     private val handler = Handler(Looper.getMainLooper())
 
     private var lastQuery: String = ""
@@ -103,5 +98,10 @@ class SearchViewModel(
     override fun onCleared() {
         super.onCleared()
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 1500L
+        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }

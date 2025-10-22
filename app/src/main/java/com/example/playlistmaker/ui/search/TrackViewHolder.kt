@@ -9,14 +9,6 @@ import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.domain.models.search.Track
 
 class TrackViewHolder (private val binding: TrackViewBinding) : RecyclerView.ViewHolder(binding.root) {
-    companion object {
-        fun from(parent: ViewGroup): TrackViewHolder {
-            val inflater = LayoutInflater.from(parent.context)
-            val binding = TrackViewBinding.inflate(inflater, parent, false)
-            return TrackViewHolder(binding)
-        }
-    }
-
     fun bind(model: Track) {
         binding.apply {
             Glide.with(root)
@@ -26,6 +18,14 @@ class TrackViewHolder (private val binding: TrackViewBinding) : RecyclerView.Vie
             trackName.text = model.trackName
             artistName.text = model.artistName
             trackTime.text = model.trackTime
+        }
+    }
+
+    companion object {
+        fun from(parent: ViewGroup): TrackViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = TrackViewBinding.inflate(inflater, parent, false)
+            return TrackViewHolder(binding)
         }
     }
 }
