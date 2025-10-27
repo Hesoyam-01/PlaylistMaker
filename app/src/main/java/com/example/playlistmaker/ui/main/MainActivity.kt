@@ -8,6 +8,7 @@ import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.presentation.main.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/*
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
 
@@ -38,4 +39,4 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-}
+}*/

@@ -6,17 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.search.SearchFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/search_toolbar"
-        style="@style/ToolbarStyle"
+    <TextView
+        android:id="@+id/search_title"
+        style="@style/TitleStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        app:contentInsetStartWithNavigation="64dp"
-        app:navigationIcon="@drawable/ic_arrow_back_24"
-        app:title="@string/search"
-        app:titleTextAppearance="@style/ToolbarStyle" />
+        android:text="@string/search" />
 
     <com.google.android.material.card.MaterialCardView
         style="@style/editTextBackground"
