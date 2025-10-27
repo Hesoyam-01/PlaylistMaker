@@ -22,13 +22,20 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:itemIconTint="@color/bottom_nav_item_colors"
+        app:itemRippleColor="@null"
+        app:itemTextAppearanceActive="@style/BottomNavTextStyle"
+        app:itemTextAppearanceInactive="@style/BottomNavTextStyle"
+        app:itemTextColor="@color/bottom_nav_item_colors"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation_items"
-        android:background="?attr/colorPrimary"
-        app:itemIconTint="@color/bottom_nav_item_colors"
-        app:itemTextColor="@color/bottom_nav_item_colors"
-        app:itemTextAppearanceActive="@style/BottomNavTextStyle"
-        app:itemTextAppearanceInactive="@style/BottomNavTextStyle"/>
+        app:menu="@menu/navigation_items" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/light_gray"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
