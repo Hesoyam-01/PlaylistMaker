@@ -34,7 +34,7 @@ class SettingsFragment : Fragment() {
 
         viewModel.getThemeMode()
 
-        binding.themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+        binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->
             viewModel.switchTheme(
                 checked
             )

@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,19 +10,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.player.PlayerFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -51,10 +46,10 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         trackAdapter = TrackAdapter { track ->
-            startPlayerActivity(track)
+            startPlayerFragment(track)
         }
         lastTracksAdapter = TrackAdapter { track ->
-            startPlayerActivity(track)
+            startPlayerFragment(track)
             handler.postDelayed({
                 viewModel.getSearchHistory()
             }, HISTORY_UPDATE_DELAY)
@@ -74,7 +69,7 @@ class SearchFragment : Fragment() {
             binding.searchHistoryView.visibility = View.GONE
         }
 
-        binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
+        binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) viewModel.getSearchHistory()
         }
 
@@ -111,19 +106,22 @@ class SearchFragment : Fragment() {
         binding.searchBar.addTextChangedListener(textWatcher)
     }
 
-    private fun startPlayerActivity(track: Track) {
-        val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
-            putExtra("TRACK_COVER", track.artworkUrl100)
-            putExtra("TRACK_NAME", track.trackName)
-            putExtra("ARTIST_NAME", track.artistName)
-            putExtra("TRACK_TIME", track.trackTime)
-            putExtra("ALBUM_NAME", track.collectionName)
-            putExtra("RELEASE_DATE", track.releaseDate)
-            putExtra("GENRE_NAME", track.primaryGenreName)
-            putExtra("COUNTRY", track.country)
-            putExtra("PREVIEW_URL", track.previewUrl)
-        }
-        startActivity(trackIntent)
+    private fun startPlayerFragment(track: Track) {
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(
+                previewUrl = track.previewUrl,
+                trackCover = track.artworkUrl100,
+                trackName = track.trackName,
+                artistName = track.artistName,
+                trackTime = track.trackTime,
+                albumName = track.collectionName,
+                genreName = track.primaryGenreName,
+                releaseDate = track.releaseDate,
+                country = track.country
+            )
+        )
+
         viewModel.addToSearchHistory(track)
     }
 
