@@ -1,16 +1,15 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,8 +20,6 @@ import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerFragment
-import com.example.playlistmaker.ui.root.RootActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -65,6 +62,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.observeSearchState().observe(viewLifecycleOwner) {
+            Log.d("111", it.toString())
             render(it)
         }
 
@@ -74,7 +72,10 @@ class SearchFragment : Fragment() {
         }
 
         binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) viewModel.getSearchHistory()
+            if (hasFocus) viewModel.getSearchHistory() else {
+                Log.d("444", "444")
+                binding.searchHistoryView.visibility = View.GONE
+            }
         }
 
         binding.searchClearButton.setOnClickListener {
@@ -97,8 +98,11 @@ class SearchFragment : Fragment() {
                 viewModel.debounceSearch(
                     s?.toString() ?: ""
                 )
-                if (s.isNullOrEmpty()) viewModel.getSearchHistory()
 
+                if (s.isNullOrEmpty()) {
+                    Log.d("333", s.toString())
+                    viewModel.getSearchHistory()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
