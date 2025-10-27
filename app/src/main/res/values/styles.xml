@@ -84,4 +84,10 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <style name="BottomNavTextStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
 </resources>
