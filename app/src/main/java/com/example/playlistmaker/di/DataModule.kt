@@ -5,12 +5,10 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
-import com.example.playlistmaker.data.impl.main.MainNavigatorImpl
 import com.example.playlistmaker.data.impl.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient
-import com.example.playlistmaker.domain.api.main.MainNavigator
 import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -29,10 +27,6 @@ object StorageKeys {
 }
 
 val dataModule = module {
-
-    single<MainNavigator> {
-        MainNavigatorImpl(androidContext())
-    }
 
     single<SearchAPI> {
         Retrofit.Builder()
