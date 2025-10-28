@@ -34,6 +34,8 @@ class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
+    private var hasFocus = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +64,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.observeSearchState().observe(viewLifecycleOwner) {
-            Log.d("111", it.toString())
+            Log.d("render", it.toString())
             render(it)
         }
 
@@ -72,9 +74,11 @@ class SearchFragment : Fragment() {
         }
 
         binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) viewModel.getSearchHistory() else {
-                Log.d("444", "444")
-                binding.searchHistoryView.visibility = View.GONE
+            if (hasFocus) {
+                if (binding.searchBar.text.isNullOrEmpty()) viewModel.getSearchHistory()
+                this.hasFocus = true
+            } else {
+                this.hasFocus = false
             }
         }
 
@@ -95,13 +99,15 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
-                viewModel.debounceSearch(
-                    s?.toString() ?: ""
-                )
+                if (hasFocus) {
+                    viewModel.debounceSearch(
+                        s?.toString() ?: ""
+                    )
 
-                if (s.isNullOrEmpty()) {
-                    Log.d("333", s.toString())
-                    viewModel.getSearchHistory()
+                    if (s.isNullOrEmpty()) {
+                        Log.d("onTextChanged nullOrEmpty", s.toString())
+                        viewModel.getSearchHistory()
+                    }
                 }
             }
 

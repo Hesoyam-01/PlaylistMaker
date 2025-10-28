@@ -37,7 +37,7 @@ class SearchViewModel(
     }
 
     fun getSearchHistory() {
-        Log.d("222", "gg")
+        Log.d("getSearchHistory", "gg")
         val lastTracksList =
             (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
                 ?: mutableListOf()
