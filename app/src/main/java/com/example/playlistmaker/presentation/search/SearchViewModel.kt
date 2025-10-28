@@ -3,7 +3,6 @@ package com.example.playlistmaker.presentation.search
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,7 +36,6 @@ class SearchViewModel(
     }
 
     fun getSearchHistory() {
-        Log.d("getSearchHistory", "gg")
         val lastTracksList =
             (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
                 ?: mutableListOf()

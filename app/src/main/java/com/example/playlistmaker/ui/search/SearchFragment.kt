@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,6 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.observeSearchState().observe(viewLifecycleOwner) {
-            Log.d("render", it.toString())
             render(it)
         }
 
@@ -105,7 +103,6 @@ class SearchFragment : Fragment() {
                     )
 
                     if (s.isNullOrEmpty()) {
-                        Log.d("onTextChanged nullOrEmpty", s.toString())
                         viewModel.getSearchHistory()
                     }
                 }
