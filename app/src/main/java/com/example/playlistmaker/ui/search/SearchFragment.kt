@@ -102,9 +102,7 @@ class SearchFragment : Fragment() {
                         s?.toString() ?: ""
                     )
 
-                    if (s.isNullOrEmpty()) {
-                        viewModel.getSearchHistory()
-                    }
+                    if (s.isNullOrEmpty()) viewModel.getSearchHistory()
                 }
             }
 
