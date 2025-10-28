@@ -1,9 +1,10 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/dark_gray</item>
+        <item name="android:navigationBarColor">@color/dark_gray</item>
         <item name="colorPrimary">@color/dark_gray</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnPrimaryFixedVariant">@color/white</item>

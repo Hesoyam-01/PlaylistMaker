@@ -52,7 +52,7 @@ class SearchViewModel(
         handler.postAtTime(
             searchRunnable,
             SEARCH_REQUEST_TOKEN,
-            postTime,
+            postTime
         )
     }
 

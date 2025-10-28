@@ -1,28 +1,27 @@
 package com.example.playlistmaker.ui.search
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.ui.player.PlayerFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
     private val handler = Handler(Looper.getMainLooper())
@@ -32,24 +31,27 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
 
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    private var hasFocus = false
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         trackAdapter = TrackAdapter { track ->
-            startPlayerActivity(track)
+            startPlayerFragment(track)
         }
         lastTracksAdapter = TrackAdapter { track ->
-            startPlayerActivity(track)
+            startPlayerFragment(track)
             handler.postDelayed({
                 viewModel.getSearchHistory()
             }, HISTORY_UPDATE_DELAY)
@@ -60,12 +62,8 @@ class SearchActivity : AppCompatActivity() {
             lastTracksRecyclerView.adapter = lastTracksAdapter
         }
 
-        viewModel.observeSearchState().observe(this) {
+        viewModel.observeSearchState().observe(viewLifecycleOwner) {
             render(it)
-        }
-
-        binding.searchToolbar.setNavigationOnClickListener {
-            finish()
         }
 
         binding.recentClearButton.setOnClickListener {
@@ -73,8 +71,13 @@ class SearchActivity : AppCompatActivity() {
             binding.searchHistoryView.visibility = View.GONE
         }
 
-        binding.searchBar.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) viewModel.getSearchHistory()
+        binding.searchBar.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                if (binding.searchBar.text.isNullOrEmpty()) viewModel.getSearchHistory()
+                this.hasFocus = true
+            } else {
+                this.hasFocus = false
+            }
         }
 
         binding.searchClearButton.setOnClickListener {
@@ -94,11 +97,13 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
-                viewModel.debounceSearch(
-                    s?.toString() ?: ""
-                )
-                if (s.isNullOrEmpty()) viewModel.getSearchHistory()
+                if (hasFocus) {
+                    viewModel.debounceSearch(
+                        s?.toString() ?: ""
+                    )
 
+                    if (s.isNullOrEmpty()) viewModel.getSearchHistory()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -110,19 +115,22 @@ class SearchActivity : AppCompatActivity() {
         binding.searchBar.addTextChangedListener(textWatcher)
     }
 
-    private fun startPlayerActivity(track: Track) {
-        val trackIntent = Intent(this@SearchActivity, PlayerActivity::class.java).apply {
-            putExtra("TRACK_COVER", track.artworkUrl100)
-            putExtra("TRACK_NAME", track.trackName)
-            putExtra("ARTIST_NAME", track.artistName)
-            putExtra("TRACK_TIME", track.trackTime)
-            putExtra("ALBUM_NAME", track.collectionName)
-            putExtra("RELEASE_DATE", track.releaseDate)
-            putExtra("GENRE_NAME", track.primaryGenreName)
-            putExtra("COUNTRY", track.country)
-            putExtra("PREVIEW_URL", track.previewUrl)
-        }
-        startActivity(trackIntent)
+    private fun startPlayerFragment(track: Track) {
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            PlayerFragment.createArgs(
+                previewUrl = track.previewUrl,
+                trackCover = track.artworkUrl100,
+                trackName = track.trackName,
+                artistName = track.artistName,
+                trackTime = track.trackTime,
+                albumName = track.collectionName,
+                genreName = track.primaryGenreName,
+                releaseDate = track.releaseDate,
+                country = track.country
+            )
+        )
+
         viewModel.addToSearchHistory(track)
     }
 
@@ -212,8 +220,8 @@ class SearchActivity : AppCompatActivity() {
         keyboardService.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         binding.searchBar.removeTextChangedListener(textWatcher)
     }
 
@@ -221,4 +229,3 @@ class SearchActivity : AppCompatActivity() {
         private const val HISTORY_UPDATE_DELAY = 600L
     }
 }
-

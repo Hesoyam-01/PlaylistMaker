@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/settings_toolbar"
-        style="@style/ToolbarStyle"
+    <TextView
+        android:id="@+id/settings_title"
+        style="@style/TitleStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:layout_marginBottom="24dp"
-        app:contentInsetStartWithNavigation="64dp"
-        app:navigationIcon="@drawable/ic_arrow_back_24"
-        app:title="@string/settings"
-        app:titleTextAppearance="@style/ToolbarStyle" />
+        android:text="@string/settings" />
 
 
     <FrameLayout
