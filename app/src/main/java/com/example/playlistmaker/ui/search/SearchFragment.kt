@@ -91,11 +91,8 @@ class SearchFragment : Fragment() {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
                 if (binding.searchBar.hasFocus()) {
-                    viewModel.debounceSearch(
-                        s?.toString() ?: ""
-                    )
-
                     if (s.isNullOrEmpty()) viewModel.getSearchHistory()
+                    else viewModel.debounceSearch(s.toString())
                 }
             }
 
