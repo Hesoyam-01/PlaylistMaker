@@ -6,6 +6,8 @@ import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.search.SearchRepository
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -13,12 +15,12 @@ import java.util.Locale
 class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    override fun searchTracks(query: String): Resource<MutableList<Track>> {
+    override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
-        return when (response.resultCode) {
+        when (response.resultCode) {
             200 -> {
-                Resource.Success((response as TracksSearchResponse).results.map {
+                emit(Resource.Success((response as TracksSearchResponse).results.map {
                     Track(
                         trackId = it.trackId,
                         trackName = it.trackName,
@@ -31,11 +33,11 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
                         country = it.country,
                         previewUrl = it.previewUrl
                     )
-                }.toMutableList())
+                }.toMutableList()))
             }
 
-            400 -> Resource.Error()
-            else -> Resource.Error()
+            400 -> emit(Resource.Error())
+            else -> emit(Resource.Error())
         }
     }
 }

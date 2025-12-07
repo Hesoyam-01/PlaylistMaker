@@ -6,11 +6,13 @@ import android.net.NetworkCapabilities
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.dto.Response
 import com.example.playlistmaker.data.dto.TracksSearchRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.UnknownHostException
 
 class RetrofitNetworkClient(private val tracksService: SearchAPI, private val context: Context) :
     NetworkClient {
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         try {
             return when {
                 !isConnected() -> {
@@ -18,9 +20,14 @@ class RetrofitNetworkClient(private val tracksService: SearchAPI, private val co
                 }
 
                 dto is TracksSearchRequest -> {
-                    val resp = tracksService.searchTracks(dto.query).execute()
-                    val body = resp.body() ?: Response()
-                    body.apply { resultCode = 200 }
+                    withContext(Dispatchers.IO) {
+                        try {
+                            val response = tracksService.searchTracks(dto.query)
+                            response.apply { resultCode = 200 }
+                        } catch (e: Throwable) {
+                            Response().apply { resultCode = 500 }
+                        }
+                    }
                 }
 
                 else -> {

@@ -1,21 +1,20 @@
 package com.example.playlistmaker.presentation.search
 
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.search.SearchInteractor
 import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.util.Resource
+import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchHistoryInteractor: SearchHistoryInteractor,
     private val searchInteractor: SearchInteractor
 ) : ViewModel() {
-    private val handler = Handler(Looper.getMainLooper())
 
     private var lastQuery: String = ""
 
@@ -44,16 +43,13 @@ class SearchViewModel(
         )
     }
 
-    fun debounceSearch(query: String) {
-        this.lastQuery = query
-        val searchRunnable = Runnable { searchRequest(query) }
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        val postTime = SystemClock.uptimeMillis() + SEARCH_DEBOUNCE_DELAY
-        handler.postAtTime(
-            searchRunnable,
-            SEARCH_REQUEST_TOKEN,
-            postTime
-        )
+    val debounceSearch = debounce<String>(
+        SEARCH_DEBOUNCE_DELAY,
+        viewModelScope,
+        true
+    ) { query ->
+        lastQuery = query
+        searchRequest(query)
     }
 
     private fun searchRequest(query: String) {
@@ -61,29 +57,34 @@ class SearchViewModel(
             renderState(
                 SearchState.Loading
             )
-            searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
-                override fun consume(resource: Resource<MutableList<Track>>) {
-                    handler.post {
-                        when (resource) {
-                            is Resource.Success -> {
-                                if (resource.data.isEmpty()) {
-                                    renderState(
-                                        SearchState.Empty
-                                    )
-                                } else renderState(
-                                    SearchState.FoundTracks(resource.data)
-                                )
-                            }
 
-                            is Resource.Error -> {
-                                renderState(
-                                    SearchState.Error
-                                )
-                            }
-                        }
+            viewModelScope.launch {
+                searchInteractor
+                    .searchTracks(query)
+                    .collect { resource ->
+                        processResult(resource)
                     }
-                }
-            })
+            }
+        }
+    }
+
+    private fun processResult(resource: Resource<MutableList<Track>>) {
+        when (resource) {
+            is Resource.Success -> {
+                if (resource.data.isEmpty()) {
+                    renderState(
+                        SearchState.Empty
+                    )
+                } else renderState(
+                    SearchState.FoundTracks(resource.data)
+                )
+            }
+
+            is Resource.Error -> {
+                renderState(
+                    SearchState.Error
+                )
+            }
         }
     }
 
@@ -95,13 +96,7 @@ class SearchViewModel(
         stateLiveData.postValue(state)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-    }
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 1500L
-        private val SEARCH_REQUEST_TOKEN = Any()
     }
 }

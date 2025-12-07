@@ -55,13 +55,14 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.roundedimageview)
     implementation(libs.androidx.constraintlayout.v200)
-    implementation (libs.androidx.appcompat.v161)
-    implementation (libs.androidx.lifecycle.livedata.ktx)
-    implementation (libs.androidx.lifecycle.viewmodel.ktx)
-    implementation (libs.androidx.activity.ktx)
+    implementation(libs.androidx.appcompat.v161)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.koin.android)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.kotlinx.coroutines.android)
 
 }

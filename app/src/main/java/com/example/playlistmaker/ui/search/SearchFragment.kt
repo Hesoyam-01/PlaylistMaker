@@ -2,8 +2,6 @@ package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -12,6 +10,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
@@ -19,19 +18,22 @@ import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerFragment
+import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
-    private val handler = Handler(Looper.getMainLooper())
-
     private lateinit var textWatcher: TextWatcher
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var lastTracksAdapter: TrackAdapter
 
     private lateinit var binding: FragmentSearchBinding
+
+    private lateinit var getSearchHistoryDebounce: (Unit) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,14 +47,25 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        trackAdapter = TrackAdapter { track ->
-            startPlayerFragment(track)
+        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+            track -> startPlayerFragment(track)
         }
+
+        getSearchHistoryDebounce = debounce(
+            HISTORY_UPDATE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            true
+        ) {
+            viewModel.getSearchHistory()
+        }
+
+        trackAdapter = TrackAdapter { track ->
+            onTrackClickDebounce(track)
+        }
+
         lastTracksAdapter = TrackAdapter { track ->
-            startPlayerFragment(track)
-            handler.postDelayed({
-                viewModel.getSearchHistory()
-            }, HISTORY_UPDATE_DELAY)
+            onTrackClickDebounce(track)
+            getSearchHistoryDebounce
         }
 
         binding.apply {
@@ -189,6 +202,7 @@ class SearchFragment : Fragment() {
 
     private fun showError() {
         binding.apply {
+            searchHistoryView.visibility = View.GONE
             tracksRecyclerView.visibility = View.GONE
             searchProgressBar.visibility = View.GONE
         }
@@ -216,6 +230,7 @@ class SearchFragment : Fragment() {
     }
 
     private companion object {
-        private const val HISTORY_UPDATE_DELAY = 600L
+        private const val HISTORY_UPDATE_DELAY = 500L
+        private const val CLICK_DEBOUNCE_DELAY = 300L
     }
 }

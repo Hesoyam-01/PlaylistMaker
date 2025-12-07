@@ -14,8 +14,8 @@
             android:id="@+id/action_searchFragment_to_playerFragment"
             app:destination="@id/playerFragment"
             app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/hold"
-            app:popEnterAnim="@anim/hold"
+            app:exitAnim="@anim/slide_out_left_30"
+            app:popEnterAnim="@anim/slide_in_left_30"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
