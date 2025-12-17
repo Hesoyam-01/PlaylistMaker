@@ -1,5 +1,7 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.db.converters.TrackDbConverter
+import com.example.playlistmaker.data.impl.favorites.FavoritesRepositoryImpl
 import com.example.playlistmaker.data.impl.player.MediaRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchRepositoryImpl
@@ -8,6 +10,7 @@ import com.example.playlistmaker.domain.api.player.MediaRepository
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.search.SearchRepository
 import com.example.playlistmaker.domain.api.settings.ThemeRepository
+import com.example.playlistmaker.domain.api.favorites.FavoritesRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -15,7 +18,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<SearchRepository> {
-        SearchRepositoryImpl(get())
+        SearchRepositoryImpl(get(), get())
     }
 
     factory<MediaRepository> {
@@ -28,6 +31,12 @@ val repositoryModule = module {
 
     single<ThemeRepository> {
         ThemeRepositoryImpl(get(named("themeStorage")), androidContext())
+    }
+
+    factory { TrackDbConverter() }
+
+    single<FavoritesRepository> {
+        FavoritesRepositoryImpl(get(), get())
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.playlistmaker.data.impl.search
 
 import com.example.playlistmaker.data.client.NetworkClient
+import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.converters.TrackDbConverter
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.search.SearchRepository
@@ -12,16 +14,22 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
+class SearchRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val appDatabase: AppDatabase
+) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
     override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
+        val favoriteTrackIds = appDatabase.trackDao().getTrackIds()
+
         when (response.resultCode) {
             200 -> {
                 emit(Resource.Success((response as TracksSearchResponse).results.map {
-                    Track(
+                    val isFavorite = favoriteTrackIds.contains(it.trackId)
+                        Track(
                         trackId = it.trackId,
                         trackName = it.trackName,
                         artistName = it.artistName,
@@ -31,7 +39,8 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
                         releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4),
                         primaryGenreName = it.primaryGenreName,
                         country = it.country,
-                        previewUrl = it.previewUrl
+                        previewUrl = it.previewUrl,
+                        isFavorite = isFavorite
                     )
                 }.toMutableList()))
             }

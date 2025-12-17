@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.api.player.MediaInteractor
 import com.example.playlistmaker.domain.models.player.MediaState
+import com.example.playlistmaker.domain.models.search.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -14,7 +16,11 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInteractor) :
+class PlayerViewModel(
+    previewUrl: String,
+    private val mediaInteractor: MediaInteractor,
+    private val favoritesInteractor: FavoritesInteractor
+) :
     ViewModel() {
 
     private val stateLiveData = MutableLiveData<PlayerState>()
@@ -30,7 +36,7 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         if (mediaState == MediaState.PREPARED) {
             stateLiveData.postValue(
                 PlayerState(
-                    false,
+                    mediaState,
                     dateFormat.format(mediaInteractor.getCurrentPosition())
                 )
             )
@@ -62,7 +68,7 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         mediaInteractor.play()
         stateLiveData.postValue(
             PlayerState(
-                true,
+                mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
         )
@@ -74,7 +80,7 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         timerJob?.cancel()
         stateLiveData.postValue(
             PlayerState(
-                false,
+                mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
         )
@@ -86,13 +92,12 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
                 if (mediaState == MediaState.PLAYING) {
                     stateLiveData.postValue(
                         PlayerState(
-                            true,
+                            mediaState,
                             dateFormat.format(mediaInteractor.getCurrentPosition())
                         )
                     )
                 }
                 delay(300L)
-
             }
         }
     }
@@ -101,10 +106,17 @@ class PlayerViewModel(previewUrl: String, private val mediaInteractor: MediaInte
         mediaInteractor.pause()
         stateLiveData.postValue(
             PlayerState(
-                false,
+                mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
         )
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch {
+            if (track.isFavorite) favoritesInteractor.deleteFromFavoriteTracks(track)
+            else favoritesInteractor.addToFavoriteTracks(track)
+        }
     }
 
     override fun onCleared() {

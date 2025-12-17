@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.domain.models.player.MediaState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -35,7 +36,7 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            changePlayStopButton(it.isPlaying)
+            changePlayStopButton(it.mediaState == MediaState.PLAYING)
             binding.elapsedTime.text = it.elapsedTime
         }
 
@@ -60,6 +61,7 @@ class PlayerFragment : Fragment() {
             genreInfo.text = requireArguments().getString(ARGS_GENRE_NAME)
             yearInfo.text = requireArguments().getString(ARGS_RELEASE_DATE)
             countryInfo.text = requireArguments().getString(ARGS_COUNTRY)
+
         }
 
         val coverUrl = requireArguments().getString(ARGS_TRACK_COVER)
@@ -97,6 +99,7 @@ class PlayerFragment : Fragment() {
         private const val ARGS_GENRE_NAME = "genre_name"
         private const val ARGS_RELEASE_DATE = "release_date"
         private const val ARGS_COUNTRY = "country"
+        private const val ARGS_IS_FAVORITE = "favorite"
 
         fun createArgs(
             previewUrl: String,
@@ -107,7 +110,8 @@ class PlayerFragment : Fragment() {
             albumName: String?,
             genreName: String,
             releaseDate: String?,
-            country: String
+            country: String,
+            isFavorite: Boolean
         ): Bundle =
             bundleOf(
                 ARGS_PREVIEW_URL to previewUrl,
@@ -118,7 +122,8 @@ class PlayerFragment : Fragment() {
                 ARGS_ALBUM_NAME to albumName,
                 ARGS_GENRE_NAME to genreName,
                 ARGS_RELEASE_DATE to releaseDate,
-                ARGS_COUNTRY to country
+                ARGS_COUNTRY to country,
+                ARGS_IS_FAVORITE to isFavorite
             )
     }
 }
