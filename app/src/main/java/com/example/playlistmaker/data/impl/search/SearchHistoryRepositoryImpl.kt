@@ -57,11 +57,11 @@ class SearchHistoryRepositoryImpl(
     }
 
     override fun getSearchHistory(): Resource<MutableList<Track>> {
-        val favoriteTrackIds = appDatabase.trackDao().getTrackIds()
+//        val favoriteTrackIds = appDatabase.trackDao().getTrackIds()
         val lastTracksList = lastTracksDtoList.map {
-            val isFavorite = favoriteTrackIds.contains(it.trackId)
+//            val isFavorite = favoriteTrackIds.contains(it.trackId)
             val track = fromTrackDtoToTrack(it)
-            track.isFavorite = isFavorite
+//            track.isFavorite = isFavorite
             track
         }.toMutableList()
         return Resource.Success(lastTracksList)

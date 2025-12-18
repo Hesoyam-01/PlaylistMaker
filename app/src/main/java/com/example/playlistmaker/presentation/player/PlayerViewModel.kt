@@ -35,7 +35,7 @@ class PlayerViewModel(
         mediaState = it
         if (mediaState == MediaState.PREPARED) {
             stateLiveData.postValue(
-                PlayerState(
+                PlayerState.Media(
                     mediaState,
                     dateFormat.format(mediaInteractor.getCurrentPosition())
                 )
@@ -67,7 +67,7 @@ class PlayerViewModel(
     private fun startPlayer() {
         mediaInteractor.play()
         stateLiveData.postValue(
-            PlayerState(
+            PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
@@ -79,7 +79,7 @@ class PlayerViewModel(
         mediaInteractor.pause()
         timerJob?.cancel()
         stateLiveData.postValue(
-            PlayerState(
+            PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
@@ -91,7 +91,7 @@ class PlayerViewModel(
             while (isActive) {
                 if (mediaState == MediaState.PLAYING) {
                     stateLiveData.postValue(
-                        PlayerState(
+                        PlayerState.Media(
                             mediaState,
                             dateFormat.format(mediaInteractor.getCurrentPosition())
                         )
@@ -105,7 +105,7 @@ class PlayerViewModel(
     fun onPause() {
         mediaInteractor.pause()
         stateLiveData.postValue(
-            PlayerState(
+            PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
             )
@@ -114,8 +114,15 @@ class PlayerViewModel(
 
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch {
-            if (track.isFavorite) favoritesInteractor.deleteFromFavoriteTracks(track)
-            else favoritesInteractor.addToFavoriteTracks(track)
+            if (track.isFavorite) {
+                favoritesInteractor.deleteFromFavoriteTracks(track)
+                stateLiveData.postValue((PlayerState.IsFavorite(false)))
+            }
+            else {
+                favoritesInteractor.addToFavoriteTracks(track)
+                stateLiveData.postValue((PlayerState.IsFavorite(true)))
+            }
+
         }
     }
 

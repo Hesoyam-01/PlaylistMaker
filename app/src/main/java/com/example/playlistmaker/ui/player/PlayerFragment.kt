@@ -13,6 +13,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.models.player.MediaState
 import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -36,9 +37,19 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val track = getTrackFromArgs()
+
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            changePlayStopButton(it.mediaState == MediaState.PLAYING)
-            binding.elapsedTime.text = it.elapsedTime
+            when (it) {
+                is PlayerState.Media -> {
+                    changePlayStopButton(it.mediaState == MediaState.PLAYING)
+                    binding.elapsedTime.text = it.elapsedTime
+                }
+
+                is PlayerState.IsFavorite -> {
+                    changeIsFavoriteButton(it.isFavorite)
+                }
+            }
         }
 
         binding.playerToolbar.setNavigationOnClickListener {
@@ -49,8 +60,8 @@ class PlayerFragment : Fragment() {
             viewModel.playbackControl()
         }
 
-        binding.favoritesButton.setOnClickListener {
-            viewModel.onFavoriteClicked()
+        binding.isFavoriteButton.setOnClickListener {
+            viewModel.onFavoriteClicked(track)
         }
 
         if (requireArguments().getString(ARGS_RELEASE_DATE) == null) binding.yearView.visibility =
@@ -59,15 +70,15 @@ class PlayerFragment : Fragment() {
             View.GONE
 
         binding.apply {
-            playerTrackName.text = requireArguments().getString(ARGS_TRACK_NAME)
-            playerArtistName.text = requireArguments().getString(ARGS_ARTIST_NAME)
-            timeInfo.text = requireArguments().getString(ARGS_TRACK_TIME)
-            albumInfo.text = requireArguments().getString(ARGS_ALBUM_NAME)
-            genreInfo.text = requireArguments().getString(ARGS_GENRE_NAME)
-            yearInfo.text = requireArguments().getString(ARGS_RELEASE_DATE)
-            countryInfo.text = requireArguments().getString(ARGS_COUNTRY)
-            if (requireArguments().getBoolean(ARGS_IS_FAVORITE)) favoritesButton.setImageResource(R.drawable.ic_favorite_51)
-            else favoritesButton.setImageResource(R.drawable.ic_not_favorite_51)
+            playerTrackName.text = track.trackName
+            playerArtistName.text = track.artistName
+            timeInfo.text = track.trackTime
+            albumInfo.text = track.collectionName
+            genreInfo.text = track.primaryGenreName
+            yearInfo.text = track.releaseDate
+            countryInfo.text = track.country
+            if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
+            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
 
         val coverUrl = requireArguments().getString(ARGS_TRACK_COVER)
@@ -83,6 +94,13 @@ class PlayerFragment : Fragment() {
         binding.apply {
             if (isPlaying) playStopButton.setImageResource(R.drawable.ic_stop_84)
             else playStopButton.setImageResource(R.drawable.ic_play_84)
+        }
+    }
+
+    private fun changeIsFavoriteButton(isFavorite: Boolean) {
+        binding.apply {
+            if (isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
+            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
     }
 
@@ -134,6 +152,22 @@ class PlayerFragment : Fragment() {
                 ARGS_COUNTRY to country,
                 ARGS_IS_FAVORITE to isFavorite,
             )
+    }
+
+    private fun getTrackFromArgs(): Track {
+        return Track(
+            trackId = requireArguments().getInt(ARGS_TRACK_ID),
+            trackName = requireArguments().getString(ARGS_TRACK_NAME) ?: "",
+            artistName = requireArguments().getString(ARGS_ARTIST_NAME) ?: "",
+            trackTime = requireArguments().getString(ARGS_TRACK_TIME) ?: "",
+            artworkUrl100 = requireArguments().getString(ARGS_TRACK_COVER) ?: "",
+            collectionName = requireArguments().getString(ARGS_ALBUM_NAME),
+            releaseDate = requireArguments().getString(ARGS_RELEASE_DATE),
+            primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
+            country = requireArguments().getString(ARGS_COUNTRY) ?: "",
+            previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
+            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
+        )
     }
 
 }
