@@ -1,6 +1,5 @@
 package com.example.playlistmaker.data.impl.favorites
 
-import android.util.Log
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.TrackDbConverter
 import com.example.playlistmaker.data.db.entity.TrackEntity
@@ -25,6 +24,10 @@ class FavoritesRepositoryImpl(
 
     override suspend fun deleteFromFavoriteTracks(track: Track) {
         appDatabase.trackDao().deleteTrack(trackDbConverter.map(track))
+    }
+
+    override suspend fun favoriteTrackIds() : List<Int> {
+        return appDatabase.trackDao().getTrackIds()
     }
 
     private fun convertFromTrackEntity(tracks: List<TrackEntity>) : List<Track> {

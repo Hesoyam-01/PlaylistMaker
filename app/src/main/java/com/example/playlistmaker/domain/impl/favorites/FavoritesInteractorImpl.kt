@@ -21,4 +21,8 @@ class FavoritesInteractorImpl(
         repository.deleteFromFavoriteTracks(track)
     }
 
+    override suspend fun favoriteTrackIds(): List<Int> {
+        return repository.favoriteTrackIds()
+    }
+
 }

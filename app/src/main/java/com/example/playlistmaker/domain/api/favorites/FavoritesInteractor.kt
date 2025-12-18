@@ -10,4 +10,6 @@ interface FavoritesInteractor {
     suspend fun addToFavoriteTracks(track: Track)
 
     suspend fun deleteFromFavoriteTracks(track: Track)
+
+    suspend fun favoriteTrackIds() : List<Int>
 }

@@ -18,6 +18,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     previewUrl: String,
+    trackId: Int,
     private val mediaInteractor: MediaInteractor,
     private val favoritesInteractor: FavoritesInteractor
 ) :
@@ -48,6 +49,11 @@ class PlayerViewModel(
     init {
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
         mediaInteractor.prepare(previewUrl)
+        viewModelScope.launch {
+            val favoriteTrackIds = favoritesInteractor.favoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(trackId)
+            stateLiveData.postValue(PlayerState.IsFavorite(isFavorite))
+        }
     }
 
     fun playbackControl() {
