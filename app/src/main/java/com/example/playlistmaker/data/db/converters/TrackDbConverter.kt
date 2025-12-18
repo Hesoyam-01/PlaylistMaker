@@ -16,7 +16,7 @@ class TrackDbConverter {
             track.releaseDate,
             track.primaryGenreName,
             track.country,
-            track.previewUrl,
+            track.previewUrl
         )
     }
 
@@ -31,7 +31,7 @@ class TrackDbConverter {
             track.releaseDate,
             track.primaryGenreName,
             track.country,
-            track.previewUrl,
+            track.previewUrl
         )
     }
 }

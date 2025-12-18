@@ -117,8 +117,7 @@ class PlayerViewModel(
             if (track.isFavorite) {
                 favoritesInteractor.deleteFromFavoriteTracks(track)
                 stateLiveData.postValue((PlayerState.IsFavorite(false)))
-            }
-            else {
+            } else {
                 favoritesInteractor.addToFavoriteTracks(track)
                 stateLiveData.postValue((PlayerState.IsFavorite(true)))
             }
