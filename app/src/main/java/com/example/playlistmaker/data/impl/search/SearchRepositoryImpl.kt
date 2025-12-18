@@ -2,7 +2,6 @@ package com.example.playlistmaker.data.impl.search
 
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.converters.TrackDbConverter
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.search.SearchRepository

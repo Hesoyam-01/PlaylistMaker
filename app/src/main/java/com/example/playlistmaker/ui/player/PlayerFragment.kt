@@ -12,6 +12,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.models.player.MediaState
+import com.example.playlistmaker.domain.models.search.Track
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -48,6 +49,10 @@ class PlayerFragment : Fragment() {
             viewModel.playbackControl()
         }
 
+        binding.favoritesButton.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
         if (requireArguments().getString(ARGS_RELEASE_DATE) == null) binding.yearView.visibility =
             View.GONE
         if (requireArguments().getString(ARGS_ALBUM_NAME) == null) binding.albumView.visibility =
@@ -61,7 +66,8 @@ class PlayerFragment : Fragment() {
             genreInfo.text = requireArguments().getString(ARGS_GENRE_NAME)
             yearInfo.text = requireArguments().getString(ARGS_RELEASE_DATE)
             countryInfo.text = requireArguments().getString(ARGS_COUNTRY)
-
+            if (requireArguments().getBoolean(ARGS_IS_FAVORITE)) favoritesButton.setImageResource(R.drawable.ic_favorite_51)
+            else favoritesButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
 
         val coverUrl = requireArguments().getString(ARGS_TRACK_COVER)
@@ -90,6 +96,7 @@ class PlayerFragment : Fragment() {
     }
 
     companion object {
+        private const val ARGS_TRACK_ID = "track_id"
         private const val ARGS_PREVIEW_URL = "preview_url"
         private const val ARGS_TRACK_COVER = "track_cover"
         private const val ARGS_TRACK_NAME = "track_name"
@@ -102,6 +109,7 @@ class PlayerFragment : Fragment() {
         private const val ARGS_IS_FAVORITE = "favorite"
 
         fun createArgs(
+            trackId: Int,
             previewUrl: String,
             trackCover: String,
             trackName: String,
@@ -111,9 +119,10 @@ class PlayerFragment : Fragment() {
             genreName: String,
             releaseDate: String?,
             country: String,
-            isFavorite: Boolean
+            isFavorite: Boolean,
         ): Bundle =
             bundleOf(
+                ARGS_TRACK_ID to trackId,
                 ARGS_PREVIEW_URL to previewUrl,
                 ARGS_TRACK_COVER to trackCover,
                 ARGS_TRACK_NAME to trackName,
@@ -123,7 +132,8 @@ class PlayerFragment : Fragment() {
                 ARGS_GENRE_NAME to genreName,
                 ARGS_RELEASE_DATE to releaseDate,
                 ARGS_COUNTRY to country,
-                ARGS_IS_FAVORITE to isFavorite
+                ARGS_IS_FAVORITE to isFavorite,
             )
     }
+
 }

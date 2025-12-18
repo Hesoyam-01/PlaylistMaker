@@ -88,11 +88,11 @@
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
 
     <ImageView
-        android:id="@+id/add_to_favorites_button"
+        android:id="@+id/favorites_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="54dp"
-        android:src="@drawable/ic_add_to_favorites_51"
+        android:src="@drawable/ic_not_favorite_51"
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
 
@@ -103,7 +103,7 @@
         android:layout_marginTop="39dp"
         android:clickable="true"
         android:src="@drawable/ic_play_84"
-        app:layout_constraintEnd_toEndOf="@id/add_to_favorites_button"
+        app:layout_constraintEnd_toEndOf="@id/favorites_button"
         app:layout_constraintStart_toStartOf="@id/add_to_playlist_button"
         app:layout_constraintTop_toBottomOf="@id/player_artist_name" />
 

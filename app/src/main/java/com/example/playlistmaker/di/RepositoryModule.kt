@@ -26,7 +26,7 @@ val repositoryModule = module {
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named("searchHistoryStorage")))
+        SearchHistoryRepositoryImpl(get(named("searchHistoryStorage")), get())
     }
 
     single<ThemeRepository> {

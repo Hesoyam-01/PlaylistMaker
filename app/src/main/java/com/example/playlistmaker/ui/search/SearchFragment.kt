@@ -122,6 +122,7 @@ class SearchFragment : Fragment() {
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(
+                trackId = track.trackId,
                 previewUrl = track.previewUrl,
                 trackCover = track.artworkUrl100,
                 trackName = track.trackName,
