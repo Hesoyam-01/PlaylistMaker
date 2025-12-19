@@ -65,7 +65,10 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun showEmpty() {
-        binding.favoritesEmptyPlaceholder.visibility = View.VISIBLE
+        binding.apply {
+            favoritesRecyclerView.visibility = View.GONE
+            favoritesEmptyPlaceholder.visibility = View.VISIBLE
+        }
     }
 
     private fun render(state: FavoritesState) {
