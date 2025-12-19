@@ -48,7 +48,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-            track -> startPlayerFragment(track)
+            startPlayerFragment(it)
         }
 
         getSearchHistoryDebounce = debounce(
@@ -59,12 +59,12 @@ class SearchFragment : Fragment() {
             viewModel.getSearchHistory()
         }
 
-        trackAdapter = TrackAdapter { track ->
-            onTrackClickDebounce(track)
+        trackAdapter = TrackAdapter {
+            onTrackClickDebounce(it)
         }
 
-        lastTracksAdapter = TrackAdapter { track ->
-            onTrackClickDebounce(track)
+        lastTracksAdapter = TrackAdapter {
+            onTrackClickDebounce(it)
             getSearchHistoryDebounce
         }
 
@@ -122,6 +122,7 @@ class SearchFragment : Fragment() {
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(
+                trackId = track.trackId,
                 previewUrl = track.previewUrl,
                 trackCover = track.artworkUrl100,
                 trackName = track.trackName,
@@ -130,7 +131,8 @@ class SearchFragment : Fragment() {
                 albumName = track.collectionName,
                 genreName = track.primaryGenreName,
                 releaseDate = track.releaseDate,
-                country = track.country
+                country = track.country,
+                isFavorite = track.isFavorite
             )
         )
 

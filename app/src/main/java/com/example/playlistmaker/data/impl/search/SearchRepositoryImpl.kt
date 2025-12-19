@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
+class SearchRepositoryImpl(
+    private val networkClient: NetworkClient,
+) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
     override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
@@ -21,7 +23,7 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
         when (response.resultCode) {
             200 -> {
                 emit(Resource.Success((response as TracksSearchResponse).results.map {
-                    Track(
+                        Track(
                         trackId = it.trackId,
                         trackName = it.trackName,
                         artistName = it.artistName,

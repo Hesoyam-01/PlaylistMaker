@@ -2,8 +2,10 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.impl.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
@@ -70,6 +72,12 @@ val dataModule = module {
 
     single<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
 }

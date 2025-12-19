@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class SearchHistoryRepositoryImpl(
-    private val storage: StorageClient<MutableList<TrackDto>>
+    private val storage: StorageClient<MutableList<TrackDto>>,
 ) : SearchHistoryRepository {
     private companion object {
         const val MAX_TRACK_HISTORY = 10
@@ -55,8 +55,9 @@ class SearchHistoryRepositoryImpl(
     }
 
     override fun getSearchHistory(): Resource<MutableList<Track>> {
-        val lastTracksList = lastTracksDtoList.map { trackDto ->
-            fromTrackDtoToTrack(trackDto)
+        val lastTracksList = lastTracksDtoList.map {
+            val track = fromTrackDtoToTrack(it)
+            track
         }.toMutableList()
         return Resource.Success(lastTracksList)
     }
