@@ -15,19 +15,15 @@ import java.util.Locale
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
-    private val appDatabase: AppDatabase
 ) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
     override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
-        val favoriteTrackIds = appDatabase.trackDao().getTrackIds()
-
         when (response.resultCode) {
             200 -> {
                 emit(Resource.Success((response as TracksSearchResponse).results.map {
-                    val isFavorite = favoriteTrackIds.contains(it.trackId)
                         Track(
                         trackId = it.trackId,
                         trackName = it.trackName,
@@ -38,8 +34,7 @@ class SearchRepositoryImpl(
                         releaseDate = it.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4),
                         primaryGenreName = it.primaryGenreName,
                         country = it.country,
-                        previewUrl = it.previewUrl,
-                        isFavorite = isFavorite
+                        previewUrl = it.previewUrl
                     )
                 }.toMutableList()))
             }

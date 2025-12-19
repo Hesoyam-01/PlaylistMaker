@@ -27,8 +27,8 @@ val viewModelModule = module {
         PlayerViewModel(params.get(), params.get(), get(), get())
     }
 
-    viewModel { params ->
-        FavoritesFragmentViewModel(params.get())
+    viewModel {
+        FavoritesFragmentViewModel(get())
     }
 
     viewModel { params ->

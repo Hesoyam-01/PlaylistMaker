@@ -48,7 +48,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-            track -> startPlayerFragment(track)
+            startPlayerFragment(it)
         }
 
         getSearchHistoryDebounce = debounce(
@@ -59,12 +59,12 @@ class SearchFragment : Fragment() {
             viewModel.getSearchHistory()
         }
 
-        trackAdapter = TrackAdapter { track ->
-            onTrackClickDebounce(track)
+        trackAdapter = TrackAdapter {
+            onTrackClickDebounce(it)
         }
 
-        lastTracksAdapter = TrackAdapter { track ->
-            onTrackClickDebounce(track)
+        lastTracksAdapter = TrackAdapter {
+            onTrackClickDebounce(it)
             getSearchHistoryDebounce
         }
 

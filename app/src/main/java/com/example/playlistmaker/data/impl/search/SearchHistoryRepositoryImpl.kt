@@ -1,7 +1,6 @@
 package com.example.playlistmaker.data.impl.search
 
 import com.example.playlistmaker.data.client.StorageClient
-import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.search.Track
@@ -11,7 +10,6 @@ import java.util.Locale
 
 class SearchHistoryRepositoryImpl(
     private val storage: StorageClient<MutableList<TrackDto>>,
-    private val appDatabase: AppDatabase
 ) : SearchHistoryRepository {
     private companion object {
         const val MAX_TRACK_HISTORY = 10
@@ -57,11 +55,8 @@ class SearchHistoryRepositoryImpl(
     }
 
     override fun getSearchHistory(): Resource<MutableList<Track>> {
-//        val favoriteTrackIds = appDatabase.trackDao().getTrackIds()
         val lastTracksList = lastTracksDtoList.map {
-//            val isFavorite = favoriteTrackIds.contains(it.trackId)
             val track = fromTrackDtoToTrack(it)
-//            track.isFavorite = isFavorite
             track
         }.toMutableList()
         return Resource.Success(lastTracksList)

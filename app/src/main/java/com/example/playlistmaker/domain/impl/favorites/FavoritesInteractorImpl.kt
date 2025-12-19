@@ -9,7 +9,7 @@ class FavoritesInteractorImpl(
     private val repository: FavoritesRepository
 ) : FavoritesInteractor {
 
-    override fun favoriteTracks(): Flow<List<Track>> {
+    override fun favoriteTracks(): Flow<MutableList<Track>> {
         return repository.favoriteTracks()
     }
 

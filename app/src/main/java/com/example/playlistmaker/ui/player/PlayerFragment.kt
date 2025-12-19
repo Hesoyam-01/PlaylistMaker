@@ -69,9 +69,9 @@ class PlayerFragment : Fragment() {
             viewModel.onFavoriteClicked(track)
         }
 
-        if (requireArguments().getString(ARGS_RELEASE_DATE) == null) binding.yearView.visibility =
+        if (track.releaseDate == null) binding.yearView.visibility =
             View.GONE
-        if (requireArguments().getString(ARGS_ALBUM_NAME) == null) binding.albumView.visibility =
+        if (track.collectionName == null) binding.albumView.visibility =
             View.GONE
 
         binding.apply {

@@ -18,7 +18,7 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     single<SearchRepository> {
-        SearchRepositoryImpl(get(), get())
+        SearchRepositoryImpl(get())
     }
 
     factory<MediaRepository> {
@@ -26,7 +26,7 @@ val repositoryModule = module {
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named("searchHistoryStorage")), get())
+        SearchHistoryRepositoryImpl(get(named("searchHistoryStorage")))
     }
 
     single<ThemeRepository> {

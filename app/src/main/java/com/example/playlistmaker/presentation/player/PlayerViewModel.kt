@@ -24,24 +24,23 @@ class PlayerViewModel(
 ) :
     ViewModel() {
 
-    private val stateLiveData = MutableLiveData<PlayerState>()
-
     private var timerJob: Job? = null
 
+    private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
     private var mediaState = MediaState.DEFAULT
 
     private val mediaStateObserver = Observer<MediaState> {
         mediaState = it
-        if (mediaState == MediaState.PREPARED) {
-            stateLiveData.postValue(
-                PlayerState.Media(
-                    mediaState,
-                    dateFormat.format(mediaInteractor.getCurrentPosition())
-                )
+
+        stateLiveData.postValue(
+            PlayerState.Media(
+                mediaState,
+                dateFormat.format(mediaInteractor.getCurrentPosition())
             )
-        }
+        )
+
     }
 
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
@@ -72,24 +71,12 @@ class PlayerViewModel(
 
     private fun startPlayer() {
         mediaInteractor.play()
-        stateLiveData.postValue(
-            PlayerState.Media(
-                mediaState,
-                dateFormat.format(mediaInteractor.getCurrentPosition())
-            )
-        )
         startTimer()
     }
 
     private fun pausePlayer() {
         mediaInteractor.pause()
         timerJob?.cancel()
-        stateLiveData.postValue(
-            PlayerState.Media(
-                mediaState,
-                dateFormat.format(mediaInteractor.getCurrentPosition())
-            )
-        )
     }
 
     private fun startTimer() {
