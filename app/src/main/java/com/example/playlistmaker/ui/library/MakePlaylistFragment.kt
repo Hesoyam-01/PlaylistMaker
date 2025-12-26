@@ -1,0 +1,34 @@
+package com.example.playlistmaker.ui.library
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentFavoritesBinding
+import com.example.playlistmaker.databinding.FragmentMakePlaylistBinding
+
+class MakePlaylistFragment : Fragment() {
+
+    private var _binding: FragmentMakePlaylistBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMakePlaylistBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
