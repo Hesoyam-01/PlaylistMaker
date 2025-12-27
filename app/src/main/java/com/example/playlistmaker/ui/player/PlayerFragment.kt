@@ -91,7 +91,7 @@ class PlayerFragment : Fragment() {
         Glide.with(this)
             .load(coverUrl)
             .transform(RoundedCorners(dpToPx(8)))
-            .placeholder(R.drawable.album_placeholder)
+            .placeholder(R.drawable.ic_album_placeholder_45)
             .into(binding.playerTrackCover)
 
     }

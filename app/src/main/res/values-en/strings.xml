@@ -25,4 +25,7 @@
     <string name="empty_library">Your library is empty</string>
     <string name="empty_playlists">No playlists created yet</string>
     <string name="new_playlist">New playlist</string>
+    <string name="title">Title*</string>
+    <string name="description">Description</string>
+    <string name="make">Make</string>
 </resources>

@@ -15,7 +15,7 @@
         android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         app:riv_corner_radius="2dp"
-        tools:src="@drawable/album_placeholder" />
+        tools:src="@drawable/ic_album_placeholder_45" />
 
     <FrameLayout
         android:layout_width="250dp"

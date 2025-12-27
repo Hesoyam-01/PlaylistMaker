@@ -28,4 +28,7 @@
     <string name="empty_library">Ваша медиатека пуста</string>
     <string name="empty_playlists">Вы не создали\nни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
+    <string name="title">Название*</string>
+    <string name="description">Описание</string>
+    <string name="make">Создать</string>
 </resources>

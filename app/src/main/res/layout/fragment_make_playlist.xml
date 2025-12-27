@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
@@ -18,11 +17,133 @@
         app:titleTextAppearance="@style/ToolbarStyle" />
 
     <ImageView
-        android:id="@+id/player_track_cover"
+        android:id="@+id/set_playlist_cover"
         android:layout_width="312dp"
         android:layout_height="312dp"
         android:layout_gravity="center"
         android:layout_marginTop="26dp"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/album_placeholder" />
+        android:background="@drawable/add_photo_background"
+        android:scaleType="center"
+        android:src="@drawable/ic_add_photo_100" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/default_padding">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="33dp"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorOnPrimaryFixedVariant"
+            app:strokeWidth="1dp">
+
+            <EditText
+                android:id="@+id/song_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:fontFamily="@font/ys_display_regular"
+                android:hint="@string/title"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="@dimen/default_padding"
+                android:singleLine="true"
+                android:textColor="@color/dark_gray"
+                android:textColorHighlight="@color/blue"
+                android:textColorHint="?attr/colorOnPrimary"
+                android:textFontWeight="400"
+                android:textSize="@dimen/small_textSize" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding"
+            android:background="?attr/colorPrimary"
+            android:fontFamily="@font/ys_display_regular"
+            android:paddingHorizontal="3dp"
+            android:text="@string/title"
+            android:textColor="?attr/colorOnPrimaryFixedVariant"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            android:translationY="26dp"
+            android:visibility="gone" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="105dp"
+            android:backgroundTint="@android:color/transparent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?attr/colorOnPrimaryFixedVariant"
+            app:strokeWidth="1dp">
+
+            <EditText
+                android:id="@+id/song_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:fontFamily="@font/ys_display_regular"
+                android:hint="@string/description"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingStart="@dimen/default_padding"
+                android:singleLine="true"
+                android:textColor="@color/dark_gray"
+                android:textColorHighlight="@color/blue"
+                android:textColorHint="?attr/colorOnPrimary"
+                android:textFontWeight="400"
+                android:textSize="@dimen/small_textSize" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding"
+            android:background="?attr/colorPrimary"
+            android:fontFamily="@font/ys_display_regular"
+            android:paddingHorizontal="3dp"
+            android:text="@string/description"
+            android:textColor="?attr/colorOnPrimaryFixedVariant"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            android:translationY="98dp"
+            android:visibility="gone" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/make_button"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="35dp"
+            android:backgroundTint="@color/make_button_colors"
+            android:paddingHorizontal="17dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            android:clickable="true"
+            android:enabled="false">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/ys_display_medium"
+                android:text="@string/make"
+                android:textColor="@color/white"
+                android:textFontWeight="500"
+                android:textSize="@dimen/small_textSize" />
+
+        </com.makeramen.roundedimageview.RoundedImageView>
+
+    </FrameLayout>
+
 </LinearLayout>
