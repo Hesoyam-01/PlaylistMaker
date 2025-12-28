@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "playlist_table")
 data class PlaylistEntity (
     @PrimaryKey(autoGenerate = true)
-    val playlistId: Int,
+    val playlistId: Int = 0,
     val playlistName: String,
     val playlistDescription: String,
     val coverFilePath: String,

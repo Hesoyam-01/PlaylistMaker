@@ -39,7 +39,7 @@ val repositoryModule = module {
     }
 
     single<MakePlaylistRepository> {
-        MakePlaylistRepositoryImpl(get())
+        MakePlaylistRepositoryImpl(get(), get(), get())
     }
 
 }

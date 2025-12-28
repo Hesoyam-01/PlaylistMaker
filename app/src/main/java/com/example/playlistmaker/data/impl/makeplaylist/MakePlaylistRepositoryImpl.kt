@@ -5,16 +5,28 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
+import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
 import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistRepository
+import com.example.playlistmaker.domain.models.library.Playlist
 import java.io.File
 import java.io.FileOutputStream
 
-class MakePlaylistRepositoryImpl(private val context: Context) : MakePlaylistRepository {
+class MakePlaylistRepositoryImpl(
+    private val context: Context,
+    private val appDatabase: AppDatabase,
+    private val playlistDbConverter: PlaylistDbConverter
+) : MakePlaylistRepository {
+
+    override suspend fun addToPlaylists(playlist: Playlist) {
+        appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
+    }
 
     override fun saveImageToPrivateStorage(uri: Uri) {
-        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")
+        val filePath =
+            File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")
 
-        if (!filePath.exists()){
+        if (!filePath.exists()) {
             filePath.mkdirs()
         }
 
