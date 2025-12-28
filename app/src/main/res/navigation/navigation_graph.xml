@@ -44,4 +44,8 @@
         android:name="com.example.playlistmaker.ui.player.PlayerFragment"
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" />
+    <fragment
+        android:id="@+id/makePlaylistFragment"
+        android:name="com.example.playlistmaker.ui.library.MakePlaylistFragment"
+        android:label="MakePlaylistFragment" />
 </navigation>
