@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +50,6 @@ class PlayerFragment : Fragment() {
 
                 is PlayerState.IsFavorite -> {
                     changeIsFavoriteButton(it.isFavorite)
-                    Log.d("state", "${track.isFavorite}")
                     track.isFavorite = it.isFavorite
                 }
             }
@@ -82,7 +80,6 @@ class PlayerFragment : Fragment() {
             genreInfo.text = track.primaryGenreName
             yearInfo.text = track.releaseDate
             countryInfo.text = track.country
-            Log.d("creating", "${track.isFavorite}")
             if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
             else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
