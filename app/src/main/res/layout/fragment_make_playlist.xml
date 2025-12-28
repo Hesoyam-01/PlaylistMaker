@@ -119,30 +119,34 @@
             android:translationY="98dp"
             android:visibility="gone" />
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/make_button"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="35dp"
-            android:backgroundTint="@color/make_button_colors"
             android:paddingHorizontal="17dp"
             app:cardCornerRadius="8dp"
-            app:cardElevation="0dp"
-            android:clickable="true"
-            android:enabled="false">
+            app:cardElevation="0dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+
+            <Button
+                android:id="@+id/make_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/make_button_colors"
+                android:elevation="0dp"
+                android:enabled="false"
                 android:fontFamily="@font/ys_display_medium"
+                android:insetTop="0dp"
+                android:insetBottom="dp"
+                android:letterSpacing="0"
                 android:text="@string/make"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textFontWeight="500"
                 android:textSize="@dimen/small_textSize" />
 
-        </com.makeramen.roundedimageview.RoundedImageView>
+        </com.google.android.material.card.MaterialCardView>
 
     </FrameLayout>
 
