@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,6 +32,10 @@ class PlaylistsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
             if (it) binding.playlistsEmptyPlaceholder.visibility = View.VISIBLE
+        }
+
+        binding.newPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_libraryFragment_to_makePlaylistFragment)
         }
     }
 
