@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistInteractor
 
 class MakePlaylistFragmentViewModel(
-    private val makePlaylistInteractor: MakePlaylistInteractor) :
-    ViewModel() {
+    private val makePlaylistInteractor: MakePlaylistInteractor
+) : ViewModel() {
+
+
+
 
     fun saveImageToPrivateStorage(uri: Uri) {
         makePlaylistInteractor.saveImageToPrivateStorage(uri)

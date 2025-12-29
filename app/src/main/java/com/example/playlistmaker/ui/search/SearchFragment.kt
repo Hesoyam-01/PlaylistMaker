@@ -112,6 +112,7 @@ class SearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 trackAdapter.clearTrackList()
                 binding.searchPlaceholder.visibility = View.GONE
+                if (s.isNullOrEmpty()) viewModel.getSearchHistory()
             }
         }
 
