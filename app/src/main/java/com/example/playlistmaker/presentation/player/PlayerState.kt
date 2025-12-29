@@ -1,6 +1,6 @@
 package com.example.playlistmaker.presentation.player
 
-import com.example.playlistmaker.domain.models.player.MediaState
+import com.example.playlistmaker.domain.model.player.MediaState
 
 sealed interface PlayerState {
     data class Media(

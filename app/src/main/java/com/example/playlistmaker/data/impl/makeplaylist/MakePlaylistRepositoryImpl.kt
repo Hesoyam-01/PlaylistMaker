@@ -8,7 +8,7 @@ import android.os.Environment
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
 import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistRepository
-import com.example.playlistmaker.domain.models.library.Playlist
+import com.example.playlistmaker.domain.model.library.Playlist
 import java.io.File
 import java.io.FileOutputStream
 
@@ -18,7 +18,12 @@ class MakePlaylistRepositoryImpl(
     private val playlistDbConverter: PlaylistDbConverter
 ) : MakePlaylistRepository {
 
-    override suspend fun addToPlaylists(playlist: Playlist) {
+    override suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?) {
+        val playlist = Playlist(name, description, coverFilePath)
+        addToPlaylists(playlist)
+    }
+
+    private suspend fun addToPlaylists(playlist: Playlist) {
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
 

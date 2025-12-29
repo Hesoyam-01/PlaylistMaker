@@ -2,7 +2,7 @@ package com.example.playlistmaker.ui.search
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 
 class TrackAdapter(
     private val onTrackClick: (Track) -> Unit

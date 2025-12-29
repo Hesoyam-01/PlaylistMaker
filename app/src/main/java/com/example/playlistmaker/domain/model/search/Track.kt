@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.models.search
+package com.example.playlistmaker.domain.model.search
 
 data class Track(
     val trackId: Int,

@@ -4,21 +4,22 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentMakePlaylistBinding
 import com.example.playlistmaker.presentation.library.MakePlaylistFragmentViewModel
 import com.example.playlistmaker.util.debounce
@@ -78,27 +79,54 @@ class MakePlaylistFragment : Fragment() {
 
         binding.apply {
 
-            val titleHintText = songTitle.hint
-            val descriptionHintText = songDescription.hint
+            val typedValue = TypedValue()
 
-            songTitle.setOnFocusChangeListener { _, hasFocus ->
+            requireContext().theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnPrimaryFixedVariant,
+                typedValue,
+                true
+            )
+            val color = typedValue.data
+
+            val nameHintText = playlistName.hint
+            val descriptionHintText = playlistDescription.hint
+
+
+            playlistName.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    titleHint.visibility = View.VISIBLE
-                    songTitle.hint = ""
+                    nameHint.visibility = View.VISIBLE
+                    nameHint.setTextColor(resources.getColor(R.color.blue))
+                    playlistName.hint = ""
+                    nameBackground.strokeColor = resources.getColor(R.color.blue)
                 }
-                else if (songTitle.text.isNullOrEmpty()) {
-                    titleHint.visibility = View.GONE
-                    songTitle.hint = titleHintText
+                else if (playlistName.text.isNullOrEmpty()) {
+                    nameHint.visibility = View.GONE
+                    nameHint.setTextColor(color)
+                    playlistName.hint = nameHintText
+                    nameBackground.strokeColor = color
+                }
+                else {
+                    nameHint.setTextColor(color)
+                    nameBackground.strokeColor = color
                 }
             }
-            songDescription. setOnFocusChangeListener { _, hasFocus ->
+
+            playlistDescription.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     descriptionHint.visibility = View.VISIBLE
-                    songDescription.hint = ""
+                    descriptionHint.setTextColor(resources.getColor((R.color.blue)))
+                    playlistDescription.hint = ""
+                    descriptionBackground.strokeColor = resources.getColor(R.color.blue)
                 }
-                else if (songDescription.text.isNullOrEmpty()) {
+                else if (playlistDescription.text.isNullOrEmpty()) {
                     descriptionHint.visibility = View.GONE
-                    songDescription.hint = descriptionHintText
+                    descriptionHint.setTextColor(color)
+                    playlistDescription.hint = descriptionHintText
+                    descriptionBackground.strokeColor = color
+                }
+                else {
+                    descriptionHint.setTextColor(color)
+                    descriptionBackground.strokeColor = color
                 }
             }
         }
@@ -113,10 +141,19 @@ class MakePlaylistFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         }
 
-        binding.songTitle.addTextChangedListener(textWatcher)
+        binding.playlistName.addTextChangedListener(textWatcher)
 
         binding.makePlaylistButton.setOnClickListener {
-            viewModel.makePlaylist()
+            val title = binding.playlistName.text.toString()
+            val description = binding.playlistDescription.text.toString()
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.makePlaylist(title, description, null)
+            }
+
+            Toast.makeText(requireContext(), title, Toast.LENGTH_SHORT).show()
+
+            findNavController().navigateUp()
         }
 
     }
@@ -129,7 +166,7 @@ class MakePlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding.apply {
-            songTitle.removeTextChangedListener(textWatcher)
+            playlistName.removeTextChangedListener(textWatcher)
         }
         _binding = null
 

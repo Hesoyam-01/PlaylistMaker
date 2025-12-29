@@ -31,4 +31,5 @@
     <string name="title">Название*</string>
     <string name="description">Описание</string>
     <string name="make">Создать</string>
+
 </resources>

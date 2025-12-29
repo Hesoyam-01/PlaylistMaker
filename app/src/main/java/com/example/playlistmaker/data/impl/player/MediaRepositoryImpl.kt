@@ -4,7 +4,7 @@ import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.playlistmaker.domain.api.player.MediaRepository
-import com.example.playlistmaker.domain.models.player.MediaState
+import com.example.playlistmaker.domain.model.player.MediaState
 
 class MediaRepositoryImpl(private val mediaPlayer: MediaPlayer) : MediaRepository {
     private val mediaStateLiveData = MutableLiveData<MediaState>()

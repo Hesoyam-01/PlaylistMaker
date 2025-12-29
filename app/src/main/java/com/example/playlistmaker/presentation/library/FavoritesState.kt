@@ -1,6 +1,6 @@
 package com.example.playlistmaker.presentation.library
 
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 
 sealed interface FavoritesState {
 

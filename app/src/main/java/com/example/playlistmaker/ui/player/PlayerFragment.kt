@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.domain.models.player.MediaState
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.player.MediaState
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

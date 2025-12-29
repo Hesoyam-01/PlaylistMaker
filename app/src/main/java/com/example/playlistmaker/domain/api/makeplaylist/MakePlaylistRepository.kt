@@ -1,10 +1,9 @@
 package com.example.playlistmaker.domain.api.makeplaylist
 
 import android.net.Uri
-import com.example.playlistmaker.domain.models.library.Playlist
 
 interface MakePlaylistRepository {
-    suspend fun addToPlaylists(playlist: Playlist)
+    suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?)
 
     fun saveImageToPrivateStorage(uri: Uri)
 }

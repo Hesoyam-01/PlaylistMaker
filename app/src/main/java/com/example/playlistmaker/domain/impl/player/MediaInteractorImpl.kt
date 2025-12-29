@@ -3,7 +3,7 @@ package com.example.playlistmaker.domain.impl.player
 import androidx.lifecycle.LiveData
 import com.example.playlistmaker.domain.api.player.MediaInteractor
 import com.example.playlistmaker.domain.api.player.MediaRepository
-import com.example.playlistmaker.domain.models.player.MediaState
+import com.example.playlistmaker.domain.model.player.MediaState
 
 class MediaInteractorImpl(private val repository: MediaRepository) : MediaInteractor {
 

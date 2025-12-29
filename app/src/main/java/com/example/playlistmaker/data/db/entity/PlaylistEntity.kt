@@ -8,8 +8,8 @@ data class PlaylistEntity (
     @PrimaryKey(autoGenerate = true)
     val playlistId: Int = 0,
     val playlistName: String,
-    val playlistDescription: String,
-    val coverFilePath: String,
-    val trackIdList: String,
-    val trackCount: Int
+    val playlistDescription: String?,
+    val coverFilePath: String?,
+    val trackIdList: String? = null,
+    val trackCount: Int = 0
 )

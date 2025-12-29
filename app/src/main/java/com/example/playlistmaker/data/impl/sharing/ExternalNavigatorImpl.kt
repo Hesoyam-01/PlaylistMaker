@@ -9,7 +9,7 @@ import android.net.Uri
 import androidx.core.content.ContextCompat.getString
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
-import com.example.playlistmaker.domain.models.sharing.EmailData
+import com.example.playlistmaker.domain.model.sharing.EmailData
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun shareApp() {
