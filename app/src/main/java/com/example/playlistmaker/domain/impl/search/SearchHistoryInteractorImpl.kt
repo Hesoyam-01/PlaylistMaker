@@ -7,7 +7,7 @@ import com.example.playlistmaker.util.Resource
 
 class SearchHistoryInteractorImpl (private val repository: SearchHistoryRepository) :
     SearchHistoryInteractor {
-    override fun getSearchHistory() : Resource<MutableList<Track>> {
+    override fun getSearchHistory() : Resource<List<Track>> {
         return repository.getSearchHistory()
     }
 

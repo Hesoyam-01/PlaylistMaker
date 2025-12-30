@@ -5,5 +5,5 @@ import com.example.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface SearchInteractor {
-    fun searchTracks(query: String) : Flow<Resource<MutableList<Track>>>
+    fun searchTracks(query: String) : Flow<Resource<List<Track>>>
 }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchInteractorImpl(private val repository: SearchRepository) : SearchInteractor {
 
-    override fun searchTracks(query: String) : Flow<Resource<MutableList<Track>>> {
+    override fun searchTracks(query: String) : Flow<Resource<List<Track>>> {
         return repository.searchTracks(query)
     }
 

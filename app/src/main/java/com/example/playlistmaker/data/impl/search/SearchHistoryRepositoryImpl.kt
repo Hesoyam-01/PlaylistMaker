@@ -54,11 +54,11 @@ class SearchHistoryRepositoryImpl(
         saveLastTracksDtoList()
     }
 
-    override fun getSearchHistory(): Resource<MutableList<Track>> {
+    override fun getSearchHistory(): Resource<List<Track>> {
         val lastTracksList = lastTracksDtoList.map {
             val track = fromTrackDtoToTrack(it)
             track
-        }.toMutableList()
+        }
         return Resource.Success(lastTracksList)
     }
 

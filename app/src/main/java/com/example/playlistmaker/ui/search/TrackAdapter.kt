@@ -9,7 +9,7 @@ class TrackAdapter(
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    private val trackList: MutableList<Track> = mutableListOf()
+    private var trackList: List<Track> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
         TrackViewHolder.from(parent)
@@ -25,14 +25,13 @@ class TrackAdapter(
         return trackList.size
     }
 
-    fun updateList(newList: MutableList<Track>) {
-        trackList.clear()
-        trackList.addAll(newList)
+    fun updateList(newList: List<Track>) {
+        trackList = newList
         notifyDataSetChanged()
     }
 
     fun clearTrackList() {
-        trackList.clear()
+        trackList = emptyList()
         notifyDataSetChanged()
     }
 

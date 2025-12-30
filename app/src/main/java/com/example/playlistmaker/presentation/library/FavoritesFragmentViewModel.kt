@@ -24,7 +24,7 @@ class FavoritesFragmentViewModel(private val favoritesInteractor: FavoritesInter
         }
     }
 
-    private fun processResult(tracks: MutableList<Track>) {
+    private fun processResult(tracks: List<Track>) {
         if (tracks.isEmpty()) {
             renderState(FavoritesState.Empty)
         } else {

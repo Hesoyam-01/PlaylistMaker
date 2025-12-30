@@ -6,5 +6,5 @@ sealed interface FavoritesState {
 
     data object Empty : FavoritesState
 
-    data class Content(val tracks: MutableList<Track>) : FavoritesState
+    data class Content(val tracks: List<Track>) : FavoritesState
 }

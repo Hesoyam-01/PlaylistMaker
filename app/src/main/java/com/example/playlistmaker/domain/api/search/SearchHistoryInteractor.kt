@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
 
 interface SearchHistoryInteractor {
-    fun getSearchHistory() : Resource<MutableList<Track>>
+    fun getSearchHistory() : Resource<List<Track>>
     fun addToSearchHistory(track: Track)
     fun clearSearchHistory()
 }

@@ -60,7 +60,7 @@ val dataModule = module {
             get(),
             get(),
             StorageKeys.SEARCH_HISTORY_KEY,
-            object : TypeToken<MutableList<TrackDto>>() {}.type
+            object : TypeToken<List<TrackDto>>() {}.type
         )
     }
 

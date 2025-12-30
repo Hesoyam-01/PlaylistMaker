@@ -56,9 +56,9 @@ class FavoritesFragment : Fragment() {
 
     }
 
-    private fun showContent(tracks: MutableList<Track>) {
+    private fun showContent(tracks: List<Track>) {
         binding.apply {
-            favoritesEmptyPlaceholder.visibility = View.GONE
+            emptyFavoritesPlaceholder.visibility = View.GONE
             favoritesRecyclerView.visibility = View.VISIBLE
         }
         favoritesAdapter.updateList(tracks)
@@ -67,7 +67,7 @@ class FavoritesFragment : Fragment() {
     private fun showEmpty() {
         binding.apply {
             favoritesRecyclerView.visibility = View.GONE
-            favoritesEmptyPlaceholder.visibility = View.VISIBLE
+            emptyFavoritesPlaceholder.visibility = View.VISIBLE
         }
     }
 

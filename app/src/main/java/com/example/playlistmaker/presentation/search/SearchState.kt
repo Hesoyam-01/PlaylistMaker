@@ -6,11 +6,11 @@ sealed interface SearchState {
     data object Loading : SearchState
 
     data class FoundTracks(
-        val tracksList: MutableList<Track>
+        val tracksList: List<Track>
     ) : SearchState
 
     data class SearchHistory(
-        val lastTracksList: MutableList<Track>
+        val lastTracksList: List<Track>
     ) : SearchState
 
     data object Error : SearchState

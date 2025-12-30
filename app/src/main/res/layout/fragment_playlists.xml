@@ -29,9 +29,12 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/default_padding"
+        android:layout_marginStart="@dimen/default_padding"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/default_padding"
         android:visibility="gone" />
 
 

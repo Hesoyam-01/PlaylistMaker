@@ -104,7 +104,10 @@ class SearchFragment : Fragment() {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
                 if (binding.searchBar.hasFocus()) {
-                    if (s.isNullOrEmpty()) viewModel.getSearchHistory()
+                    if (s.isNullOrEmpty()) {
+                        viewModel.cancelSearchRequest()
+                        viewModel.getSearchHistory()
+                    }
                     else viewModel.debounceSearch(s.toString())
                 }
             }
@@ -150,7 +153,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showSearchHistory(lastTracksList: MutableList<Track>) {
+    private fun showSearchHistory(lastTracksList: List<Track>) {
         if (lastTracksList.isNotEmpty()) {
             binding.apply {
                 searchPlaceholder.visibility = View.GONE
@@ -162,7 +165,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showFoundTracks(tracksList: MutableList<Track>) {
+    private fun showFoundTracks(tracksList: List<Track>) {
         binding.apply {
             searchProgressBar.visibility = View.GONE
             searchPlaceholder.visibility = View.GONE

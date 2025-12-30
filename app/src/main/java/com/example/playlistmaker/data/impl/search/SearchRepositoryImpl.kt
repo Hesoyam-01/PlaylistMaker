@@ -17,7 +17,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
+    override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
         when (response.resultCode) {
@@ -35,7 +35,7 @@ class SearchRepositoryImpl(
                         country = it.country,
                         previewUrl = it.previewUrl
                     )
-                }.toMutableList()))
+                }))
             }
 
             400 -> emit(Resource.Error())

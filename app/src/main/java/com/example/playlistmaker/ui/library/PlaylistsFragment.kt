@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.model.library.Playlist
@@ -41,15 +42,37 @@ class PlaylistsFragment : Fragment() {
 
         playlistsAdapter = PlaylistAdapter()
 
+        binding.playlistsRecyclerView.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = playlistsAdapter
+        }
+
         viewModel.observePlaylistLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
+
+        viewModel.fillData()
     }
 
     private fun render(state: PlaylistsState) {
         when (state) {
             is PlaylistsState.Content -> showContent(state.playlists)
             is PlaylistsState.Empty -> showEmpty()
+        }
+    }
+
+    private fun showContent(playlists: List<Playlist>) {
+        binding.apply {
+            emptyPlaylistsPlaceholder.visibility = View.GONE
+            playlistsRecyclerView.visibility = View.VISIBLE
+        }
+        playlistsAdapter.updateList(playlists)
+    }
+
+    private fun showEmpty() {
+        binding.apply {
+            playlistsRecyclerView.visibility = View.GONE
+            emptyPlaylistsPlaceholder.visibility = View.VISIBLE
         }
     }
 

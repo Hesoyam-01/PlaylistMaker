@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playlist_view"
-    android:layout_width="160dp"
-    android:layout_height="196dp"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/default_padding"
+    android:layout_marginEnd="8dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/playlist_cover"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
         app:riv_corner_radius="8dp"
         android:layout_marginBottom="4dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_playlist_cover_placeholder_160" />
 
     <TextView
@@ -29,6 +35,8 @@
         android:textColor="?attr/colorOnPrimary"
         android:textFontWeight="400"
         android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/playlist_cover"
+        app:layout_constraintStart_toStartOf="@id/playlist_cover"
         tools:text="BeSt SoNg EvEr!"/>
 
     <TextView
@@ -44,7 +52,9 @@
         android:textColor="?attr/colorOnPrimary"
         android:textFontWeight="400"
         android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/playlist_name"
+        app:layout_constraintStart_toStartOf="@id/playlist_name"
         tools:text="1 трек"/>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

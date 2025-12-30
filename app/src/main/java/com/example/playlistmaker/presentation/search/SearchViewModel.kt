@@ -9,6 +9,7 @@ import com.example.playlistmaker.domain.api.search.SearchInteractor
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
 import com.example.playlistmaker.util.debounce
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -24,20 +25,20 @@ class SearchViewModel(
     fun addToSearchHistory(track: Track) {
         searchHistoryInteractor.addToSearchHistory(track)
         (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
-            ?: mutableListOf()
+            ?: listOf()
     }
 
     fun clearSearchHistory() {
         searchHistoryInteractor.clearSearchHistory()
         renderState(
-            SearchState.SearchHistory(mutableListOf())
+            SearchState.SearchHistory(listOf())
         )
     }
 
     fun getSearchHistory() {
         val lastTracksList =
             (searchHistoryInteractor.getSearchHistory() as? Resource.Success)?.data
-                ?: mutableListOf()
+                ?: listOf()
         renderState(
             SearchState.SearchHistory(lastTracksList)
         )
@@ -50,6 +51,10 @@ class SearchViewModel(
     ) { query ->
         lastQuery = query
         searchRequest(query)
+    }
+
+    fun cancelSearchRequest() {
+        viewModelScope.coroutineContext.cancelChildren()
     }
 
     private fun searchRequest(query: String) {
@@ -68,7 +73,7 @@ class SearchViewModel(
         }
     }
 
-    private fun processResult(resource: Resource<MutableList<Track>>) {
+    private fun processResult(resource: Resource<List<Track>>) {
         when (resource) {
             is Resource.Success -> {
                 if (resource.data.isEmpty()) {
