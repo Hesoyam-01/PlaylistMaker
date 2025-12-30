@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Playlist maker</string>
+    <string name="app_name" translatable="false">Playlist Maker</string>
     <string name="title_hello">Привет, Практикум</string>
     <string name="search">Поиск</string>
     <string name="library">Медиатека</string>
@@ -31,5 +31,10 @@
     <string name="title">Название*</string>
     <string name="description">Описание</string>
     <string name="make">Создать</string>
+    <string name="playlist_maked">Плейлист "%1$s" создан</string>
+    <string name="finish_making">Завершить создание плейлиста?</string>
+    <string name="unsaved_data">Все несохраненные данные будут потеряны</string>
+    <string name="cancel">Отмена</string>
+    <string name="finish">Завершить</string>
 
 </resources>

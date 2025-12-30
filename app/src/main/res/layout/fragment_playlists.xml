@@ -28,8 +28,15 @@
 
     </androidx.cardview.widget.CardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/default_padding"
+        android:visibility="gone" />
+
+
     <LinearLayout
-        android:id="@+id/playlists_empty_placeholder"
+        android:id="@+id/empty_playlists_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

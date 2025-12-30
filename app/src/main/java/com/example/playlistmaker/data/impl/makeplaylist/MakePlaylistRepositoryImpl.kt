@@ -27,7 +27,7 @@ class MakePlaylistRepositoryImpl(
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
 
-    override fun saveImageToPrivateStorage(uri: Uri) {
+    override fun saveImageToPrivateStorage(uri: Uri) : String {
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")
 
@@ -36,7 +36,8 @@ class MakePlaylistRepositoryImpl(
         }
 
         val timestamp = System.currentTimeMillis()
-        val file = File(filePath, "${timestamp}_cover.jpg")
+        val fileName = "${timestamp}_cover.jpg"
+        val file = File(filePath, fileName)
 
         val inputStream = context.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
@@ -47,5 +48,7 @@ class MakePlaylistRepositoryImpl(
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 30, output)
             }
         }
+
+        return fileName
     }
 }

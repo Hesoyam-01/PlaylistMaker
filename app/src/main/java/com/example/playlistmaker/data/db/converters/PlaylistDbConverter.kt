@@ -22,7 +22,7 @@ class PlaylistDbConverter(private val gson: Gson) {
             playlist.playlistName,
             playlist.playlistDescription,
             playlist.coverFilePath,
-            gson.fromJson(playlist.trackIdList, object : TypeToken<Int>() {}.type),
+            gson.fromJson(playlist.trackIdList, object : TypeToken<List<Int>>() {}.type),
             playlist.trackCount
         )
     }

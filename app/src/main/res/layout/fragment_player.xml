@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="@id/right_guideline"
         app:layout_constraintStart_toStartOf="@id/left_guideline"
         app:layout_constraintTop_toBottomOf="@id/player_toolbar"
-        tools:src="@drawable/ic_album_placeholder_45" />
+        tools:src="@drawable/ic_track_cover_placeholder_45" />
 
     <TextView
         android:id="@+id/player_track_name"

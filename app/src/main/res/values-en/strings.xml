@@ -28,4 +28,9 @@
     <string name="title">Title*</string>
     <string name="description">Description</string>
     <string name="make">Make</string>
+    <string name="playlist_maked">Playlist %1$s maked</string>
+    <string name="finish_making">Finish playlist making?</string>
+    <string name="unsaved_data">All unsaved changes will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
 </resources>

@@ -10,13 +10,13 @@ class MakePlaylistFragmentViewModel(
     private val makePlaylistInteractor: MakePlaylistInteractor
 ) : ViewModel() {
 
-    fun makePlaylist(title: String, description: String?, coverPath: String?) {
+    fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
         viewModelScope.launch {
-            makePlaylistInteractor.makePlaylist(title, description, coverPath)
+            makePlaylistInteractor.makePlaylist(title, description, coverFilePath)
         }
     }
 
-    fun saveImageToPrivateStorage(uri: Uri) {
-        makePlaylistInteractor.saveImageToPrivateStorage(uri)
+    fun saveImageToPrivateStorage(uri: Uri) : String {
+        return makePlaylistInteractor.saveImageToPrivateStorage(uri)
     }
 }

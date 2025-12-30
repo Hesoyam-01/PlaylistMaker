@@ -9,11 +9,12 @@ import com.example.playlistmaker.databinding.TrackViewBinding
 import com.example.playlistmaker.domain.model.search.Track
 
 class TrackViewHolder (private val binding: TrackViewBinding) : RecyclerView.ViewHolder(binding.root) {
+
     fun bind(model: Track) {
         binding.apply {
             Glide.with(root)
                 .load(model.artworkUrl100)
-                .placeholder(R.drawable.ic_album_placeholder_45)
+                .placeholder(R.drawable.ic_track_cover_placeholder_45)
                 .into(trackCover)
             trackName.text = model.trackName
             artistName.text = model.artistName

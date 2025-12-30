@@ -31,7 +31,7 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
-            if (it) binding.playlistsEmptyPlaceholder.visibility = View.VISIBLE
+            if (it) binding.emptyPlaylistsPlaceholder.visibility = View.VISIBLE
         }
 
         binding.newPlaylistButton.setOnClickListener {

@@ -10,7 +10,7 @@ class MakePlaylistInteractorImpl(private val repository: MakePlaylistRepository)
         repository.makePlaylist(name, description, coverFilePath)
     }
 
-    override fun saveImageToPrivateStorage(uri: Uri) {
-        repository.saveImageToPrivateStorage(uri)
+    override fun saveImageToPrivateStorage(uri: Uri) : String {
+        return repository.saveImageToPrivateStorage(uri)
     }
 }
