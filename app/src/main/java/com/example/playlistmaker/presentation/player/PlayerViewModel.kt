@@ -49,7 +49,7 @@ class PlayerViewModel(
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
         mediaInteractor.prepare(previewUrl)
         viewModelScope.launch {
-            val favoriteTrackIds = favoritesInteractor.favoriteTrackIds()
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
             val isFavorite = favoriteTrackIds.contains(trackId)
             stateLiveData.postValue(PlayerState.IsFavorite(isFavorite))
         }

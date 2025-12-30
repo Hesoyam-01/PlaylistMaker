@@ -1,7 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.data.impl.favorites.FavoritesRepositoryImpl
-import com.example.playlistmaker.data.impl.makeplaylist.playlistRepositoryImpl
+import com.example.playlistmaker.data.impl.makeplaylist.PlaylistRepositoryImpl
 import com.example.playlistmaker.data.impl.player.MediaRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchRepositoryImpl
@@ -39,7 +39,7 @@ val repositoryModule = module {
     }
 
     single<PlaylistRepository> {
-        playlistRepositoryImpl(get(), get(), get())
+        PlaylistRepositoryImpl(get(), get(), get())
     }
 
 }

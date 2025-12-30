@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoritesInteractor {
 
-    fun favoriteTracks(): Flow<MutableList<Track>>
+    fun getFavoriteTracks(): Flow<MutableList<Track>>
 
     suspend fun addToFavoriteTracks(track: Track)
 
     suspend fun deleteFromFavoriteTracks(track: Track)
 
-    suspend fun favoriteTrackIds() : List<Int>
+    suspend fun getFavoriteTrackIds() : List<Int>
 }

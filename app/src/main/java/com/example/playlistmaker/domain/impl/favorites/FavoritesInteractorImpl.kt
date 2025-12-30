@@ -9,8 +9,8 @@ class FavoritesInteractorImpl(
     private val repository: FavoritesRepository
 ) : FavoritesInteractor {
 
-    override fun favoriteTracks(): Flow<MutableList<Track>> {
-        return repository.favoriteTracks()
+    override fun getFavoriteTracks(): Flow<MutableList<Track>> {
+        return repository.getFavoriteTracks()
     }
 
     override suspend fun addToFavoriteTracks(track: Track) {
@@ -21,8 +21,8 @@ class FavoritesInteractorImpl(
         repository.deleteFromFavoriteTracks(track)
     }
 
-    override suspend fun favoriteTrackIds(): List<Int> {
-        return repository.favoriteTrackIds()
+    override suspend fun getFavoriteTrackIds(): List<Int> {
+        return repository.getFavoriteTrackIds()
     }
 
 }

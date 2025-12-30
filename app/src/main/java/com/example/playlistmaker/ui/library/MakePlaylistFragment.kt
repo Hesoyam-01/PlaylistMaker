@@ -32,7 +32,6 @@ class MakePlaylistFragment : Fragment() {
     private val viewModel: MakePlaylistFragmentViewModel by viewModel()
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
-    private var isImageChosen = false
 
     private var selectedImageUri: Uri? = null
 
@@ -55,7 +54,7 @@ class MakePlaylistFragment : Fragment() {
         fun navigateUpWithConfirmation() {
             if (binding.playlistName.text.isNotEmpty()
                 or binding.playlistDescription.text.isNotEmpty()
-                or isImageChosen
+                or (selectedImageUri != null)
             ) confirmDialog.show()
             else findNavController().navigateUp()
         }
@@ -99,8 +98,6 @@ class MakePlaylistFragment : Fragment() {
                         .apply(RequestOptions.bitmapTransform(transformation))
                         .into(binding.setPlaylistCover)
 
-                    isImageChosen = true
-
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -120,16 +117,20 @@ class MakePlaylistFragment : Fragment() {
             val description = binding.playlistDescription.text.toString()
             var coverFilePath: String?
 
-            coverFilePath = if (selectedImageUri != null) viewModel.saveImageAndGetPath(
-                selectedImageUri!!
-            )
-            else null
-            viewModel.makePlaylist(name, description, coverFilePath)
+            if (selectedImageUri != null) {
+                viewModel.saveImageAndGetPath(selectedImageUri!!)
+                viewModel.observeImagePath().observe(viewLifecycleOwner) {
+                    coverFilePath = it
+                    viewModel.makePlaylist(name, description, coverFilePath)
+                    Toast.makeText(requireContext(), getString(R.string.playlist_maked, name), Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }
+            } else {
+                viewModel.makePlaylist(name, description, null)
+                Toast.makeText(requireContext(), getString(R.string.playlist_maked, name), Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            }
 
-            val message = getString(R.string.playlist_maked, name)
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-
-            findNavController().navigateUp()
         }
 
         binding.apply {

@@ -17,7 +17,7 @@ class FavoritesFragmentViewModel(private val favoritesInteractor: FavoritesInter
     fun fillData() {
         viewModelScope.launch {
             favoritesInteractor
-                .favoriteTracks()
+                .getFavoriteTracks()
                 .collect {
                     processResult(it)
                 }

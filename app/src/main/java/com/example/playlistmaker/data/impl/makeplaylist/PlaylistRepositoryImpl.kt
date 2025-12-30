@@ -7,12 +7,17 @@ import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
+import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.library.Playlist
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-class playlistRepositoryImpl(
+class PlaylistRepositoryImpl(
     private val context: Context,
     private val appDatabase: AppDatabase,
     private val playlistDbConverter: PlaylistDbConverter
@@ -27,7 +32,16 @@ class playlistRepositoryImpl(
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
 
-    override fun saveImageToPrivateStorage(uri: Uri) : String {
+    override suspend fun getPlaylists(): Flow<List<Playlist>> = flow {
+        val playlists = appDatabase.playlistDao().getPlaylists()
+        emit(convertFromPlaylistEntity(playlists))
+    }
+
+    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>) : List<Playlist> {
+        return playlists.map { playlistDbConverter.map(it) }
+    }
+
+    override suspend fun saveImageAndGetPath(uri: Uri) : String {
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")
 
@@ -40,7 +54,9 @@ class playlistRepositoryImpl(
         val file = File(filePath, fileName)
 
         val inputStream = context.contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
+        val outputStream = withContext(Dispatchers.IO) {
+            FileOutputStream(file)
+        }
 
         inputStream?.use { input ->
             outputStream.use { output ->

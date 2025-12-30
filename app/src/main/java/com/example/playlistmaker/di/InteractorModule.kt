@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.api.search.SearchInteractor
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
 import com.example.playlistmaker.domain.api.sharing.SharingInteractor
 import com.example.playlistmaker.domain.impl.favorites.FavoritesInteractorImpl
-import com.example.playlistmaker.domain.impl.makeplaylist.MakePlaylistInteractorImpl
+import com.example.playlistmaker.domain.impl.playlist.PlaylistInteractorImpl
 import com.example.playlistmaker.domain.impl.player.MediaInteractorImpl
 import com.example.playlistmaker.domain.impl.search.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.impl.search.SearchInteractorImpl
@@ -43,7 +43,7 @@ val interactorModule = module {
     }
 
     single<PlaylistInteractor> {
-        MakePlaylistInteractorImpl(get())
+        PlaylistInteractorImpl(get())
     }
 
 }

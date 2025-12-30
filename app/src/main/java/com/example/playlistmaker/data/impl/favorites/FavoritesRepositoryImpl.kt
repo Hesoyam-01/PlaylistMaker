@@ -13,7 +13,7 @@ class FavoritesRepositoryImpl(
     private val trackDbConverter: TrackDbConverter
 ) : FavoritesRepository {
 
-    override fun favoriteTracks(): Flow<MutableList<Track>> = flow {
+    override fun getFavoriteTracks(): Flow<MutableList<Track>> = flow {
         val tracks = appDatabase.trackDao().getTracks()
         emit(convertFromTrackEntity(tracks))
     }
@@ -26,7 +26,7 @@ class FavoritesRepositoryImpl(
         appDatabase.trackDao().deleteTrack(trackDbConverter.map(track))
     }
 
-    override suspend fun favoriteTrackIds() : List<Int> {
+    override suspend fun getFavoriteTrackIds() : List<Int> {
         return appDatabase.trackDao().getTrackIds()
     }
 

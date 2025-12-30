@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.model.library.Playlist
 
 class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
 
-    private val playlistList: MutableList<Playlist> = mutableListOf()
+    private var playlistList: List<Playlist> = listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder =
         PlaylistViewHolder.from(parent)
@@ -19,9 +19,8 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
         return playlistList.size
     }
 
-    fun updateList(newList: MutableList<Playlist>) {
-        playlistList.clear()
-        playlistList.addAll(newList)
+    fun updateList(newList: List<Playlist>) {
+        playlistList = newList
         notifyDataSetChanged()
     }
 }

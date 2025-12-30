@@ -8,7 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.presentation.library.FavoritesState
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.library.PlaylistsState
+import com.example.playlistmaker.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -17,6 +21,8 @@ class PlaylistsFragment : Fragment() {
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var playlistsAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,12 +34,22 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
-            if (it) binding.emptyPlaylistsPlaceholder.visibility = View.VISIBLE
-        }
 
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_makePlaylistFragment)
+        }
+
+        playlistsAdapter = PlaylistAdapter()
+
+        viewModel.observePlaylistLiveData().observe(viewLifecycleOwner) {
+            render(it)
+        }
+    }
+
+    private fun render(state: PlaylistsState) {
+        when (state) {
+            is PlaylistsState.Content -> showContent(state.playlists)
+            is PlaylistsState.Empty -> showEmpty()
         }
     }
 
