@@ -3,20 +3,22 @@ package com.example.playlistmaker.presentation.library
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistInteractor
+import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import kotlinx.coroutines.launch
 
 class MakePlaylistFragmentViewModel(
-    private val makePlaylistInteractor: MakePlaylistInteractor
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
         viewModelScope.launch {
-            makePlaylistInteractor.makePlaylist(title, description, coverFilePath)
+            playlistInteractor.makePlaylist(title, description, coverFilePath)
         }
     }
 
-    fun saveImageToPrivateStorage(uri: Uri) : String {
-        return makePlaylistInteractor.saveImageToPrivateStorage(uri)
+    fun saveImageAndGetPath(uri: Uri): String {
+        viewModelScope.launch {
+            return playlistInteractor.saveImageAndGetPath(uri)
+        }
     }
 }

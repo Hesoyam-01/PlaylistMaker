@@ -13,9 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
-    private val viewModel: PlaylistsFragmentViewModel by viewModel {
-        parametersOf(true)
-    }
+    private val viewModel: PlaylistsFragmentViewModel by viewModel()
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!

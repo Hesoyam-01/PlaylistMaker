@@ -1,13 +1,13 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.data.impl.favorites.FavoritesRepositoryImpl
-import com.example.playlistmaker.data.impl.makeplaylist.MakePlaylistRepositoryImpl
+import com.example.playlistmaker.data.impl.makeplaylist.playlistRepositoryImpl
 import com.example.playlistmaker.data.impl.player.MediaRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.impl.search.SearchRepositoryImpl
 import com.example.playlistmaker.data.impl.settings.ThemeRepositoryImpl
 import com.example.playlistmaker.domain.api.favorites.FavoritesRepository
-import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistRepository
+import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.api.player.MediaRepository
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.api.search.SearchRepository
@@ -38,8 +38,8 @@ val repositoryModule = module {
         FavoritesRepositoryImpl(get(), get())
     }
 
-    single<MakePlaylistRepository> {
-        MakePlaylistRepositoryImpl(get(), get(), get())
+    single<PlaylistRepository> {
+        playlistRepositoryImpl(get(), get(), get())
     }
 
 }

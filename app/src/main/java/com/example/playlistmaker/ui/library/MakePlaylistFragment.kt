@@ -26,7 +26,6 @@ import com.example.playlistmaker.databinding.FragmentMakePlaylistBinding
 import com.example.playlistmaker.presentation.library.MakePlaylistFragmentViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MakePlaylistFragment : Fragment() {
@@ -56,7 +55,8 @@ class MakePlaylistFragment : Fragment() {
         fun navigateUpWithConfirmation() {
             if (binding.playlistName.text.isNotEmpty()
                 or binding.playlistDescription.text.isNotEmpty()
-                or isImageChosen) confirmDialog.show()
+                or isImageChosen
+            ) confirmDialog.show()
             else findNavController().navigateUp()
         }
 
@@ -64,13 +64,16 @@ class MakePlaylistFragment : Fragment() {
             navigateUpWithConfirmation()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 navigateUpWithConfirmation()
             }
         })
 
-        confirmDialog = MaterialAlertDialogBuilder(requireContext(), androidx.appcompat.R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+        confirmDialog = MaterialAlertDialogBuilder(
+            requireContext(),
+            androidx.appcompat.R.style.Theme_AppCompat_DayNight_Dialog_Alert
+        )
             .setTitle(R.string.finish_making)
             .setMessage(R.string.unsaved_data)
             .setNeutralButton(
@@ -117,14 +120,11 @@ class MakePlaylistFragment : Fragment() {
             val description = binding.playlistDescription.text.toString()
             var coverFilePath: String?
 
-            viewLifecycleOwner.lifecycleScope.launch {
-
-                coverFilePath = if (selectedImageUri != null) viewModel.saveImageToPrivateStorage(
-                    selectedImageUri!!
-                )
-                else null
-                viewModel.makePlaylist(name, description, coverFilePath)
-            }
+            coverFilePath = if (selectedImageUri != null) viewModel.saveImageAndGetPath(
+                selectedImageUri!!
+            )
+            else null
+            viewModel.makePlaylist(name, description, coverFilePath)
 
             val message = getString(R.string.playlist_maked, name)
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

@@ -7,16 +7,16 @@ import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
-import com.example.playlistmaker.domain.api.makeplaylist.MakePlaylistRepository
+import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.library.Playlist
 import java.io.File
 import java.io.FileOutputStream
 
-class MakePlaylistRepositoryImpl(
+class playlistRepositoryImpl(
     private val context: Context,
     private val appDatabase: AppDatabase,
     private val playlistDbConverter: PlaylistDbConverter
-) : MakePlaylistRepository {
+) : PlaylistRepository {
 
     override suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?) {
         val playlist = Playlist(name, description, coverFilePath)
