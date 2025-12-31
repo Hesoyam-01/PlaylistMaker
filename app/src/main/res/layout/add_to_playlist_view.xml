@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/track_view"
+    android:id="@+id/add_to_playlist_view"
     android:layout_width="match_parent"
     android:layout_height="@dimen/track_height"
     android:background="?attr/colorPrimary"
@@ -10,17 +10,17 @@
     android:paddingHorizontal="13dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/track_cover"
+        android:id="@+id/playlist_cover"
         android:layout_width="45dp"
         android:layout_height="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:riv_corner_radius="2dp"
-        tools:src="@drawable/ic_track_cover_placeholder_45" />
+        tools:src="@drawable/ic_cover_placeholder_45" />
 
     <TextView
-        android:id="@+id/track_name"
+        android:id="@+id/playlist_name"
         style="@style/TrackTextViewStyle"
         android:layout_width="0dp"
         android:layout_height="19dp"
@@ -30,12 +30,12 @@
         android:foreground="@android:color/transparent"
         android:maxLines="1"
         android:padding="0dp"
-        app:layout_constraintStart_toEndOf="@+id/track_cover"
+        app:layout_constraintStart_toEndOf="@+id/playlist_cover"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Enter Sandman" />
+        tools:text="Best songs 2021" />
 
     <TextView
-        android:id="@+id/artist_name"
+        android:id="@+id/track_count"
         style="@style/TrackTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="13dp"
@@ -45,8 +45,8 @@
         android:padding="0dp"
         android:textColor="?attr/colorOnPrimaryFixedVariant"
         android:textSize="11sp"
-        app:layout_constraintStart_toStartOf="@+id/track_name"
-        app:layout_constraintTop_toBottomOf="@+id/track_name"
-        tools:text="Metallica" />
+        app:layout_constraintStart_toStartOf="@+id/playlist_name"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_name"
+        tools:text="98 треков" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

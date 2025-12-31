@@ -14,7 +14,7 @@ class TrackViewHolder (private val binding: TrackViewBinding) : RecyclerView.Vie
         binding.apply {
             Glide.with(root)
                 .load(model.artworkUrl100)
-                .placeholder(R.drawable.ic_track_cover_placeholder_45)
+                .placeholder(R.drawable.ic_cover_placeholder_45)
                 .into(trackCover)
             trackName.text = model.trackName
             artistName.text = model.artistName

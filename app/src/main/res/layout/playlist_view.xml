@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/playlist_name"
-        tools:src="@drawable/ic_playlist_cover_placeholder_160" />
+        tools:src="@drawable/ic_cover_placeholder_160" />
 
     <TextView
         android:id="@+id/playlist_name"
