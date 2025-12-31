@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.api.player.MediaInteractor
+import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Job
@@ -20,6 +21,7 @@ class PlayerViewModel(
     previewUrl: String,
     trackId: Int,
     private val mediaInteractor: MediaInteractor,
+    private val playlistInteractor: PlaylistInteractor,
     private val favoritesInteractor: FavoritesInteractor
 ) :
     ViewModel() {

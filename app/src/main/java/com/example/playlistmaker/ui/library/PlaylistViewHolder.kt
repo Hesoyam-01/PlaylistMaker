@@ -1,6 +1,5 @@
 package com.example.playlistmaker.ui.library
 
-import android.annotation.SuppressLint
 import android.os.Environment
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -23,7 +22,7 @@ class PlaylistViewHolder (private val binding: PlaylistViewBinding) : RecyclerVi
                 .placeholder(R.drawable.ic_playlist_cover_placeholder_160)
                 .into(playlistCover)
             playlistName.text = model.playlistName
-            trackCount.text = model.trackCount.toString()
+            trackCount.text = root.resources.getQuantityString(R.plurals.tracks_count, model.trackCount, model.trackCount)
         }
     }
 

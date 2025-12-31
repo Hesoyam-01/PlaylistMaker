@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/track_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/track_height"
+    android:background="?attr/colorPrimary"
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingHorizontal="13dp">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/track_cover"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_corner_radius="2dp"
+        tools:src="@drawable/ic_track_cover_placeholder_45" />
+
+    <TextView
+        android:id="@+id/track_name"
+        style="@style/TrackTextViewStyle"
+        android:layout_width="0dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="14dp"
+        android:ellipsize="end"
+        android:foreground="@android:color/transparent"
+        android:maxLines="1"
+        android:padding="0dp"
+        app:layout_constraintStart_toEndOf="@+id/track_cover"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Enter Sandman" />
+
+    <TextView
+        android:id="@+id/artist_name"
+        style="@style/TrackTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="13dp"
+        android:ellipsize="end"
+        android:foreground="@android:color/transparent"
+        android:maxLines="1"
+        android:padding="0dp"
+        android:textColor="?attr/colorOnPrimaryFixedVariant"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/track_name"
+        app:layout_constraintTop_toBottomOf="@+id/track_name"
+        tools:text="Metallica" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
