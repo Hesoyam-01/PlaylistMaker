@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.player
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,7 +20,7 @@ import java.util.Locale
 
 class PlayerViewModel(
     previewUrl: String,
-    trackId: Int,
+    private val trackId: Int,
     private val mediaInteractor: MediaInteractor,
     private val playlistInteractor: PlaylistInteractor,
     private val favoritesInteractor: FavoritesInteractor
@@ -52,11 +51,6 @@ class PlayerViewModel(
     init {
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
         mediaInteractor.prepare(previewUrl)
-        viewModelScope.launch {
-            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(trackId)
-            renderState(PlayerState.IsFavorite(isFavorite))
-        }
     }
 
     fun playbackControl() {
@@ -129,6 +123,9 @@ class PlayerViewModel(
                 .collect {
                     processResult(it)
                 }
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 
@@ -137,7 +134,6 @@ class PlayerViewModel(
     }
 
     private fun renderState(state: PlayerState) {
-        Log.d("1", state.toString())
         stateLiveData.postValue(state)
     }
 

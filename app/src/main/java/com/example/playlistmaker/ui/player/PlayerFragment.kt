@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,7 +57,6 @@ class PlayerFragment : Fragment() {
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            Log.d("2", it.toString())
             render(it)
         }
 
