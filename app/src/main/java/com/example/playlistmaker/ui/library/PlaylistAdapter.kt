@@ -11,12 +11,12 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder =
         PlaylistViewHolder.from(parent)
 
-    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlistList[position])
-    }
-
     override fun getItemCount(): Int {
         return playlistList.size
+    }
+
+    override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
+        holder.bind(playlistList[position])
     }
 
     fun updateList(newList: List<Playlist>) {

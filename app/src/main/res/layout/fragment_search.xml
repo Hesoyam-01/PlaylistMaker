@@ -92,7 +92,7 @@
             android:gravity="center_horizontal"
             android:textColor="?attr/colorOnPrimary"
             android:textFontWeight="400"
-            android:textSize="@dimen/medium_textsize"
+            android:textSize="@dimen/medium_textSize"
             tools:text="@string/connection_problems" />
 
         <androidx.cardview.widget.CardView
@@ -147,7 +147,7 @@
             android:text="@string/recent_searches"
             android:textColor="?attr/colorOnPrimary"
             android:textFontWeight="500"
-            android:textSize="@dimen/medium_textsize" />
+            android:textSize="@dimen/medium_textSize" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/last_tracks_recycler_view"

@@ -10,12 +10,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.model.library.Playlist
-import com.example.playlistmaker.presentation.library.FavoritesState
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
 import com.example.playlistmaker.presentation.library.PlaylistsState
-import com.example.playlistmaker.ui.search.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
     private val viewModel: PlaylistsFragmentViewModel by viewModel()

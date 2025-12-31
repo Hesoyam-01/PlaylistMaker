@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -26,6 +29,10 @@ class PlayerFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentPlayerBinding
+
+    private lateinit var addToPlaylistAdapter: AddToPlaylistAdapter
+
+    private lateinit var track: Track
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,20 +46,20 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val track = getTrackFromArgs()
+        track = getTrackFromArgs()
+
+        addToPlaylistAdapter = AddToPlaylistAdapter()
+        binding.playlistsRecyclerView.adapter = addToPlaylistAdapter
+
+        viewModel.fillData()
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            when (it) {
-                is PlayerState.Media -> {
-                    changePlayStopButton(it.mediaState == MediaState.PLAYING)
-                    binding.elapsedTime.text = it.elapsedTime
-                }
-
-                is PlayerState.IsFavorite -> {
-                    changeIsFavoriteButton(it.isFavorite)
-                    track.isFavorite = it.isFavorite
-                }
-            }
+            Log.d("2", it.toString())
+            render(it)
         }
 
         binding.playerToolbar.setNavigationOnClickListener {
@@ -66,6 +73,19 @@ class PlayerFragment : Fragment() {
         binding.isFavoriteButton.setOnClickListener {
             viewModel.onFavoriteClicked(track)
         }
+
+        binding.addToPlaylistButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val alpha = (slideOffset + 1) / 2
+                binding.overlay.alpha = alpha
+            }
+        })
 
         if (track.releaseDate == null) binding.yearView.visibility =
             View.GONE
@@ -93,11 +113,28 @@ class PlayerFragment : Fragment() {
 
     }
 
-    private fun changePlayStopButton(isPlaying: Boolean) {
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    private fun render(state: PlayerState) {
+        when (state) {
+            is PlayerState.Playlists -> showPlaylists(state.list)
+            is PlayerState.IsFavorite -> changeIsFavoriteButton(state.isFavorite)
+            is PlayerState.Media -> showMedia(state.mediaState, state.elapsedTime)
+        }
+    }
+
+    private fun showPlaylists(playlists: List<Playlist>) {
+        addToPlaylistAdapter.updateList(playlists)
+    }
+
+    private fun showMedia(mediaState: MediaState, elapsedTime: String) {
         binding.apply {
-            if (isPlaying) playStopButton.setImageResource(R.drawable.ic_stop_84)
+            if (mediaState == MediaState.PLAYING) playStopButton.setImageResource(R.drawable.ic_stop_84)
             else playStopButton.setImageResource(R.drawable.ic_play_84)
         }
+        binding.elapsedTime.text = elapsedTime
     }
 
     private fun changeIsFavoriteButton(isFavorite: Boolean) {
@@ -105,10 +142,7 @@ class PlayerFragment : Fragment() {
             if (isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
             else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
+        track.isFavorite = isFavorite
     }
 
     override fun onPause() {
@@ -117,6 +151,8 @@ class PlayerFragment : Fragment() {
     }
 
     companion object {
+        private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+
         private const val ARGS_TRACK_ID = "track_id"
         private const val ARGS_PREVIEW_URL = "preview_url"
         private const val ARGS_TRACK_COVER = "track_cover"

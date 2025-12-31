@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.player
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.api.player.MediaInteractor
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Job
@@ -36,7 +38,7 @@ class PlayerViewModel(
     private val mediaStateObserver = Observer<MediaState> {
         mediaState = it
 
-        stateLiveData.postValue(
+        renderState(
             PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -53,7 +55,7 @@ class PlayerViewModel(
         viewModelScope.launch {
             val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
             val isFavorite = favoriteTrackIds.contains(trackId)
-            stateLiveData.postValue(PlayerState.IsFavorite(isFavorite))
+            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 
@@ -85,7 +87,7 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (isActive) {
                 if (mediaState == MediaState.PLAYING) {
-                    stateLiveData.postValue(
+                    renderState(
                         PlayerState.Media(
                             mediaState,
                             dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -99,7 +101,7 @@ class PlayerViewModel(
 
     fun onPause() {
         mediaInteractor.pause()
-        stateLiveData.postValue(
+        renderState(
             PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -111,13 +113,32 @@ class PlayerViewModel(
         viewModelScope.launch {
             if (track.isFavorite) {
                 favoritesInteractor.deleteFromFavoriteTracks(track)
-                stateLiveData.postValue((PlayerState.IsFavorite(false)))
+                renderState(PlayerState.IsFavorite(false))
             } else {
                 favoritesInteractor.addToFavoriteTracks(track)
-                stateLiveData.postValue((PlayerState.IsFavorite(true)))
+                renderState(PlayerState.IsFavorite(true))
             }
 
         }
+    }
+
+    fun fillData() {
+        viewModelScope.launch {
+            playlistInteractor
+                .getPlaylists()
+                .collect {
+                    processResult(it)
+                }
+        }
+    }
+
+    private fun processResult(playlists: List<Playlist>) {
+        renderState(PlayerState.Playlists(playlists))
+    }
+
+    private fun renderState(state: PlayerState) {
+        Log.d("1", state.toString())
+        stateLiveData.postValue(state)
     }
 
     override fun onCleared() {

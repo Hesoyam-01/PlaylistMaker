@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="tracks_count">
+        <item quantity="one">%d track</item>
+        <item quantity="other">%d tracks</item>
+    </plurals>
+
     <string name="title_hello">Hello, Practicum</string>
     <string name="search">Search</string>
     <string name="library">Library</string>
@@ -33,10 +38,6 @@
     <string name="unsaved_data">All unsaved changes will be lost</string>
     <string name="cancel">Cancel</string>
     <string name="finish">Finish</string>
-
-    <plurals name="tracks_count">
-        <item quantity="one">%d track</item>
-        <item quantity="other">%d tracks</item>
-    </plurals>
+    <string name="add_to_playlist">Add to playlist</string>
 
 </resources>

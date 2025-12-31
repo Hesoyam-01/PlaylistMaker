@@ -1,8 +1,13 @@
 package com.example.playlistmaker.presentation.player
 
+import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 
 sealed interface PlayerState {
+    data class Playlists(
+        val list: List<Playlist>
+    ) : PlayerState
+
     data class Media(
         val mediaState: MediaState,
         val elapsedTime: String
