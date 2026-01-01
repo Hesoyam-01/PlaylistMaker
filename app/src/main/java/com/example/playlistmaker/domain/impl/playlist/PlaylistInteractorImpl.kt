@@ -16,6 +16,10 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         return repository.getPlaylists()
     }
 
+    override suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
+        repository.addTrackToPlaylist(playlistId, newTrackId)
+    }
+
     override suspend fun saveImageAndGetPath(uri: Uri) : String {
         return repository.saveImageAndGetPath(uri)
     }
