@@ -121,12 +121,20 @@ class MakePlaylistFragment : Fragment() {
                 viewModel.observeImagePath().observe(viewLifecycleOwner) {
                     coverFilePath = it
                     viewModel.makePlaylist(name, description, coverFilePath)
-                    Toast.makeText(requireContext(), getString(R.string.playlist_maked, name), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.playlist_maked, name),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     findNavController().navigateUp()
                 }
             } else {
                 viewModel.makePlaylist(name, description, null)
-                Toast.makeText(requireContext(), getString(R.string.playlist_maked, name), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.playlist_maked, name),
+                    Toast.LENGTH_SHORT
+                ).show()
                 findNavController().navigateUp()
             }
 

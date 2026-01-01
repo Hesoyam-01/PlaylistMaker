@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -25,8 +27,10 @@ import org.koin.core.parameter.parametersOf
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(requireArguments().getString(ARGS_PREVIEW_URL),
-            requireArguments().getInt(ARGS_TRACK_ID))
+        parametersOf(
+            requireArguments().getString(ARGS_PREVIEW_URL),
+            requireArguments().getInt(ARGS_TRACK_ID)
+        )
     }
 
     private lateinit var binding: FragmentPlayerBinding
@@ -34,6 +38,8 @@ class PlayerFragment : Fragment() {
     private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
 
     private lateinit var addToPlaylistAdapter: AddToPlaylistAdapter
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private lateinit var track: Track
 
@@ -51,9 +57,10 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
-        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-            viewModel.addTrackToPlaylist(it.playlistId, track.trackId)
-        }
+        onPlaylistClickDebounce =
+            debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+                viewModel.addTrackToPlaylist(it, track.trackId)
+            }
 
         addToPlaylistAdapter = AddToPlaylistAdapter {
             onPlaylistClickDebounce(it)
@@ -62,7 +69,7 @@ class PlayerFragment : Fragment() {
 
         viewModel.fillData()
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
@@ -86,7 +93,8 @@ class PlayerFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {}
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -130,6 +138,28 @@ class PlayerFragment : Fragment() {
             is PlayerState.Playlists -> showPlaylists(state.list)
             is PlayerState.IsFavorite -> changeIsFavoriteButton(state.isFavorite)
             is PlayerState.Media -> showMedia(state.mediaState, state.elapsedTime)
+            is PlayerState.TrackInPlaylistCheck -> showPlaylistCheckFeedback(
+                state.isPresent,
+                state.playlistName
+            )
+        }
+    }
+
+    private fun showPlaylistCheckFeedback(isPresent: Boolean, playlistName: String) {
+        binding.apply {
+            if (isPresent) Toast.makeText(
+                requireContext(),
+                getString(R.string.track_is_present, playlistName),
+                Toast.LENGTH_SHORT
+            ).show()
+            else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.track_added_to_playlist, playlistName),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

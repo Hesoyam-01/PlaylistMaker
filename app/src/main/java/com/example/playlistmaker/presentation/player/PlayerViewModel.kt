@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.player
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -134,9 +133,23 @@ class PlayerViewModel(
         renderState(PlayerState.Playlists(playlists))
     }
 
-    fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
-        viewModelScope.launch {
-            playlistInteractor.addTrackToPlaylist(playlistId, newTrackId)
+    fun addTrackToPlaylist(playlist: Playlist, newTrackId: Int) {
+        if (playlist.trackIdList.contains(newTrackId)) renderState(
+            PlayerState.TrackInPlaylistCheck(
+                true,
+                playlist.playlistName
+            )
+        )
+        else {
+            renderState(
+                PlayerState.TrackInPlaylistCheck(
+                    false,
+                    playlist.playlistName
+                )
+            )
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(playlist.playlistId, newTrackId)
+            }
         }
     }
 
