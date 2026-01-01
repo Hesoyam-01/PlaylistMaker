@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,7 @@ import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -56,6 +58,8 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         track = getTrackFromArgs()
+
+        viewModel.getBottomSheetState()
 
         viewModel.fillData()
 
@@ -94,13 +98,23 @@ class PlayerFragment : Fragment() {
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-                viewModel.fillData()
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            viewModel.fillData()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val alpha = (slideOffset + 1) / 2
@@ -132,6 +146,12 @@ class PlayerFragment : Fragment() {
             .placeholder(R.drawable.ic_cover_placeholder_45)
             .into(binding.playerTrackCover)
 
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        })
+
     }
 
     private fun dpToPx(dp: Int): Int {
@@ -147,6 +167,8 @@ class PlayerFragment : Fragment() {
                 state.isPresent,
                 state.playlistName
             )
+
+            is PlayerState.BottomSheet -> bottomSheetBehavior.state = state.bottomSheetState
         }
     }
 
@@ -191,6 +213,7 @@ class PlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.onPause()
+        viewModel.saveBottomSheetState(bottomSheetBehavior.state)
     }
 
     companion object {

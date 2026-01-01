@@ -160,11 +160,11 @@ class PlayerViewModel(
     }
 
     fun getBottomSheetState() {
-
+        renderState(PlayerState.BottomSheet(bottomSheetState))
     }
 
-    fun saveBottomSheetState() {
-
+    fun saveBottomSheetState(bottomSheetState: Int) {
+        this.bottomSheetState = bottomSheetState
     }
 
     private fun renderState(state: PlayerState) {
