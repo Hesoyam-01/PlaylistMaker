@@ -10,6 +10,6 @@ data class PlaylistEntity (
     val playlistName: String,
     val playlistDescription: String?,
     val coverFilePath: String?,
-    val trackIdList: String? = null,
+    val trackIdList: String = "1",
     val trackCount: Int = 0
 )

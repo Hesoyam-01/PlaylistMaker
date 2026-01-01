@@ -44,5 +44,6 @@
     <string name="cancel">Отмена</string>
     <string name="finish">Завершить</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+    <string name="default_time" translatable="false">0:00</string>
 
 </resources>

@@ -9,5 +9,7 @@ interface PlaylistRepository {
 
     suspend fun getPlaylists() : Flow<List<Playlist>>
 
+    suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
+
     suspend fun saveImageAndGetPath(uri: Uri) : String
 }

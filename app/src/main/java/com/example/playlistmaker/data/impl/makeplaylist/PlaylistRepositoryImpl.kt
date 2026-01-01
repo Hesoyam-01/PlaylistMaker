@@ -41,6 +41,16 @@ class PlaylistRepositoryImpl(
         return playlists.map { playlistDbConverter.map(it) }
     }
 
+    override suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
+        val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
+        val newTrackIdList = playlistDbConverter.mapIdList(trackIdList + newTrackId)
+        appDatabase.playlistDao().addTrackToPlaylist(playlistId, newTrackIdList)
+    }
+
+    private suspend fun getTrackIdList(playlistId: Int) : String? {
+        return appDatabase.playlistDao().getTrackIdList(playlistId)
+    }
+
     override suspend fun saveImageAndGetPath(uri: Uri) : String {
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")

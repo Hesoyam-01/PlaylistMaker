@@ -26,4 +26,12 @@ class PlaylistDbConverter(private val gson: Gson) {
             playlist.trackCount
         )
     }
+
+    fun mapIdList(idList: List<Int>) : String {
+        return gson.toJson(idList)
+    }
+
+    fun mapIdList(idList: String?) : List<Int> {
+        return gson.fromJson(idList, object : TypeToken<List<Int>>() {}.type)
+    }
 }
