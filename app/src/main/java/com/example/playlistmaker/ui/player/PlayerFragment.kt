@@ -1,7 +1,6 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +57,8 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
+        viewModel.fillData()
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_makePlaylistFragment)
         }
@@ -77,7 +78,6 @@ class PlayerFragment : Fragment() {
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            Log.d("1", it.toString())
             render(it)
         }
 
@@ -94,8 +94,8 @@ class PlayerFragment : Fragment() {
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-            viewModel.fillData()
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                viewModel.fillData()
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         bottomSheetBehavior.addBottomSheetCallback(object :

@@ -4,6 +4,10 @@ import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 
 sealed interface PlayerState {
+    data class BottomSheet(
+        val bottomSheetState: Int
+    ) : PlayerState
+
     data class TrackInPlaylistStatus(
         val isPresent: Boolean,
         val playlistName: String

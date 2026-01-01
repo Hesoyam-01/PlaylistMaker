@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.player
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -11,6 +12,7 @@ import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -31,6 +33,8 @@ class PlayerViewModel(
 
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
+
+    private var bottomSheetState = BottomSheetBehavior.STATE_HIDDEN
 
     private var mediaState = MediaState.DEFAULT
 
@@ -121,6 +125,7 @@ class PlayerViewModel(
     }
 
     fun fillData() {
+        Log.d("!!", "")
         viewModelScope.launch {
             playlistInteractor
                 .getPlaylists()
@@ -152,6 +157,14 @@ class PlayerViewModel(
                 playlistInteractor.addTrackToPlaylist(playlist.playlistId, newTrackId)
             }
         }
+    }
+
+    fun getBottomSheetState() {
+
+    }
+
+    fun saveBottomSheetState() {
+
     }
 
     private fun renderState(state: PlayerState) {
