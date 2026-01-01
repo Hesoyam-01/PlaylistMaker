@@ -21,12 +21,6 @@ class MakePlaylistFragmentViewModel(
         }
     }
 
-    fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
-        viewModelScope.launch {
-            playlistInteractor.addTrackToPlaylist(playlistId, newTrackId)
-        }
-    }
-
     fun saveImageAndGetPath(uri: Uri) {
         viewModelScope.launch {
             savedImagePathLiveData.postValue(playlistInteractor.saveImageAndGetPath(uri))

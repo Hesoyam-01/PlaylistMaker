@@ -24,7 +24,7 @@ class PlaylistRepositoryImpl(
 ) : PlaylistRepository {
 
     override suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?) {
-        val playlist = Playlist(name, description, coverFilePath)
+        val playlist = Playlist(playlistName = name, playlistDescription = description, coverFilePath = coverFilePath)
         addToPlaylists(playlist)
     }
 

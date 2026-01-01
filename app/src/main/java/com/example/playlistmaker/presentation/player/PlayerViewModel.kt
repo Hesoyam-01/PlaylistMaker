@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.player
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -131,6 +132,13 @@ class PlayerViewModel(
 
     private fun processResult(playlists: List<Playlist>) {
         renderState(PlayerState.Playlists(playlists))
+    }
+
+    fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
+        viewModelScope.launch {
+            Log.d("111", playlistId.toString() + newTrackId.toString())
+            playlistInteractor.addTrackToPlaylist(playlistId, newTrackId)
+        }
     }
 
     private fun renderState(state: PlayerState) {

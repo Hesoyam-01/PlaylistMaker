@@ -4,7 +4,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.domain.model.library.Playlist
 
-class AddToPlaylistAdapter : RecyclerView.Adapter<AddToPlaylistViewHolder>() {
+class AddToPlaylistAdapter(
+    private val onPlaylistClicked: (Playlist) -> Unit
+) :
+    RecyclerView.Adapter<AddToPlaylistViewHolder>() {
 
     private var playlistList: List<Playlist> = listOf()
 
@@ -17,6 +20,9 @@ class AddToPlaylistAdapter : RecyclerView.Adapter<AddToPlaylistViewHolder>() {
 
     override fun onBindViewHolder(holder: AddToPlaylistViewHolder, position: Int) {
         holder.bind(playlistList[position])
+        holder.itemView.setOnClickListener {
+            onPlaylistClicked(playlistList[position])
+        }
     }
 
     fun updateList(newList: List<Playlist>) {

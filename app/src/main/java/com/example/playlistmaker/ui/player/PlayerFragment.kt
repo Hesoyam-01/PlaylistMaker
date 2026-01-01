@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -16,6 +17,7 @@ import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
+import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -28,6 +30,8 @@ class PlayerFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentPlayerBinding
+
+    private lateinit var onPlaylistClickDebounce: (Playlist) -> Unit
 
     private lateinit var addToPlaylistAdapter: AddToPlaylistAdapter
 
@@ -47,7 +51,13 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
-        addToPlaylistAdapter = AddToPlaylistAdapter()
+        onPlaylistClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+            viewModel.addTrackToPlaylist(it.playlistId, track.trackId)
+        }
+
+        addToPlaylistAdapter = AddToPlaylistAdapter {
+            onPlaylistClickDebounce(it)
+        }
         binding.playlistsRecyclerView.adapter = addToPlaylistAdapter
 
         viewModel.fillData()
@@ -150,6 +160,7 @@ class PlayerFragment : Fragment() {
 
     companion object {
         private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+        private const val CLICK_DEBOUNCE_DELAY = 300L
 
         private const val ARGS_TRACK_ID = "track_id"
         private const val ARGS_PREVIEW_URL = "preview_url"

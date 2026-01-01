@@ -82,7 +82,6 @@ class MakePlaylistFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
-
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 selectedImageUri = uri
