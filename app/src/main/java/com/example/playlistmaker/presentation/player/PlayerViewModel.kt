@@ -136,7 +136,6 @@ class PlayerViewModel(
 
     fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
         viewModelScope.launch {
-            Log.d("111", playlistId.toString() + newTrackId.toString())
             playlistInteractor.addTrackToPlaylist(playlistId, newTrackId)
         }
     }
