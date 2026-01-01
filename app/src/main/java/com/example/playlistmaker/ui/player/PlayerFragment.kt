@@ -1,6 +1,7 @@
 package com.example.playlistmaker.ui.player
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +58,10 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
+        binding.newPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_makePlaylistFragment)
+        }
+
         onPlaylistClickDebounce =
             debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
                 viewModel.addTrackToPlaylist(it, track.trackId)
@@ -67,13 +72,12 @@ class PlayerFragment : Fragment() {
         }
         binding.playlistsRecyclerView.adapter = addToPlaylistAdapter
 
-        viewModel.fillData()
-
         bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
+            Log.d("1", it.toString())
             render(it)
         }
 
@@ -90,6 +94,7 @@ class PlayerFragment : Fragment() {
         }
 
         binding.addToPlaylistButton.setOnClickListener {
+            viewModel.fillData()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
@@ -138,7 +143,7 @@ class PlayerFragment : Fragment() {
             is PlayerState.Playlists -> showPlaylists(state.list)
             is PlayerState.IsFavorite -> changeIsFavoriteButton(state.isFavorite)
             is PlayerState.Media -> showMedia(state.mediaState, state.elapsedTime)
-            is PlayerState.TrackInPlaylistCheck -> showPlaylistCheckFeedback(
+            is PlayerState.TrackInPlaylistStatus -> showPlaylistCheckFeedback(
                 state.isPresent,
                 state.playlistName
             )

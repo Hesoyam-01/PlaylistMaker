@@ -11,6 +11,7 @@ class MediaRepositoryImpl(private val mediaPlayer: MediaPlayer) : MediaRepositor
     override fun getMediaStateLiveData(): LiveData<MediaState> = mediaStateLiveData
 
     override fun prepare(previewUrl: String) {
+        mediaPlayer.reset()
         mediaPlayer.setDataSource(previewUrl)
         mediaPlayer.setOnPreparedListener {
             mediaStateLiveData.postValue(MediaState.PREPARED)

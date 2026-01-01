@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.player.MediaState
 
 sealed interface PlayerState {
-    data class TrackInPlaylistCheck(
+    data class TrackInPlaylistStatus(
         val isPresent: Boolean,
         val playlistName: String
     ) : PlayerState

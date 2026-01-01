@@ -51,6 +51,11 @@ class PlayerViewModel(
     init {
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
         mediaInteractor.prepare(previewUrl)
+        viewModelScope.launch {
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
+        }
     }
 
     fun playbackControl() {
@@ -112,7 +117,6 @@ class PlayerViewModel(
                 favoritesInteractor.addToFavoriteTracks(track)
                 renderState(PlayerState.IsFavorite(true))
             }
-
         }
     }
 
@@ -123,9 +127,6 @@ class PlayerViewModel(
                 .collect {
                     processResult(it)
                 }
-            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(trackId)
-            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 
@@ -135,14 +136,14 @@ class PlayerViewModel(
 
     fun addTrackToPlaylist(playlist: Playlist, newTrackId: Int) {
         if (playlist.trackIdList.contains(newTrackId)) renderState(
-            PlayerState.TrackInPlaylistCheck(
+            PlayerState.TrackInPlaylistStatus(
                 true,
                 playlist.playlistName
             )
         )
         else {
             renderState(
-                PlayerState.TrackInPlaylistCheck(
+                PlayerState.TrackInPlaylistStatus(
                     false,
                     playlist.playlistName
                 )
