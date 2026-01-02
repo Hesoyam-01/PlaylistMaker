@@ -7,8 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.api.player.MediaInteractor
-import com.example.playlistmaker.domain.models.player.MediaState
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.player.MediaState
+import com.example.playlistmaker.domain.model.search.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -17,9 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
-    previewUrl: String,
-    trackId: Int,
+    private val track: Track,
     private val mediaInteractor: MediaInteractor,
+    private val playlistInteractor: PlaylistInteractor,
     private val favoritesInteractor: FavoritesInteractor
 ) :
     ViewModel() {
@@ -29,12 +32,15 @@ class PlayerViewModel(
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
+    private var bottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+    private var isBottomSheetStateSaved = false
+
     private var mediaState = MediaState.DEFAULT
 
     private val mediaStateObserver = Observer<MediaState> {
         mediaState = it
 
-        stateLiveData.postValue(
+        renderState(
             PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -47,12 +53,7 @@ class PlayerViewModel(
 
     init {
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
-        mediaInteractor.prepare(previewUrl)
-        viewModelScope.launch {
-            val favoriteTrackIds = favoritesInteractor.favoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(trackId)
-            stateLiveData.postValue(PlayerState.IsFavorite(isFavorite))
-        }
+        mediaInteractor.prepare(track.previewUrl)
     }
 
     fun playbackControl() {
@@ -83,7 +84,7 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (isActive) {
                 if (mediaState == MediaState.PLAYING) {
-                    stateLiveData.postValue(
+                    renderState(
                         PlayerState.Media(
                             mediaState,
                             dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -97,7 +98,7 @@ class PlayerViewModel(
 
     fun onPause() {
         mediaInteractor.pause()
-        stateLiveData.postValue(
+        renderState(
             PlayerState.Media(
                 mediaState,
                 dateFormat.format(mediaInteractor.getCurrentPosition())
@@ -109,13 +110,64 @@ class PlayerViewModel(
         viewModelScope.launch {
             if (track.isFavorite) {
                 favoritesInteractor.deleteFromFavoriteTracks(track)
-                stateLiveData.postValue((PlayerState.IsFavorite(false)))
+                renderState(PlayerState.IsFavorite(false))
             } else {
                 favoritesInteractor.addToFavoriteTracks(track)
-                stateLiveData.postValue((PlayerState.IsFavorite(true)))
+                renderState(PlayerState.IsFavorite(true))
             }
-
         }
+    }
+
+    fun fillData() {
+        viewModelScope.launch {
+            playlistInteractor
+                .getPlaylists()
+                .collect {
+                    processResult(it)
+                }
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(track.trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
+        }
+    }
+
+    private fun processResult(playlists: List<Playlist>) {
+        renderState(PlayerState.Playlists(playlists))
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist) {
+        if (playlist.trackIdList.contains(track.trackId)) renderState(
+            PlayerState.TrackInPlaylistStatus(
+                true,
+                playlist.playlistName
+            )
+        )
+        else {
+            renderState(
+                PlayerState.TrackInPlaylistStatus(
+                    false,
+                    playlist.playlistName
+                )
+            )
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(playlist.playlistId, track.trackId)
+                playlistInteractor.saveTrackFromPlaylist(track)
+            }
+        }
+    }
+
+    fun getBottomSheetState() {
+        if (isBottomSheetStateSaved) renderState(PlayerState.BottomSheet(bottomSheetState))
+        isBottomSheetStateSaved = false
+    }
+
+    fun saveBottomSheetState(bottomSheetState: Int) {
+        this.bottomSheetState = bottomSheetState
+        isBottomSheetStateSaved = true
+    }
+
+    private fun renderState(state: PlayerState) {
+        stateLiveData.postValue(state)
     }
 
     override fun onCleared() {

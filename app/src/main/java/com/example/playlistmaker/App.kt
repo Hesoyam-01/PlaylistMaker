@@ -7,6 +7,7 @@ import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.api.settings.ThemeInteractor
+import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -18,6 +19,8 @@ class App : Application() {
             androidContext(this@App)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
+
+        PermissionRequester.initialize(applicationContext)
 
         val themeInteractor = getKoin().get<ThemeInteractor>()
         themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {

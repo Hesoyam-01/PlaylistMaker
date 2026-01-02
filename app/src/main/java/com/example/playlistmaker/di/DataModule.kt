@@ -6,6 +6,9 @@ import androidx.room.Room
 import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
+import com.example.playlistmaker.data.db.converters.TrackDbConverter
+import com.example.playlistmaker.data.db.converters.TrackFromPlaylistDbConverter
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.impl.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
@@ -58,7 +61,7 @@ val dataModule = module {
             get(),
             get(),
             StorageKeys.SEARCH_HISTORY_KEY,
-            object : TypeToken<MutableList<TrackDto>>() {}.type
+            object : TypeToken<List<TrackDto>>() {}.type
         )
     }
 
@@ -79,5 +82,11 @@ val dataModule = module {
             .fallbackToDestructiveMigration()
             .build()
     }
+
+    factory { TrackDbConverter() }
+
+    factory { PlaylistDbConverter(get()) }
+
+    factory { TrackFromPlaylistDbConverter() }
 
 }

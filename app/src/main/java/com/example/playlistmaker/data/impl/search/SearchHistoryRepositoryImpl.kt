@@ -3,7 +3,7 @@ package com.example.playlistmaker.data.impl.search
 import com.example.playlistmaker.data.client.StorageClient
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -54,11 +54,11 @@ class SearchHistoryRepositoryImpl(
         saveLastTracksDtoList()
     }
 
-    override fun getSearchHistory(): Resource<MutableList<Track>> {
+    override fun getSearchHistory(): Resource<List<Track>> {
         val lastTracksList = lastTracksDtoList.map {
             val track = fromTrackDtoToTrack(it)
             track
-        }.toMutableList()
+        }
         return Resource.Success(lastTracksList)
     }
 

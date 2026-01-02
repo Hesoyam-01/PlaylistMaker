@@ -2,6 +2,8 @@ package com.example.playlistmaker.ui.root
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,6 +32,9 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.playerFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
+                R.id.makePlaylistFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
                 else -> {

@@ -31,6 +31,13 @@
             app:exitAnim="@anim/slide_out_left_30"
             app:popEnterAnim="@anim/slide_in_left_30"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_libraryFragment_to_makePlaylistFragment"
+            app:destination="@id/makePlaylistFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/hold"
+            app:popExitAnim="@anim/slide_in_up"
+            app:popEnterAnim="@anim/hold"/>
     </fragment>
 
     <fragment
@@ -43,5 +50,19 @@
         android:id="@+id/playerFragment"
         android:name="com.example.playlistmaker.ui.player.PlayerFragment"
         android:label="fragment_player"
-        tools:layout="@layout/fragment_player" />
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_makePlaylistFragment"
+            app:destination="@id/makePlaylistFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/hold"
+            app:popExitAnim="@anim/slide_in_up"
+            app:popEnterAnim="@anim/hold"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/makePlaylistFragment"
+        android:name="com.example.playlistmaker.ui.library.MakePlaylistFragment"
+        android:label="MakePlaylistFragment"
+        tools:layout="@layout/fragment_make_playlist"/>
 </navigation>

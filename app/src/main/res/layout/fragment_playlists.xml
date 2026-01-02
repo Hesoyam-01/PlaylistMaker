@@ -5,36 +5,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/new_playlist_button"
+        android:layout_width="133dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="?attr/colorOnPrimary"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="54dp"
+        app:cardElevation="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/new_playlist"
+            android:textColor="?attr/colorPrimary"
+            android:textFontWeight="500"
+            android:textSize="14sp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/default_padding"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/default_padding"
+        android:visibility="gone" />
+
+
     <LinearLayout
-        android:id="@+id/playlists_empty_placeholder"
+        android:id="@+id/empty_playlists_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"
         android:orientation="vertical"
         android:visibility="gone">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/new_playlist_button"
-            android:layout_width="133dp"
-            android:layout_height="36dp"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="?attr/colorOnPrimary"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardCornerRadius="54dp"
-            app:cardElevation="0dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/ys_display_medium"
-                android:text="@string/new_playlist"
-                android:textColor="?attr/colorPrimary"
-                android:textFontWeight="500"
-                android:textSize="14sp" />
-
-        </androidx.cardview.widget.CardView>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -53,7 +63,7 @@
             android:text="@string/empty_playlists"
             android:textColor="?attr/colorOnPrimary"
             android:textFontWeight="400"
-            android:textSize="@dimen/medium_textsize" />
+            android:textSize="@dimen/medium_textSize" />
 
     </LinearLayout>
 </LinearLayout>

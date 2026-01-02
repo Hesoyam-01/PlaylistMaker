@@ -7,6 +7,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/dark_gray</item>
         <item name="colorOnPrimaryFixedVariant">@color/text_gray</item>
+        <item name="colorOnPrimaryFixed">@color/light_gray</item>
         <item name="colorControlActivated">@color/blue</item>
     </style>
     

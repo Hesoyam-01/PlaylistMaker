@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="tracks_count">
+        <item quantity="one">%d track</item>
+        <item quantity="other">%d tracks</item>
+    </plurals>
+
     <string name="title_hello">Hello, Practicum</string>
     <string name="search">Search</string>
     <string name="library">Library</string>
@@ -25,4 +30,16 @@
     <string name="empty_library">Your library is empty</string>
     <string name="empty_playlists">No playlists created yet</string>
     <string name="new_playlist">New playlist</string>
+    <string name="title">Title*</string>
+    <string name="description">Description</string>
+    <string name="make">Make</string>
+    <string name="playlist_maked">Playlist %1$s maked</string>
+    <string name="finish_making">Finish playlist making?</string>
+    <string name="unsaved_data">All unsaved changes will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="add_to_playlist">Add to playlist</string>
+    <string name="track_is_present">Track is already in the playlist \"%1$s\"</string>
+    <string name="track_added_to_playlist">Added to the playlist %1$s</string>
+
 </resources>

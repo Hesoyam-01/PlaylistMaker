@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.search.SearchState
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.ui.player.PlayerFragment
@@ -104,7 +104,10 @@ class SearchFragment : Fragment() {
                 binding.searchClearButton.isVisible = !s.isNullOrEmpty()
 
                 if (binding.searchBar.hasFocus()) {
-                    if (s.isNullOrEmpty()) viewModel.getSearchHistory()
+                    if (s.isNullOrEmpty()) {
+                        viewModel.cancelSearchRequest()
+                        viewModel.getSearchHistory()
+                    }
                     else viewModel.debounceSearch(s.toString())
                 }
             }
@@ -112,6 +115,7 @@ class SearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 trackAdapter.clearTrackList()
                 binding.searchPlaceholder.visibility = View.GONE
+                if (s.isNullOrEmpty()) viewModel.getSearchHistory()
             }
         }
 
@@ -149,7 +153,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showSearchHistory(lastTracksList: MutableList<Track>) {
+    private fun showSearchHistory(lastTracksList: List<Track>) {
         if (lastTracksList.isNotEmpty()) {
             binding.apply {
                 searchPlaceholder.visibility = View.GONE
@@ -161,7 +165,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showFoundTracks(tracksList: MutableList<Track>) {
+    private fun showFoundTracks(tracksList: List<Track>) {
         binding.apply {
             searchProgressBar.visibility = View.GONE
             searchPlaceholder.visibility = View.GONE

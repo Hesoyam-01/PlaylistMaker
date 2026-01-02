@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.library.FavoritesFragmentViewModel
+import com.example.playlistmaker.presentation.library.MakePlaylistFragmentViewModel
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
 import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.presentation.player.PlayerViewModel
@@ -24,14 +25,19 @@ val viewModelModule = module {
     }
 
     viewModel { params ->
-        PlayerViewModel(params.get(), params.get(), get(), get())
+        PlayerViewModel(params.get(), get(), get(), get())
     }
 
     viewModel {
         FavoritesFragmentViewModel(get())
     }
 
-    viewModel { params ->
-        PlaylistsFragmentViewModel(params.get())
+    viewModel {
+        PlaylistsFragmentViewModel(get())
     }
+
+    viewModel {
+        MakePlaylistFragmentViewModel(get())
+    }
+
 }

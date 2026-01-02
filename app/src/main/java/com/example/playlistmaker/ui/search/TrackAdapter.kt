@@ -2,16 +2,21 @@ package com.example.playlistmaker.ui.search
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 
 class TrackAdapter(
     private val onTrackClick: (Track) -> Unit
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    private val trackList: MutableList<Track> = mutableListOf()
+    private var trackList: List<Track> = listOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder.from(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder =
+        TrackViewHolder.from(parent)
+
+    override fun getItemCount(): Int {
+        return trackList.size
+    }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -20,18 +25,13 @@ class TrackAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return trackList.size
-    }
-
-    fun updateList(newList: MutableList<Track>) {
-        trackList.clear()
-        trackList.addAll(newList)
+    fun updateList(newList: List<Track>) {
+        trackList = newList
         notifyDataSetChanged()
     }
 
     fun clearTrackList() {
-        trackList.clear()
+        trackList = emptyList()
         notifyDataSetChanged()
     }
 

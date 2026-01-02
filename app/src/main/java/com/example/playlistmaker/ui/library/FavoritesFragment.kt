@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.library.FavoritesFragmentViewModel
 import com.example.playlistmaker.presentation.library.FavoritesState
 import com.example.playlistmaker.ui.player.PlayerFragment
@@ -56,9 +56,9 @@ class FavoritesFragment : Fragment() {
 
     }
 
-    private fun showContent(tracks: MutableList<Track>) {
+    private fun showContent(tracks: List<Track>) {
         binding.apply {
-            favoritesEmptyPlaceholder.visibility = View.GONE
+            emptyFavoritesPlaceholder.visibility = View.GONE
             favoritesRecyclerView.visibility = View.VISIBLE
         }
         favoritesAdapter.updateList(tracks)
@@ -67,7 +67,7 @@ class FavoritesFragment : Fragment() {
     private fun showEmpty() {
         binding.apply {
             favoritesRecyclerView.visibility = View.GONE
-            favoritesEmptyPlaceholder.visibility = View.VISIBLE
+            emptyFavoritesPlaceholder.visibility = View.VISIBLE
         }
     }
 

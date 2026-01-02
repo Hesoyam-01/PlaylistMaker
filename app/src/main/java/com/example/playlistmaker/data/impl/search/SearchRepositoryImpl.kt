@@ -4,7 +4,7 @@ import com.example.playlistmaker.data.client.NetworkClient
 import com.example.playlistmaker.data.dto.TracksSearchRequest
 import com.example.playlistmaker.data.dto.TracksSearchResponse
 import com.example.playlistmaker.domain.api.search.SearchRepository
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
     private val dateFormat by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
 
-    override fun searchTracks(query: String): Flow<Resource<MutableList<Track>>> = flow {
+    override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(query))
 
         when (response.resultCode) {
@@ -35,7 +35,7 @@ class SearchRepositoryImpl(
                         country = it.country,
                         previewUrl = it.previewUrl
                     )
-                }.toMutableList()))
+                }))
             }
 
             400 -> emit(Resource.Error())

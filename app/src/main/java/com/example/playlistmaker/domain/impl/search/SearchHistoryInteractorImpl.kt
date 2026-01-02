@@ -2,12 +2,12 @@ package com.example.playlistmaker.domain.impl.search
 
 import com.example.playlistmaker.domain.api.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
 
 class SearchHistoryInteractorImpl (private val repository: SearchHistoryRepository) :
     SearchHistoryInteractor {
-    override fun getSearchHistory() : Resource<MutableList<Track>> {
+    override fun getSearchHistory() : Resource<List<Track>> {
         return repository.getSearchHistory()
     }
 

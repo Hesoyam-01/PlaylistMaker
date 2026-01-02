@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
-import com.example.playlistmaker.domain.models.search.Track
+import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.launch
 
 class FavoritesFragmentViewModel(private val favoritesInteractor: FavoritesInteractor) :
@@ -17,14 +17,14 @@ class FavoritesFragmentViewModel(private val favoritesInteractor: FavoritesInter
     fun fillData() {
         viewModelScope.launch {
             favoritesInteractor
-                .favoriteTracks()
+                .getFavoriteTracks()
                 .collect {
                     processResult(it)
                 }
         }
     }
 
-    private fun processResult(tracks: MutableList<Track>) {
+    private fun processResult(tracks: List<Track>) {
         if (tracks.isEmpty()) {
             renderState(FavoritesState.Empty)
         } else {

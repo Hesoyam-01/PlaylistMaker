@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/favorites_empty_placeholder"
+        android:id="@+id/empty_favorites_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -30,7 +30,7 @@
             android:text="@string/empty_library"
             android:textColor="?attr/colorOnPrimary"
             android:textFontWeight="400"
-            android:textSize="@dimen/medium_textsize" />
+            android:textSize="@dimen/medium_textSize" />
 
     </LinearLayout>
 

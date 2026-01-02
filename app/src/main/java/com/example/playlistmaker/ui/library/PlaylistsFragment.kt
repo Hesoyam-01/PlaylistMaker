@@ -5,18 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.library.PlaylistsState
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
-    private val viewModel: PlaylistsFragmentViewModel by viewModel {
-        parametersOf(true)
-    }
+    private val viewModel: PlaylistsFragmentViewModel by viewModel()
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var playlistsAdapter: PlaylistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,8 +32,44 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.observeIsPlaylistsEmpty().observe(viewLifecycleOwner) {
-            if (it) binding.playlistsEmptyPlaceholder.visibility = View.VISIBLE
+
+        binding.newPlaylistButton.setOnClickListener {
+            findNavController().navigate(R.id.action_libraryFragment_to_makePlaylistFragment)
+        }
+
+        playlistsAdapter = PlaylistAdapter()
+
+        binding.playlistsRecyclerView.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = playlistsAdapter
+        }
+
+        viewModel.observePlaylistLiveData().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        viewModel.fillData()
+    }
+
+    private fun render(state: PlaylistsState) {
+        when (state) {
+            is PlaylistsState.Content -> showContent(state.playlists)
+            is PlaylistsState.Empty -> showEmpty()
+        }
+    }
+
+    private fun showContent(playlists: List<Playlist>) {
+        binding.apply {
+            emptyPlaylistsPlaceholder.visibility = View.GONE
+            playlistsRecyclerView.visibility = View.VISIBLE
+        }
+        playlistsAdapter.updateList(playlists)
+    }
+
+    private fun showEmpty() {
+        binding.apply {
+            playlistsRecyclerView.visibility = View.GONE
+            emptyPlaylistsPlaceholder.visibility = View.VISIBLE
         }
     }
 
