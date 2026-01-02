@@ -65,6 +65,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Костыль -->
         <TextView
             android:id="@+id/name_hint"
             android:layout_width="wrap_content"
@@ -111,6 +112,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Костыль -->
         <TextView
             android:id="@+id/description_hint"
             android:layout_width="wrap_content"
