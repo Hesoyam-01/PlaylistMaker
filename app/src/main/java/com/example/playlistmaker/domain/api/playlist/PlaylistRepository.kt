@@ -2,6 +2,7 @@ package com.example.playlistmaker.domain.api.playlist
 
 import android.net.Uri
 import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.flow.Flow
 
 interface PlaylistRepository {
@@ -12,4 +13,6 @@ interface PlaylistRepository {
     suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
 
     suspend fun saveImageAndGetPath(uri: Uri) : String
+
+    suspend fun saveTrackFromPlaylist(track: Track)
 }

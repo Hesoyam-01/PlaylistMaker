@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.player
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,8 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerViewModel(
-    previewUrl: String,
-    private val trackId: Int,
+    private val track: Track,
     private val mediaInteractor: MediaInteractor,
     private val playlistInteractor: PlaylistInteractor,
     private val favoritesInteractor: FavoritesInteractor
@@ -35,6 +33,7 @@ class PlayerViewModel(
     fun observePlayerState(): LiveData<PlayerState> = stateLiveData
 
     private var bottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+    private var isBottomSheetStateSaved = false
 
     private var mediaState = MediaState.DEFAULT
 
@@ -54,12 +53,7 @@ class PlayerViewModel(
 
     init {
         mediaInteractor.observeMediaState().observeForever(mediaStateObserver)
-        mediaInteractor.prepare(previewUrl)
-        viewModelScope.launch {
-            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(trackId)
-            renderState(PlayerState.IsFavorite(isFavorite))
-        }
+        mediaInteractor.prepare(track.previewUrl)
     }
 
     fun playbackControl() {
@@ -125,13 +119,15 @@ class PlayerViewModel(
     }
 
     fun fillData() {
-        Log.d("!!", "")
         viewModelScope.launch {
             playlistInteractor
                 .getPlaylists()
                 .collect {
                     processResult(it)
                 }
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(track.trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 
@@ -139,8 +135,8 @@ class PlayerViewModel(
         renderState(PlayerState.Playlists(playlists))
     }
 
-    fun addTrackToPlaylist(playlist: Playlist, newTrackId: Int) {
-        if (playlist.trackIdList.contains(newTrackId)) renderState(
+    fun addTrackToPlaylist(playlist: Playlist) {
+        if (playlist.trackIdList.contains(track.trackId)) renderState(
             PlayerState.TrackInPlaylistStatus(
                 true,
                 playlist.playlistName
@@ -154,17 +150,20 @@ class PlayerViewModel(
                 )
             )
             viewModelScope.launch {
-                playlistInteractor.addTrackToPlaylist(playlist.playlistId, newTrackId)
+                playlistInteractor.addTrackToPlaylist(playlist.playlistId, track.trackId)
+                playlistInteractor.saveTrackFromPlaylist(track)
             }
         }
     }
 
     fun getBottomSheetState() {
-        renderState(PlayerState.BottomSheet(bottomSheetState))
+        if (isBottomSheetStateSaved) renderState(PlayerState.BottomSheet(bottomSheetState))
+        isBottomSheetStateSaved = false
     }
 
     fun saveBottomSheetState(bottomSheetState: Int) {
         this.bottomSheetState = bottomSheetState
+        isBottomSheetStateSaved = true
     }
 
     private fun renderState(state: PlayerState) {

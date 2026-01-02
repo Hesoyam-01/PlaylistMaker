@@ -22,6 +22,7 @@ import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,8 +31,7 @@ class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(
-            requireArguments().getString(ARGS_PREVIEW_URL),
-            requireArguments().getInt(ARGS_TRACK_ID)
+            track
         )
     }
 
@@ -59,9 +59,12 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
-        viewModel.getBottomSheetState()
-
         viewModel.fillData()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(MINIMAL_DELAY)
+            viewModel.getBottomSheetState()
+        }
 
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_makePlaylistFragment)
@@ -69,7 +72,7 @@ class PlayerFragment : Fragment() {
 
         onPlaylistClickDebounce =
             debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-                viewModel.addTrackToPlaylist(it, track.trackId)
+                viewModel.addTrackToPlaylist(it)
             }
 
         addToPlaylistAdapter = AddToPlaylistAdapter {
@@ -104,17 +107,7 @@ class PlayerFragment : Fragment() {
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
-                    }
-                }
-            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) {}
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val alpha = (slideOffset + 1) / 2
@@ -219,6 +212,7 @@ class PlayerFragment : Fragment() {
     companion object {
         private const val INITIAL_OVERLAY_ALPHA: Float = 0F
         private const val CLICK_DEBOUNCE_DELAY = 300L
+        private const val MINIMAL_DELAY = 200L
 
         private const val ARGS_TRACK_ID = "track_id"
         private const val ARGS_PREVIEW_URL = "preview_url"

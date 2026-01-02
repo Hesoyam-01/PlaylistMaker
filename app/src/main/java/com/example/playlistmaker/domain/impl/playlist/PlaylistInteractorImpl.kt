@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.flow.Flow
 
 class PlaylistInteractorImpl(private val repository: PlaylistRepository) : PlaylistInteractor {
@@ -22,5 +23,9 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
 
     override suspend fun saveImageAndGetPath(uri: Uri) : String {
         return repository.saveImageAndGetPath(uri)
+    }
+
+    override suspend fun saveTrackFromPlaylist(track: Track) {
+        repository.saveTrackFromPlaylist(track)
     }
 }

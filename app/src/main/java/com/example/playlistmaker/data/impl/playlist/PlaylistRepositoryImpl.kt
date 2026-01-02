@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.impl.makeplaylist
+package com.example.playlistmaker.data.impl.playlist
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,9 +7,11 @@ import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
+import com.example.playlistmaker.data.db.converters.TrackFromPlaylistDbConverter
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,7 +22,8 @@ import java.io.FileOutputStream
 class PlaylistRepositoryImpl(
     private val context: Context,
     private val appDatabase: AppDatabase,
-    private val playlistDbConverter: PlaylistDbConverter
+    private val playlistDbConverter: PlaylistDbConverter,
+    private val trackFromPlaylistDbConverter: TrackFromPlaylistDbConverter
 ) : PlaylistRepository {
 
     override suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?) {
@@ -76,5 +79,9 @@ class PlaylistRepositoryImpl(
         }
 
         return fileName
+    }
+
+    override suspend fun saveTrackFromPlaylist(track: Track) {
+        appDatabase.trackInPlaylistDao().insertTrack(trackFromPlaylistDbConverter.map(track))
     }
 }
