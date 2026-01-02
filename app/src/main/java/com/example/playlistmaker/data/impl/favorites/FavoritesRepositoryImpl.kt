@@ -30,7 +30,7 @@ class FavoritesRepositoryImpl(
         return appDatabase.trackDao().getTrackIds()
     }
 
-    private fun convertFromTrackEntity(tracks: MutableList<TrackEntity>) : MutableList<Track> {
-        return tracks.map { trackDbConverter.map(it) }.toMutableList()
+    private fun convertFromTrackEntity(tracks: List<TrackEntity>) : List<Track> {
+        return tracks.map { trackDbConverter.map(it) }
     }
 }
