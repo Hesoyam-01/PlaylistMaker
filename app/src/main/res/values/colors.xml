@@ -8,4 +8,5 @@
     <color name="text_gray">#AEAFB4</color>
     <color name="dark_gray">#1A1B22</color>
     <color name="overlay">#99000000</color>
+    <color name="ic_launcher_background">#1E1E1E</color>
 </resources>
