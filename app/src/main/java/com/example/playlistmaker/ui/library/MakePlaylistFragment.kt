@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.library
 
+import android.content.res.Resources.Theme
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -52,8 +53,8 @@ class MakePlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fun navigateUpWithConfirmation() {
-            if (binding.playlistName.text.isNotEmpty()
-                or binding.playlistDescription.text.isNotEmpty()
+            if ((!binding.playlistName.text.isNullOrEmpty())
+                or (!binding.playlistDescription.text.isNullOrEmpty())
                 or (selectedImageUri != null)
             ) confirmDialog.show()
             else findNavController().navigateUp()
@@ -138,56 +139,6 @@ class MakePlaylistFragment : Fragment() {
                 findNavController().navigateUp()
             }
 
-        }
-
-        binding.apply {
-
-            val typedValue = TypedValue()
-
-            requireContext().theme.resolveAttribute(
-                com.google.android.material.R.attr.colorOnPrimaryFixedVariant,
-                typedValue,
-                true
-            )
-            val color = typedValue.data
-
-            val nameHintText = playlistName.hint
-            val descriptionHintText = playlistDescription.hint
-
-
-            playlistName.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    nameHint.visibility = View.VISIBLE
-                    nameHint.setTextColor(resources.getColor(R.color.blue))
-                    playlistName.hint = ""
-                    nameBackground.strokeColor = resources.getColor(R.color.blue)
-                } else if (playlistName.text.isNullOrEmpty()) {
-                    nameHint.visibility = View.GONE
-                    nameHint.setTextColor(color)
-                    playlistName.hint = nameHintText
-                    nameBackground.strokeColor = color
-                } else {
-                    nameHint.setTextColor(color)
-                    nameBackground.strokeColor = color
-                }
-            }
-
-            playlistDescription.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    descriptionHint.visibility = View.VISIBLE
-                    descriptionHint.setTextColor(resources.getColor((R.color.blue)))
-                    playlistDescription.hint = ""
-                    descriptionBackground.strokeColor = resources.getColor(R.color.blue)
-                } else if (playlistDescription.text.isNullOrEmpty()) {
-                    descriptionHint.visibility = View.GONE
-                    descriptionHint.setTextColor(color)
-                    playlistDescription.hint = descriptionHintText
-                    descriptionBackground.strokeColor = color
-                } else {
-                    descriptionHint.setTextColor(color)
-                    descriptionBackground.strokeColor = color
-                }
-            }
         }
 
         textWatcher = object : TextWatcher {

@@ -90,5 +90,13 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="MyTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+
+    </style>
+
 
 </resources>
