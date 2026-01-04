@@ -1,12 +1,10 @@
 package com.example.playlistmaker.ui.library
 
-import android.content.res.Resources.Theme
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

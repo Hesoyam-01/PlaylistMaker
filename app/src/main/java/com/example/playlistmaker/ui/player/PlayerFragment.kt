@@ -30,9 +30,7 @@ import org.koin.core.parameter.parametersOf
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(
-            track
-        )
+        parametersOf(track)
     }
 
     private lateinit var binding: FragmentPlayerBinding
@@ -137,7 +135,7 @@ class PlayerFragment : Fragment() {
         Glide.with(this)
             .load(coverUrl)
             .transform(RoundedCorners(dpToPx(8)))
-            .placeholder(R.drawable.ic_cover_placeholder_45)
+            .placeholder(R.drawable.ic_cover_placeholder_312)
             .into(binding.playerTrackCover)
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
