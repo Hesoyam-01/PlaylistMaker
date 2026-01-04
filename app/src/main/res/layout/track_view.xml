@@ -62,8 +62,7 @@
             <ImageView
                 android:layout_width="3dp"
                 android:layout_height="3dp"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginVertical="5dp"
+                android:layout_margin="5dp"
                 android:src="@drawable/ic_ellipse_3"
                 app:tint="?attr/colorOnPrimaryFixedVariant">
 
