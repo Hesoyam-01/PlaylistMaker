@@ -76,9 +76,7 @@ class MakePlaylistFragment : Fragment() {
         )
             .setTitle(R.string.finish_making)
             .setMessage(R.string.unsaved_data)
-            .setNeutralButton(
-                R.string.cancel
-            ) { _, _ -> }
+            .setNeutralButton(R.string.cancel) { _, _ -> }
             .setPositiveButton(R.string.finish) { _, _ ->
                 findNavController().navigateUp()
             }
