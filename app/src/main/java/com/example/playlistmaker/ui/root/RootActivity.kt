@@ -25,6 +25,8 @@ class RootActivity : AppCompatActivity() {
         }
         enableEdgeToEdge()
 
+        binding.bottomNavigationView.setOnApplyWindowInsetsListener(null)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
