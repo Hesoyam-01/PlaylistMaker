@@ -5,6 +5,7 @@
     android:id="@+id/make_playlist_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/screen_margin_top"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
     tools:context=".ui.makeplaylist.MakePlaylistFragment">

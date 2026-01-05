@@ -1,6 +1,8 @@
 package com.example.playlistmaker.ui.player
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,10 +105,22 @@ class PlayerFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenHeightPx = displayMetrics.heightPixels
+
+        val topMarginPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            0f,
+            resources.displayMetrics
+        ).toInt()
 
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    val params = bottomSheet.layoutParams
+                    params.height = screenHeightPx - topMarginPx
+                    bottomSheet.layoutParams = params
+            }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val alpha = (slideOffset + 1) / 2
