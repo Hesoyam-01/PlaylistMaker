@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    tools:context=".ui.library.MakePlaylistFragment">
+    tools:context=".ui.makeplaylist.MakePlaylistFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/new_playlist_toolbar"

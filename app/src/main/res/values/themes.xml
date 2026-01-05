@@ -2,8 +2,6 @@
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor">@color/white</item>
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/dark_gray</item>
         <item name="colorOnPrimaryFixedVariant">@color/text_gray</item>
