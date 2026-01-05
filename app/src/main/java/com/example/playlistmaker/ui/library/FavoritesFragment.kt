@@ -49,7 +49,7 @@ class FavoritesFragment : Fragment() {
 
         onTrackClickDebounce =
             debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-                startPlayerFragment(it)
+                navigateToPlayerFragment(it)
             }
 
         viewModel.fillData()
@@ -78,7 +78,7 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    private fun startPlayerFragment(track: Track) {
+    private fun navigateToPlayerFragment(track: Track) {
         findNavController().navigate(
             R.id.action_libraryFragment_to_playerFragment,
             PlayerFragment.createArgs(

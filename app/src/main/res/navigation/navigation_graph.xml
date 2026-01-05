@@ -74,7 +74,7 @@
         tools:layout="@layout/fragment_make_playlist"/>
     <fragment
         android:id="@+id/playlistScreenFragment"
-        android:name="com.example.playlistmaker.ui.playlist.PlaylistScreenFragment"
+        android:name="com.example.playlistmaker.ui.playlistscreen.PlaylistScreenFragment"
         android:label="fragment_playlist_screen"
         tools:layout="@layout/fragment_playlist_screen" />
 </navigation>

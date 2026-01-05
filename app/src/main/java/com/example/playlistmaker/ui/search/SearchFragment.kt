@@ -48,7 +48,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-            startPlayerFragment(it)
+            navigateToPlayerFragment(it)
         }
 
         getSearchHistoryDebounce = debounce(
@@ -122,7 +122,7 @@ class SearchFragment : Fragment() {
         binding.searchBar.addTextChangedListener(textWatcher)
     }
 
-    private fun startPlayerFragment(track: Track) {
+    private fun navigateToPlayerFragment(track: Track) {
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(
