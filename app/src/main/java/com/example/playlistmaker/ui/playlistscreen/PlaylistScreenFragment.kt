@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.playlistscreen
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Environment
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,16 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import java.io.File
 
 class PlaylistScreenFragment : Fragment() {
 
@@ -29,6 +38,28 @@ class PlaylistScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.playlistToolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        val filePath = File(
+            requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "playlistsCovers"
+        )
+        val playlistCoverPath = requireArguments().getString(ARGS_PLAYLIST_COVER_PATH)
+        val file = if (playlistCoverPath != null) File(filePath, playlistCoverPath) else null
+
+        binding.apply {
+            Glide.with(root)
+                .load(file)
+                .placeholder(R.drawable.ic_cover_placeholder_312)
+                .centerCrop()
+                .into(playlistCover)
+            playlistName.text = requireArguments().getString(ARGS_PLAYLIST_NAME)
+            playlistDescription.text = requireArguments().getString(ARGS_PLAYLIST_DESCRIPTION)
+            trackCount.text = requireArguments().getString(ARGS_TRACK_COUNT)
+        }
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
 
@@ -55,7 +86,7 @@ class PlaylistScreenFragment : Fragment() {
 
     companion object {
         private const val ARGS_PLAYLIST_ID = "playlist_id"
-        private const val ARGS_PLAYLIST_NAME = "playlist_description"
+        private const val ARGS_PLAYLIST_NAME = "playlist_name"
         private const val ARGS_PLAYLIST_DESCRIPTION = "playlist_description"
         private const val ARGS_PLAYLIST_COVER_PATH = "playlist_cover_path"
         private const val ARGS_TRACK_ID_LIST = "track_id_list"
@@ -69,7 +100,7 @@ class PlaylistScreenFragment : Fragment() {
             trackIdList: List<Int>,
             trackCount: Int
 
-        ) : Bundle =
+        ): Bundle =
             bundleOf(
                 ARGS_PLAYLIST_ID to playlistId,
                 ARGS_PLAYLIST_NAME to playlistName,
