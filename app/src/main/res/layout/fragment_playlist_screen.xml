@@ -152,7 +152,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
-        android:visibility="gone"
         app:behavior_hideable="false"
         app:behavior_peekHeight="240dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -180,7 +179,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
-        android:visibility="gone"
         app:behavior_hideable="true"
         app:behavior_peekHeight="383dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
