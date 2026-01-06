@@ -13,7 +13,6 @@ import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch

@@ -236,7 +236,6 @@ class PlayerFragment : Fragment() {
             primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
             country = requireArguments().getString(ARGS_COUNTRY) ?: "",
             previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
-//            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
         )
 
     companion object {
@@ -254,7 +253,6 @@ class PlayerFragment : Fragment() {
         private const val ARGS_GENRE_NAME = "genre_name"
         private const val ARGS_RELEASE_DATE = "release_date"
         private const val ARGS_COUNTRY = "country"
-//        private const val ARGS_IS_FAVORITE = "favorite"
 
         fun createArgs(
             trackId: Int,
@@ -266,8 +264,7 @@ class PlayerFragment : Fragment() {
             albumName: String?,
             genreName: String,
             releaseDate: String?,
-            country: String,
-//            isFavorite: Boolean,
+            country: String
         ): Bundle =
             bundleOf(
                 ARGS_TRACK_ID to trackId,
@@ -279,8 +276,7 @@ class PlayerFragment : Fragment() {
                 ARGS_ALBUM_NAME to albumName,
                 ARGS_GENRE_NAME to genreName,
                 ARGS_RELEASE_DATE to releaseDate,
-                ARGS_COUNTRY to country,
-//                ARGS_IS_FAVORITE to isFavorite,
+                ARGS_COUNTRY to country
             )
     }
 
