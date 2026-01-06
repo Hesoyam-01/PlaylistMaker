@@ -1,6 +1,7 @@
 package com.example.playlistmaker.domain.api.playlist
 
 import android.net.Uri
+import com.example.playlistmaker.data.db.entity.TrackFromPlaylistEntity
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,6 @@ interface PlaylistRepository {
     suspend fun saveImageAndGetPath(uri: Uri) : String
 
     suspend fun saveTrackFromPlaylist(track: Track)
+
+    suspend fun getTracksFromPlaylist(ids: List<Int>) : Flow<List<TrackFromPlaylistEntity>>
 }

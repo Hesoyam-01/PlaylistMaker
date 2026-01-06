@@ -1,5 +1,5 @@
 <resources>
-    <plurals name="tracks_count">
+    <plurals name="track_count">
         <item quantity="one">%d трек</item>
         <item quantity="few">%d трека</item>
         <item quantity="many">%d треков</item>

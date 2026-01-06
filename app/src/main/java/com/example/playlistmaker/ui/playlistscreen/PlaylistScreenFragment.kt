@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
+import com.example.playlistmaker.domain.model.library.Playlist
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.io.File
 
@@ -23,6 +24,8 @@ class PlaylistScreenFragment : Fragment() {
 
     private lateinit var trackBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var moreBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private lateinit var playlist: Playlist
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +39,8 @@ class PlaylistScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playlist = getPlaylistFromArgs()
+
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
         binding.playlistToolbar.setNavigationOnClickListener {
@@ -46,8 +51,7 @@ class PlaylistScreenFragment : Fragment() {
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlistsCovers"
         )
-        val playlistCoverPath = requireArguments().getString(ARGS_PLAYLIST_COVER_PATH)
-        val file = if (playlistCoverPath != null) File(filePath, playlistCoverPath) else null
+        val file = if (playlist.coverFilePath != null) File(filePath, playlist.coverFilePath!!) else null
 
         binding.apply {
             Glide.with(root)
@@ -55,9 +59,17 @@ class PlaylistScreenFragment : Fragment() {
                 .placeholder(R.drawable.ic_cover_placeholder_312)
                 .centerCrop()
                 .into(playlistCover)
-            playlistName.text = requireArguments().getString(ARGS_PLAYLIST_NAME)
-            playlistDescription.text = requireArguments().getString(ARGS_PLAYLIST_DESCRIPTION)
-            trackCount.text = requireArguments().getString(ARGS_TRACK_COUNT)
+            playlistName.text = playlist.playlistName
+            playlistDescription.text = playlist.playlistDescription
+            trackCount.text = root.resources.getQuantityString(R.plurals.track_count, playlist.trackCount, playlist.trackCount)
+
+            Glide.with(root)
+                .load(file)
+                .placeholder(R.drawable.ic_cover_placeholder_45)
+                .centerCrop()
+                .into(bottomSheetPlaylistCover)
+            bottomSheetPlaylistName.text = playlist.playlistName
+            bottomSheetTrackCount.text = root.resources.getQuantityString(R.plurals.track_count, playlist.trackCount, playlist.trackCount)
         }
 
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -104,6 +116,17 @@ class PlaylistScreenFragment : Fragment() {
         })
 
     }
+
+    private fun getPlaylistFromArgs() =
+        Playlist(
+            playlistId = requireArguments().getInt(ARGS_PLAYLIST_ID),
+            playlistName = requireArguments().getString(ARGS_PLAYLIST_NAME) ?: "",
+            playlistDescription = requireArguments().getString(ARGS_PLAYLIST_DESCRIPTION),
+            coverFilePath = requireArguments().getString(ARGS_PLAYLIST_COVER_PATH),
+            trackIdList = requireArguments().getIntegerArrayList(ARGS_TRACK_ID_LIST) ?: emptyList(),
+            trackCount = requireArguments().getInt(ARGS_TRACK_COUNT)
+        )
+
 
     companion object {
         private const val INITIAL_OVERLAY_ALPHA: Float = 0F

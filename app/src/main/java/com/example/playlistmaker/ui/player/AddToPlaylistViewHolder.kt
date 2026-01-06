@@ -22,7 +22,7 @@ class AddToPlaylistViewHolder (private val binding: AddToPlaylistViewBinding) : 
                 .placeholder(R.drawable.ic_cover_placeholder_45)
                 .into(playlistCover)
             playlistName.text = model.playlistName
-            trackCount.text = root.resources.getQuantityString(R.plurals.tracks_count, model.trackCount, model.trackCount)
+            trackCount.text = root.resources.getQuantityString(R.plurals.track_count, model.trackCount, model.trackCount)
         }
     }
 

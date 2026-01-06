@@ -9,6 +9,7 @@ import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
 import com.example.playlistmaker.data.db.converters.TrackFromPlaylistDbConverter
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
+import com.example.playlistmaker.data.db.entity.TrackFromPlaylistEntity
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
@@ -83,5 +84,9 @@ class PlaylistRepositoryImpl(
 
     override suspend fun saveTrackFromPlaylist(track: Track) {
         appDatabase.trackInPlaylistDao().insertTrack(trackFromPlaylistDbConverter.map(track))
+    }
+
+    override suspend fun getTracksFromPlaylist(ids: List<Int>): Flow<List<TrackFromPlaylistEntity>> {
+        TODO("Not yet implemented")
     }
 }

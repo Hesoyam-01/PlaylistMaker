@@ -117,9 +117,9 @@ class PlayerFragment : Fragment() {
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    val params = bottomSheet.layoutParams
-                    params.height = screenHeightPx - topMarginPx
-                    bottomSheet.layoutParams = params
+                val params = bottomSheet.layoutParams
+                params.height = screenHeightPx - topMarginPx
+                bottomSheet.layoutParams = params
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -222,6 +222,21 @@ class PlayerFragment : Fragment() {
         viewModel.saveBottomSheetState(bottomSheetBehavior.state)
     }
 
+    private fun getTrackFromArgs() =
+        Track(
+            trackId = requireArguments().getInt(ARGS_TRACK_ID),
+            trackName = requireArguments().getString(ARGS_TRACK_NAME) ?: "",
+            artistName = requireArguments().getString(ARGS_ARTIST_NAME) ?: "",
+            trackTime = requireArguments().getString(ARGS_TRACK_TIME) ?: "",
+            artworkUrl100 = requireArguments().getString(ARGS_TRACK_COVER) ?: "",
+            collectionName = requireArguments().getString(ARGS_ALBUM_NAME),
+            releaseDate = requireArguments().getString(ARGS_RELEASE_DATE),
+            primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
+            country = requireArguments().getString(ARGS_COUNTRY) ?: "",
+            previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
+            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
+        )
+
     companion object {
         private const val INITIAL_OVERLAY_ALPHA: Float = 0F
         private const val CLICK_DEBOUNCE_DELAY = 300L
@@ -265,22 +280,6 @@ class PlayerFragment : Fragment() {
                 ARGS_COUNTRY to country,
                 ARGS_IS_FAVORITE to isFavorite,
             )
-    }
-
-    private fun getTrackFromArgs(): Track {
-        return Track(
-            trackId = requireArguments().getInt(ARGS_TRACK_ID),
-            trackName = requireArguments().getString(ARGS_TRACK_NAME) ?: "",
-            artistName = requireArguments().getString(ARGS_ARTIST_NAME) ?: "",
-            trackTime = requireArguments().getString(ARGS_TRACK_TIME) ?: "",
-            artworkUrl100 = requireArguments().getString(ARGS_TRACK_COVER) ?: "",
-            collectionName = requireArguments().getString(ARGS_ALBUM_NAME),
-            releaseDate = requireArguments().getString(ARGS_RELEASE_DATE),
-            primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
-            country = requireArguments().getString(ARGS_COUNTRY) ?: "",
-            previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
-            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
-        )
     }
 
 }
