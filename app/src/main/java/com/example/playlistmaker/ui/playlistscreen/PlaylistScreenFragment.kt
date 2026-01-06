@@ -12,10 +12,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,7 +21,8 @@ class PlaylistScreenFragment : Fragment() {
 
     private lateinit var binding: FragmentPlaylistScreenBinding
 
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var trackBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var moreBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +58,7 @@ class PlaylistScreenFragment : Fragment() {
             trackCount.text = requireArguments().getString(ARGS_TRACK_COUNT)
         }
 
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
+        trackBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
 
         val displayMetrics = Resources.getSystem().displayMetrics
         val screenHeightPx = displayMetrics.heightPixels
@@ -72,7 +69,7 @@ class PlaylistScreenFragment : Fragment() {
             resources.displayMetrics
         ).toInt()
 
-        bottomSheetBehavior.addBottomSheetCallback(object :
+        trackBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 val params = bottomSheet.layoutParams
@@ -82,6 +79,25 @@ class PlaylistScreenFragment : Fragment() {
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
+
+        binding.moreButton.setOnClickListener {
+            trackBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        moreBottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val params = bottomSheet.layoutParams
+                params.height = screenHeightPx - topMarginPx
+                bottomSheet.layoutParams = params
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                val alpha = (slideOffset + 1) / 2
+                binding.overlay.alpha = alpha
+            }
+        })
+
     }
 
     companion object {

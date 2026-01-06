@@ -47,7 +47,8 @@
     <string name="default_time" translatable="false">0:00</string>
     <string name="track_is_present">Трек уже добавлен в плейлист "%1$s"</string>
     <string name="track_added_to_playlist">Добавлено в плейлист "%1$s"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 
 </resources>
