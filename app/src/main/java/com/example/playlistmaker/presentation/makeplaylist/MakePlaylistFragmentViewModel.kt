@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.library
+package com.example.playlistmaker.presentation.makeplaylist
 
 import android.net.Uri
 import androidx.lifecycle.LiveData

@@ -1,7 +1,7 @@
 package com.example.playlistmaker.di
 
 import com.example.playlistmaker.presentation.library.FavoritesFragmentViewModel
-import com.example.playlistmaker.presentation.library.MakePlaylistFragmentViewModel
+import com.example.playlistmaker.presentation.makeplaylist.MakePlaylistFragmentViewModel
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
 import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.presentation.player.PlayerViewModel
