@@ -36,6 +36,8 @@ class PlaylistScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
+
         binding.playlistToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -58,8 +60,6 @@ class PlaylistScreenFragment : Fragment() {
             trackCount.text = requireArguments().getString(ARGS_TRACK_COUNT)
         }
 
-        trackBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
-
         val displayMetrics = Resources.getSystem().displayMetrics
         val screenHeightPx = displayMetrics.heightPixels
 
@@ -68,6 +68,8 @@ class PlaylistScreenFragment : Fragment() {
             0f,
             resources.displayMetrics
         ).toInt()
+
+        trackBottomSheetBehavior = BottomSheetBehavior.from(binding.tracksBottomSheet)
 
         trackBottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -80,8 +82,10 @@ class PlaylistScreenFragment : Fragment() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         })
 
+        moreBottomSheetBehavior = BottomSheetBehavior.from(binding.moreBottomSheet)
+
         binding.moreButton.setOnClickListener {
-            trackBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
         moreBottomSheetBehavior.addBottomSheetCallback(object :
@@ -101,6 +105,8 @@ class PlaylistScreenFragment : Fragment() {
     }
 
     companion object {
+        private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+
         private const val ARGS_PLAYLIST_ID = "playlist_id"
         private const val ARGS_PLAYLIST_NAME = "playlist_name"
         private const val ARGS_PLAYLIST_DESCRIPTION = "playlist_description"
