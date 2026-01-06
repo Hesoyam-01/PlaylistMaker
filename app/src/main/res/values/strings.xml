@@ -38,7 +38,7 @@
     <string name="title">Название*</string>
     <string name="description">Описание</string>
     <string name="make">Создать</string>
-    <string name="playlist_maked">Плейлист "%1$s" создан</string>
+    <string name="playlist_made">Плейлист "%1$s" создан</string>
     <string name="finish_making">Завершить создание плейлиста?</string>
     <string name="unsaved_data">Все несохраненные данные будут потеряны</string>
     <string name="cancel">Отмена</string>

@@ -120,7 +120,7 @@ class MakePlaylistFragment : Fragment() {
                     viewModel.makePlaylist(name, description, coverFilePath)
                     Toast.makeText(
                         requireContext(),
-                        getString(R.string.playlist_maked, name),
+                        getString(R.string.playlist_made, name),
                         Toast.LENGTH_SHORT
                     ).show()
                     findNavController().navigateUp()
@@ -129,7 +129,7 @@ class MakePlaylistFragment : Fragment() {
                 viewModel.makePlaylist(name, description, null)
                 Toast.makeText(
                     requireContext(),
-                    getString(R.string.playlist_maked, name),
+                    getString(R.string.playlist_made, name),
                     Toast.LENGTH_SHORT
                 ).show()
                 findNavController().navigateUp()
