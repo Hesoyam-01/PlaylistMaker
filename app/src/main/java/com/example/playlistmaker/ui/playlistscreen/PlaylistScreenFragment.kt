@@ -83,6 +83,7 @@ class PlaylistScreenFragment : Fragment() {
         })
 
         moreBottomSheetBehavior = BottomSheetBehavior.from(binding.moreBottomSheet)
+        moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         binding.moreButton.setOnClickListener {
             moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
