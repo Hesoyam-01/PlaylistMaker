@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistRepository {
     suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?)
 
-    suspend fun getPlaylists() : Flow<List<Playlist>>
+    fun getPlaylists() : Flow<List<Playlist>>
 
     suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
 
@@ -17,5 +17,5 @@ interface PlaylistRepository {
 
     suspend fun saveTrackFromPlaylist(track: Track)
 
-    suspend fun getTracksFromPlaylist(ids: List<Int>) : Flow<List<TrackFromPlaylistEntity>>
+    fun getTracksByIds(ids: List<Int>) : Flow<List<Track>>
 }

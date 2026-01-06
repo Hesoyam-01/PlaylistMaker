@@ -13,7 +13,7 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.makePlaylist(name, description, coverFilePath)
     }
 
-    override suspend fun getPlaylists(): Flow<List<Playlist>> {
+    override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
 
@@ -28,4 +28,9 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
     override suspend fun saveTrackFromPlaylist(track: Track) {
         repository.saveTrackFromPlaylist(track)
     }
+
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> {
+        return repository.getTracksByIds(ids)
+    }
+
 }

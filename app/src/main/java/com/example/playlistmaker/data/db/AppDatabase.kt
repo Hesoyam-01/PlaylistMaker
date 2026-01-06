@@ -16,5 +16,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun playlistDao() : PlaylistDao
 
-    abstract fun trackInPlaylistDao() : TrackFromPlaylistDao
+    abstract fun trackFromPlaylistDao() : TrackFromPlaylistDao
 }

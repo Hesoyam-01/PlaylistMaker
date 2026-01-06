@@ -59,6 +59,10 @@ class PlayerFragment : Fragment() {
 
         track = getTrackFromArgs()
 
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
         viewModel.fillData()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -84,10 +88,6 @@ class PlayerFragment : Fragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
-        viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -101,7 +101,6 @@ class PlayerFragment : Fragment() {
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-            viewModel.fillData()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 

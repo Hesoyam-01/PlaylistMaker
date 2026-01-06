@@ -15,7 +15,7 @@ import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
@@ -28,7 +28,11 @@ class PlaylistRepositoryImpl(
 ) : PlaylistRepository {
 
     override suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?) {
-        val playlist = Playlist(playlistName = name, playlistDescription = description, coverFilePath = coverFilePath)
+        val playlist = Playlist(
+            playlistName = name,
+            playlistDescription = description,
+            coverFilePath = coverFilePath
+        )
         addToPlaylists(playlist)
     }
 
@@ -36,12 +40,11 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
 
-    override suspend fun getPlaylists(): Flow<List<Playlist>> = flow {
-        val playlists = appDatabase.playlistDao().getPlaylists()
-        emit(convertFromPlaylistEntity(playlists))
+    override fun getPlaylists(): Flow<List<Playlist>> {
+        return appDatabase.playlistDao().getPlaylists().map { convertFromPlaylistEntity(it) }
     }
 
-    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>) : List<Playlist> {
+    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { playlistDbConverter.map(it) }
     }
 
@@ -51,11 +54,11 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().addTrackToPlaylist(playlistId, newTrackIdList)
     }
 
-    private suspend fun getTrackIdList(playlistId: Int) : String? {
+    private suspend fun getTrackIdList(playlistId: Int): String? {
         return appDatabase.playlistDao().getTrackIdList(playlistId)
     }
 
-    override suspend fun saveImageAndGetPath(uri: Uri) : String {
+    override suspend fun saveImageAndGetPath(uri: Uri): String {
         val filePath =
             File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlistsCovers")
 
@@ -83,10 +86,14 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun saveTrackFromPlaylist(track: Track) {
-        appDatabase.trackInPlaylistDao().insertTrack(trackFromPlaylistDbConverter.map(track))
+        appDatabase.trackFromPlaylistDao().insertTrack(trackFromPlaylistDbConverter.map(track))
     }
 
-    override suspend fun getTracksFromPlaylist(ids: List<Int>): Flow<List<TrackFromPlaylistEntity>> {
-        TODO("Not yet implemented")
+    override fun getTracksByIds(ids: List<Int>): Flow<List<Track>> {
+        return appDatabase.trackFromPlaylistDao().getTracksByIds(ids).map { convertFromTrackFromPlaylistEntity(it) }
+    }
+
+    private fun convertFromTrackFromPlaylistEntity(tracks: List<TrackFromPlaylistEntity>): List<Track> {
+        return tracks.map { trackFromPlaylistDbConverter.map(it) }
     }
 }

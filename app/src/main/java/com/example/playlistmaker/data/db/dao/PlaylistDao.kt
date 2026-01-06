@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PlaylistDao {
@@ -13,7 +14,7 @@ interface PlaylistDao {
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table ORDER BY playlistId DESC")
-    suspend fun getPlaylists() : List<PlaylistEntity>
+    fun getPlaylists() : Flow<List<PlaylistEntity>>
 
     @Query("SELECT trackIdList FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getTrackIdList(playlistId: Int): String?
