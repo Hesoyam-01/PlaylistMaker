@@ -13,6 +13,7 @@ import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -106,9 +107,9 @@ class PlayerViewModel(
         )
     }
 
-    fun onFavoriteClicked(track: Track) {
+    fun onFavoriteClicked(isFavorite: Boolean) {
         viewModelScope.launch {
-            if (track.isFavorite) {
+            if (isFavorite) {
                 favoritesInteractor.deleteFromFavoriteTracks(track)
                 renderState(PlayerState.IsFavorite(false))
             } else {
@@ -120,14 +121,14 @@ class PlayerViewModel(
 
     fun fillData() {
         viewModelScope.launch {
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(track.trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
             playlistInteractor
                 .getPlaylists()
                 .collect {
                     processResult(it)
                 }
-            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(track.trackId)
-            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 

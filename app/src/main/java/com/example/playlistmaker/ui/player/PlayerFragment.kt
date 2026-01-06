@@ -2,6 +2,7 @@ package com.example.playlistmaker.ui.player
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,8 @@ class PlayerFragment : Fragment() {
 
     private lateinit var track: Track
 
+    private var isFavorite = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +63,7 @@ class PlayerFragment : Fragment() {
         track = getTrackFromArgs()
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
+            Log.d("1", it.toString())
             render(it)
         }
 
@@ -97,7 +101,7 @@ class PlayerFragment : Fragment() {
         }
 
         binding.isFavoriteButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track)
+            viewModel.onFavoriteClicked(isFavorite)
         }
 
         binding.addToPlaylistButton.setOnClickListener {
@@ -140,8 +144,8 @@ class PlayerFragment : Fragment() {
             genreInfo.text = track.primaryGenreName
             yearInfo.text = track.releaseDate
             countryInfo.text = track.country
-            if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
-            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
+            /*if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
+            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)*/
         }
 
         val coverUrl = track.artworkUrl100
@@ -172,7 +176,6 @@ class PlayerFragment : Fragment() {
                 state.isPresent,
                 state.playlistName
             )
-
             is PlayerState.BottomSheet -> bottomSheetBehavior.state = state.bottomSheetState
         }
     }
@@ -212,7 +215,7 @@ class PlayerFragment : Fragment() {
             if (isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
             else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
-        track.isFavorite = isFavorite
+        this.isFavorite = isFavorite
     }
 
     override fun onPause() {
@@ -233,7 +236,7 @@ class PlayerFragment : Fragment() {
             primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
             country = requireArguments().getString(ARGS_COUNTRY) ?: "",
             previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
-            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
+//            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
         )
 
     companion object {
@@ -251,7 +254,7 @@ class PlayerFragment : Fragment() {
         private const val ARGS_GENRE_NAME = "genre_name"
         private const val ARGS_RELEASE_DATE = "release_date"
         private const val ARGS_COUNTRY = "country"
-        private const val ARGS_IS_FAVORITE = "favorite"
+//        private const val ARGS_IS_FAVORITE = "favorite"
 
         fun createArgs(
             trackId: Int,
@@ -264,7 +267,7 @@ class PlayerFragment : Fragment() {
             genreName: String,
             releaseDate: String?,
             country: String,
-            isFavorite: Boolean,
+//            isFavorite: Boolean,
         ): Bundle =
             bundleOf(
                 ARGS_TRACK_ID to trackId,
@@ -277,7 +280,7 @@ class PlayerFragment : Fragment() {
                 ARGS_GENRE_NAME to genreName,
                 ARGS_RELEASE_DATE to releaseDate,
                 ARGS_COUNTRY to country,
-                ARGS_IS_FAVORITE to isFavorite,
+//                ARGS_IS_FAVORITE to isFavorite,
             )
     }
 

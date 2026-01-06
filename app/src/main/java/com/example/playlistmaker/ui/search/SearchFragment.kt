@@ -136,7 +136,7 @@ class SearchFragment : Fragment() {
                 genreName = track.primaryGenreName,
                 releaseDate = track.releaseDate,
                 country = track.country,
-                isFavorite = track.isFavorite
+//                isFavorite = track.isFavorite
             )
         )
 

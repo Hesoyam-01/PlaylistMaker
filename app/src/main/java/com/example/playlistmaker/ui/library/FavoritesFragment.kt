@@ -91,8 +91,8 @@ class FavoritesFragment : Fragment() {
                 albumName = track.collectionName,
                 genreName = track.primaryGenreName,
                 releaseDate = track.releaseDate,
-                country = track.country,
-                isFavorite = track.isFavorite
+                country = track.country
+//                isFavorite = track.isFavorite
             )
         )
     }
