@@ -158,6 +158,7 @@ class SearchFragment : Fragment() {
                 searchPlaceholder.visibility = View.GONE
                 searchUpdateQueryButton.visibility = View.GONE
                 tracksRecyclerView.visibility = View.GONE
+                searchProgressBar.visibility = View.GONE
                 searchHistoryView.visibility = View.VISIBLE
             }
             lastTracksAdapter.updateList(lastTracksList)

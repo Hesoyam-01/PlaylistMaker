@@ -6,6 +6,13 @@
         <item quantity="other">%d трек</item>
     </plurals>
 
+    <plurals name="minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минута</item>
+    </plurals>
+
     <string name="app_name" translatable="false">Playlist Maker</string>
     <string name="title_hello">Привет, Практикум</string>
     <string name="search">Поиск</string>

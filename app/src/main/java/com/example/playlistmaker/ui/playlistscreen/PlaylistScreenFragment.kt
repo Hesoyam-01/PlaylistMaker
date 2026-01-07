@@ -147,9 +147,9 @@ class PlaylistScreenFragment : Fragment() {
         })
     }
 
-    private fun showContent(tracks: List<Track>, totalTime: String) {
+    private fun showContent(tracks: List<Track>, totalTime: Int) {
         tracksInPlaylistAdapter.updateList(tracks)
-        binding.totalTime.text = totalTime
+        binding.totalTime.text = requireContext().resources.getQuantityString(R.plurals.minutes, totalTime, totalTime)
     }
 
     private fun render(state: PlaylistScreenState) {

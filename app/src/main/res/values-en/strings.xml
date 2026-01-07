@@ -5,6 +5,11 @@
         <item quantity="other">%d tracks</item>
     </plurals>
 
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+
     <string name="title_hello">Hello, Practicum</string>
     <string name="search">Search</string>
     <string name="library">Library</string>
