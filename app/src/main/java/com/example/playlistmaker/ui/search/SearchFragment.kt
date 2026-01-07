@@ -59,14 +59,19 @@ class SearchFragment : Fragment() {
             viewModel.getSearchHistory()
         }
 
-        trackAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
-        }
+        trackAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = {}
+        )
 
-        lastTracksAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
-            getSearchHistoryDebounce
-        }
+        lastTracksAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = {}
+        )
 
         binding.apply {
             tracksRecyclerView.adapter = trackAdapter

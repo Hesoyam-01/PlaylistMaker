@@ -1,11 +1,13 @@
 package com.example.playlistmaker.ui.search
 
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.domain.model.search.Track
 
 class TrackAdapter(
-    private val onTrackClick: (Track) -> Unit
+    private val onTrackClick: (Track) -> Unit,
+    private val onTrackLongClick: (Int) -> Unit
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
@@ -22,6 +24,10 @@ class TrackAdapter(
         holder.bind(trackList[position])
         holder.itemView.setOnClickListener {
             onTrackClick(trackList[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            onTrackLongClick(trackList[position].trackId)
+            true
         }
     }
 

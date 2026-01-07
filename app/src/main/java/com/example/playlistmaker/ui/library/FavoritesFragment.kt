@@ -41,9 +41,12 @@ class FavoritesFragment : Fragment() {
             render(it)
         }
 
-        favoritesAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
-        }
+        favoritesAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = {}
+        )
 
         binding.favoritesRecyclerView.adapter = favoritesAdapter
 

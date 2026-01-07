@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentMakePlaylistBinding
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
@@ -23,17 +25,20 @@ import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
 class PlaylistScreenFragment : Fragment() {
-
     private val viewModel: PlaylistScreenFragmentViewModel by viewModel()
 
-    private lateinit var binding: FragmentPlaylistScreenBinding
+    private var _binding: FragmentPlaylistScreenBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var trackBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var moreBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private lateinit var deleteDialog: MaterialAlertDialogBuilder
 
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
@@ -46,7 +51,7 @@ class PlaylistScreenFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistScreenBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -61,9 +66,24 @@ class PlaylistScreenFragment : Fragment() {
 
         viewModel.getTracksByIdsAndTotalTime(playlist.trackIdList)
 
-        tracksInPlaylistAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
+        binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
+
+        binding.playlistToolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        })
+
+        tracksInPlaylistAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = { deleteDialog.show() }
+        )
 
         binding.tracksInPlaylistRecyclerView.adapter = tracksInPlaylistAdapter
 
@@ -72,17 +92,20 @@ class PlaylistScreenFragment : Fragment() {
                 navigateToPlayerFragment(it)
             }
 
-        binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
-
-        binding.playlistToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
+        deleteDialog = MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.MyAlertDialogStyle
+        )
+            .setTitle(R.string.delete_track_question)
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ -> }
 
         val filePath = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlistsCovers"
         )
-        val file = if (playlist.coverFilePath != null) File(filePath, playlist.coverFilePath!!) else null
+        val file =
+            if (playlist.coverFilePath != null) File(filePath, playlist.coverFilePath!!) else null
 
         binding.apply {
             Glide.with(root)
@@ -92,7 +115,11 @@ class PlaylistScreenFragment : Fragment() {
                 .into(playlistCover)
             playlistName.text = playlist.playlistName
             playlistDescription.text = playlist.playlistDescription
-            trackCount.text = root.resources.getQuantityString(R.plurals.track_count, playlist.trackCount, playlist.trackCount)
+            trackCount.text = root.resources.getQuantityString(
+                R.plurals.track_count,
+                playlist.trackCount,
+                playlist.trackCount
+            )
 
             Glide.with(root)
                 .load(file)
@@ -100,7 +127,11 @@ class PlaylistScreenFragment : Fragment() {
                 .centerCrop()
                 .into(bottomSheetPlaylistCover)
             bottomSheetPlaylistName.text = playlist.playlistName
-            bottomSheetTrackCount.text = root.resources.getQuantityString(R.plurals.track_count, playlist.trackCount, playlist.trackCount)
+            bottomSheetTrackCount.text = root.resources.getQuantityString(
+                R.plurals.track_count,
+                playlist.trackCount,
+                playlist.trackCount
+            )
         }
 
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -149,7 +180,8 @@ class PlaylistScreenFragment : Fragment() {
 
     private fun showContent(tracks: List<Track>, totalTime: Int) {
         tracksInPlaylistAdapter.updateList(tracks)
-        binding.totalTime.text = requireContext().resources.getQuantityString(R.plurals.minutes, totalTime, totalTime)
+        binding.totalTime.text =
+            requireContext().resources.getQuantityString(R.plurals.minutes, totalTime, totalTime)
     }
 
     private fun render(state: PlaylistScreenState) {
@@ -186,6 +218,10 @@ class PlaylistScreenFragment : Fragment() {
             trackCount = requireArguments().getInt(ARGS_TRACK_COUNT)
         )
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 300L

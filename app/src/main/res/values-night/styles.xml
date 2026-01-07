@@ -17,4 +17,8 @@
         <item name="android:textColorHint">@color/dark_gray</item>
     </style>
 
+    <style name="MyAlertDialogStyle" parent="ShapeAppearanceOverlay.MaterialAlertDialog.Material3">
+        <item name="colorSurface">@color/dark_gray</item>
+        <item name="colorPrimary">@color/blue</item>
+    </style>
 </resources>

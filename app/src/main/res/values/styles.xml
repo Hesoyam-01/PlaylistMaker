@@ -95,8 +95,11 @@
         <item name="boxCornerRadiusBottomStart">8dp</item>
         <item name="boxCornerRadiusTopEnd">8dp</item>
         <item name="boxCornerRadiusBottomEnd">8dp</item>
-
     </style>
 
+    <style name="MyAlertDialogStyle" parent="ShapeAppearanceOverlay.MaterialAlertDialog.Material3">
+        <item name="colorSurface">@color/white</item>
+        <item name="colorPrimary">@color/blue</item>
+    </style>
 
 </resources>

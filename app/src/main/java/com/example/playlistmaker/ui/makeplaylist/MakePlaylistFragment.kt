@@ -32,9 +32,9 @@ class MakePlaylistFragment : Fragment() {
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private var selectedImageUri: Uri? = null
-
     private lateinit var textWatcher: TextWatcher
+
+    private var selectedImageUri: Uri? = null
 
     private var _binding: FragmentMakePlaylistBinding? = null
     private val binding get() = _binding!!
@@ -70,9 +70,9 @@ class MakePlaylistFragment : Fragment() {
 
         confirmDialog = MaterialAlertDialogBuilder(
             requireContext(),
-            androidx.appcompat.R.style.Theme_AppCompat_DayNight_Dialog_Alert
+            R.style.MyAlertDialogStyle
         )
-            .setTitle(R.string.finish_making)
+            .setTitle(R.string.finish_making_question)
             .setMessage(R.string.unsaved_data)
             .setNeutralButton(R.string.cancel) { _, _ -> }
             .setPositiveButton(R.string.finish) { _, _ ->

@@ -39,7 +39,7 @@
     <string name="description">Description</string>
     <string name="make">Make</string>
     <string name="playlist_made">Playlist %1$s made</string>
-    <string name="finish_making">Finish playlist making?</string>
+    <string name="finish_making_question">Finish playlist making?</string>
     <string name="unsaved_data">All unsaved changes will be lost</string>
     <string name="cancel">Cancel</string>
     <string name="finish">Finish</string>
@@ -49,5 +49,8 @@
     <string name="share">Share</string>
     <string name="edit_information">Edit information</string>
     <string name="delete_playlist">Delete playlist</string>
+    <string name="delete_track_question">Do you want to delete the track?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 
 </resources>
