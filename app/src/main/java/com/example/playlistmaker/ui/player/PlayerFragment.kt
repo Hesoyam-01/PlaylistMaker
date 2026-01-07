@@ -144,8 +144,6 @@ class PlayerFragment : Fragment() {
             genreInfo.text = track.primaryGenreName
             yearInfo.text = track.releaseDate
             countryInfo.text = track.country
-            /*if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
-            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)*/
         }
 
         val coverUrl = track.artworkUrl100

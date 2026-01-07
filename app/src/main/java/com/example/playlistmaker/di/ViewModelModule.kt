@@ -5,6 +5,7 @@ import com.example.playlistmaker.presentation.makeplaylist.MakePlaylistFragmentV
 import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
 import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.presentation.player.PlayerViewModel
+import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenFragmentViewModel
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,6 +39,10 @@ val viewModelModule = module {
 
     viewModel {
         MakePlaylistFragmentViewModel(get())
+    }
+
+    viewModel {
+        PlaylistScreenFragmentViewModel(get())
     }
 
 }

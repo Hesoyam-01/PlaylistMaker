@@ -10,20 +10,33 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.search.Track
+import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenFragmentViewModel
+import com.example.playlistmaker.ui.player.PlayerFragment
+import com.example.playlistmaker.ui.search.TrackAdapter
+import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
 class PlaylistScreenFragment : Fragment() {
+
+    private val viewModel: PlaylistScreenFragmentViewModel by viewModel()
 
     private lateinit var binding: FragmentPlaylistScreenBinding
 
     private lateinit var trackBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var moreBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
+
+    private lateinit var tracksInPlaylistAdapter: TrackAdapter
 
     private lateinit var playlist: Playlist
 
@@ -40,6 +53,23 @@ class PlaylistScreenFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         playlist = getPlaylistFromArgs()
+
+        viewModel.observePlaylistScreenState().observe(viewLifecycleOwner) {
+            tracksInPlaylistAdapter.updateList(it)
+        }
+
+        viewModel.getTracksByIds(playlist.trackIdList)
+
+        tracksInPlaylistAdapter = TrackAdapter {
+            onTrackClickDebounce(it)
+        }
+
+        binding.tracksInPlaylistRecyclerView.adapter = tracksInPlaylistAdapter
+
+        onTrackClickDebounce =
+            debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+                navigateToPlayerFragment(it)
+            }
 
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
@@ -117,6 +147,24 @@ class PlaylistScreenFragment : Fragment() {
 
     }
 
+    private fun navigateToPlayerFragment(track: Track) {
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playerFragment,
+            PlayerFragment.createArgs(
+                trackId = track.trackId,
+                previewUrl = track.previewUrl,
+                trackCover = track.artworkUrl100,
+                trackName = track.trackName,
+                artistName = track.artistName,
+                trackTime = track.trackTime,
+                albumName = track.collectionName,
+                genreName = track.primaryGenreName,
+                releaseDate = track.releaseDate,
+                country = track.country
+            )
+        )
+    }
+
     private fun getPlaylistFromArgs() =
         Playlist(
             playlistId = requireArguments().getInt(ARGS_PLAYLIST_ID),
@@ -129,6 +177,7 @@ class PlaylistScreenFragment : Fragment() {
 
 
     companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 300L
         private const val INITIAL_OVERLAY_ALPHA: Float = 0F
 
         private const val ARGS_PLAYLIST_ID = "playlist_id"
