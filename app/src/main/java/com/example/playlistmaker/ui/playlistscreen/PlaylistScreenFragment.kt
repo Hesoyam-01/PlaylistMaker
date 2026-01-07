@@ -18,6 +18,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenFragmentViewModel
+import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenState
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.util.debounce
@@ -55,10 +56,10 @@ class PlaylistScreenFragment : Fragment() {
         playlist = getPlaylistFromArgs()
 
         viewModel.observePlaylistScreenState().observe(viewLifecycleOwner) {
-            tracksInPlaylistAdapter.updateList(it)
+            render(it)
         }
 
-        viewModel.getTracksByIds(playlist.trackIdList)
+        viewModel.getTracksByIdsAndTotalTime(playlist.trackIdList)
 
         tracksInPlaylistAdapter = TrackAdapter {
             onTrackClickDebounce(it)
@@ -144,7 +145,17 @@ class PlaylistScreenFragment : Fragment() {
                 binding.overlay.alpha = alpha
             }
         })
+    }
 
+    private fun showContent(tracks: List<Track>, totalTime: String) {
+        tracksInPlaylistAdapter.updateList(tracks)
+        binding.totalTime.text = totalTime
+    }
+
+    private fun render(state: PlaylistScreenState) {
+        when (state) {
+            is PlaylistScreenState.Content -> showContent(state.tracks, state.totalTime)
+        }
     }
 
     private fun navigateToPlayerFragment(track: Track) {

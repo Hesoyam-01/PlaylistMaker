@@ -66,7 +66,7 @@
             tools:text="2022" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tracks_time"
+            android:id="@+id/total_time"
             android:layout_width="wrap_content"
             android:layout_height="21dp"
             android:layout_marginStart="@dimen/default_padding"
@@ -91,8 +91,8 @@
             android:layout_marginTop="5dp"
             android:scaleType="center"
             android:src="@drawable/ic_ellipse_3"
-            app:layout_constraintStart_toEndOf="@+id/tracks_time"
-            app:layout_constraintTop_toTopOf="@+id/tracks_time"
+            app:layout_constraintStart_toEndOf="@+id/total_time"
+            app:layout_constraintTop_toTopOf="@+id/total_time"
             app:tint="@color/dark_gray">
 
         </androidx.appcompat.widget.AppCompatImageView>
@@ -125,7 +125,7 @@
             android:src="@drawable/ic_share_24"
             android:tint="@color/dark_gray"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tracks_time" />
+            app:layout_constraintTop_toBottomOf="@+id/total_time" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/more_button"
@@ -136,7 +136,7 @@
             android:scaleType="center"
             android:src="@drawable/ic_more_24"
             app:layout_constraintStart_toEndOf="@id/share_playlist_button"
-            app:layout_constraintTop_toBottomOf="@+id/tracks_time" />
+            app:layout_constraintTop_toBottomOf="@+id/total_time" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

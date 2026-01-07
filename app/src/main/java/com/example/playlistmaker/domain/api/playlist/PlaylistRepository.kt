@@ -17,5 +17,5 @@ interface PlaylistRepository {
 
     suspend fun saveTrackFromPlaylist(track: Track)
 
-    fun getTracksByIds(ids: List<Int>) : Flow<List<Track>>
+    suspend fun getTracksByIds(ids: List<Int>) : List<Track>
 }

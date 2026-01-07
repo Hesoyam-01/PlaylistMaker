@@ -5,34 +5,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
-import com.example.playlistmaker.domain.model.search.Track
-import com.example.playlistmaker.presentation.player.PlayerState
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlaylistScreenFragmentViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) :
     ViewModel() {
 
-    private val stateLiveData = MutableLiveData<List<Track>>()
-    fun observePlaylistScreenState(): LiveData<List<Track>> = stateLiveData
+    private val stateLiveData = MutableLiveData<PlaylistScreenState>()
+    fun observePlaylistScreenState(): LiveData<PlaylistScreenState> = stateLiveData
 
-    fun getTracksByIds(ids: List<Int>) {
-        viewModelScope.launch {
-            playlistInteractor
-                .getTracksByIds(ids)
-                .collect {
-                    processResult(it)
-                }
+    private val dateFormatFromMssToMillis by lazy {
+        fun(durationStr: String): Long {
+            val date = SimpleDateFormat("m:ss", Locale.getDefault()).parse(durationStr)
+            return date?.time ?: 0
         }
     }
 
-    private fun processResult(tracks: List<Track>) {
-        renderState(tracks)
+    private val dateFormatFromMillisToMinutes by lazy {
+        SimpleDateFormat("m", Locale.getDefault())
     }
 
-    private fun renderState(tracks: List<Track>) {
-        stateLiveData.postValue(tracks)
+    fun getTracksByIdsAndTotalTime(ids: List<Int>) {
+        viewModelScope.launch {
+            val tracks = playlistInteractor.getTracksByIds(ids)
+            val totalTime = dateFormatFromMillisToMinutes.format(tracks.sumOf { dateFormatFromMssToMillis(it.trackTime) })
+            renderState(PlaylistScreenState.Content(tracks, totalTime))
+        }
+    }
+
+    private fun renderState(state: PlaylistScreenState) {
+        stateLiveData.postValue(state)
     }
 
 }
