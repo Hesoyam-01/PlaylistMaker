@@ -76,5 +76,13 @@
         android:id="@+id/playlistScreenFragment"
         android:name="com.example.playlistmaker.ui.playlistscreen.PlaylistScreenFragment"
         android:label="fragment_playlist_screen"
-        tools:layout="@layout/fragment_playlist_screen" />
+        tools:layout="@layout/fragment_playlist_screen" >
+        <action
+            android:id="@+id/action_playlistScreenFragment_to_playerFragment"
+            app:destination="@id/playerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left_30"
+            app:popEnterAnim="@anim/slide_in_left_30"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
 </navigation>

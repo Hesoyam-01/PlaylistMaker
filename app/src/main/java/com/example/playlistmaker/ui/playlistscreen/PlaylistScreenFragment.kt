@@ -149,7 +149,7 @@ class PlaylistScreenFragment : Fragment() {
 
     private fun navigateToPlayerFragment(track: Track) {
         findNavController().navigate(
-            R.id.action_libraryFragment_to_playerFragment,
+            R.id.action_playlistScreenFragment_to_playerFragment,
             PlayerFragment.createArgs(
                 trackId = track.trackId,
                 previewUrl = track.previewUrl,
