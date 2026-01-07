@@ -9,13 +9,15 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistRepository {
     suspend fun makePlaylist(name: String, description: String?, coverFilePath: String?)
 
-    fun getPlaylists() : Flow<List<Playlist>>
+    fun getPlaylists(): Flow<List<Playlist>>
 
     suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
 
-    suspend fun saveImageAndGetPath(uri: Uri) : String
+    suspend fun saveImageAndGetPath(uri: Uri): String
 
     suspend fun saveTrackFromPlaylist(track: Track)
 
-    suspend fun getTracksByIds(ids: List<Int>) : List<Track>
+    suspend fun getTracksByIds(ids: List<Int>): List<Track>
+
+    suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int)
 }

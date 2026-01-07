@@ -46,6 +46,8 @@ class PlaylistScreenFragment : Fragment() {
 
     private lateinit var playlist: Playlist
 
+    private var selectedTrackId: Int? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,7 +84,10 @@ class PlaylistScreenFragment : Fragment() {
             onTrackClick = {
                 onTrackClickDebounce(it)
             },
-            onTrackLongClick = { deleteDialog.show() }
+            onTrackLongClick = {
+                selectedTrackId = it
+                deleteDialog.show()
+            }
         )
 
         binding.tracksInPlaylistRecyclerView.adapter = tracksInPlaylistAdapter
@@ -98,7 +103,9 @@ class PlaylistScreenFragment : Fragment() {
         )
             .setTitle(R.string.delete_track_question)
             .setNegativeButton(R.string.no) { _, _ -> }
-            .setPositiveButton(R.string.yes) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                viewModel.deleteTrackFromPlaylist(playlist.playlistId, selectedTrackId!!)
+            }
 
         val filePath = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),

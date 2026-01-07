@@ -25,6 +25,12 @@ class PlaylistScreenFragmentViewModel(
         }
     }
 
+    fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
+        viewModelScope.launch {
+            playlistInteractor.deleteTrackFromPlaylist(playlistId, trackId)
+        }
+    }
+
     private fun parseTime(timeStr: String): Long {
         val parts = timeStr.split(":")
         return when (parts.size) {
@@ -33,17 +39,19 @@ class PlaylistScreenFragmentViewModel(
                 val seconds = parts[1].toLongOrNull() ?: 0L
                 minutes * 60_000 + seconds * 1_000
             }
+
             3 -> {
                 val hours = parts[0].toLongOrNull() ?: 0L
                 val minutes = parts[1].toLongOrNull() ?: 0L
                 val seconds = parts[2].toLongOrNull() ?: 0L
                 hours * 3_600_000 + minutes * 60_000 + seconds * 1_000
             }
+
             else -> 0L
         }
     }
 
-    private fun fromMillisToMinutes(millis: Long) : Int {
+    private fun fromMillisToMinutes(millis: Long): Int {
         return (millis / 60000).toInt()
     }
 

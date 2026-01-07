@@ -19,7 +19,7 @@ interface PlaylistDao {
     @Query("SELECT trackIdList FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getTrackIdList(playlistId: Int): String?
 
-    @Query("UPDATE playlist_table SET trackIdList = :newTrackIdList, trackCount = trackCount + 1 WHERE playlistId = :playlistId")
-    suspend fun addTrackToPlaylist(playlistId: Int, newTrackIdList: String)
+    @Query("UPDATE playlist_table SET trackIdList = :newTrackIdList, trackCount = trackCount + (:delta) WHERE playlistId = :playlistId")
+    suspend fun updateTrackIdListAndCount(playlistId: Int, newTrackIdList: String, delta: Int)
 
 }

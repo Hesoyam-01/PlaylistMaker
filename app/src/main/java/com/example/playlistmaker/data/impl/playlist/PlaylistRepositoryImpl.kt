@@ -51,7 +51,7 @@ class PlaylistRepositoryImpl(
     override suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
         val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
         val newTrackIdList = playlistDbConverter.mapIdList(trackIdList + newTrackId)
-        appDatabase.playlistDao().addTrackToPlaylist(playlistId, newTrackIdList)
+        appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, INCREMENT)
     }
 
     private suspend fun getTrackIdList(playlistId: Int): String? {
@@ -94,7 +94,18 @@ class PlaylistRepositoryImpl(
         return convertFromTrackFromPlaylistEntity(tracks)
     }
 
+    override suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
+        val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
+        val newTrackIdList = playlistDbConverter.mapIdList(trackIdList - trackId)
+        appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, DECREMENT)
+    }
+
     private fun convertFromTrackFromPlaylistEntity(tracks: List<TrackFromPlaylistEntity>): List<Track> {
         return tracks.map { trackFromPlaylistDbConverter.map(it) }
+    }
+
+    private companion object {
+        private const val INCREMENT = 1
+        private const val DECREMENT = -1
     }
 }
