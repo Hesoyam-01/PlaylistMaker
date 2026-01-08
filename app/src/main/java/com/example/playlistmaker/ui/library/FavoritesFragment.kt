@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
 import com.example.playlistmaker.domain.model.search.Track
-import com.example.playlistmaker.presentation.library.FavoritesViewModel
 import com.example.playlistmaker.presentation.library.FavoritesState
+import com.example.playlistmaker.presentation.library.FavoritesViewModel
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.util.debounce
