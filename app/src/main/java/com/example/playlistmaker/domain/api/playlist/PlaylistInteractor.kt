@@ -12,7 +12,7 @@ interface PlaylistInteractor {
 
     fun getPlaylistById(playlistId: Int): Flow<Playlist>
 
-    suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
+    suspend fun addTrackToPlaylistById(playlistId: Int, newTrackId: Int)
 
     suspend fun saveImageAndGetPath(uri: Uri): String
 
@@ -20,5 +20,7 @@ interface PlaylistInteractor {
 
     suspend fun getTracksByIds(ids: List<Int>): List<Track>
 
-    suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int)
+    suspend fun deleteTrackFromPlaylistById(playlistId: Int, trackId: Int)
+
+    suspend fun deleteTrackById(playlistId: Int)
 }

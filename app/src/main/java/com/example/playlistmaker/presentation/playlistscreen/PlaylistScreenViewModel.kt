@@ -50,7 +50,7 @@ class PlaylistScreenViewModel(
 
     fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
         viewModelScope.launch {
-            playlistInteractor.deleteTrackFromPlaylist(playlistId, trackId)
+            playlistInteractor.deleteTrackFromPlaylistById(playlistId, trackId)
         }
     }
 

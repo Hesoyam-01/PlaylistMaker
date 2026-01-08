@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.converters.PlaylistDbConverter
-import com.example.playlistmaker.data.db.converters.TrackFromPlaylistDbConverter
+import com.example.playlistmaker.data.db.converter.PlaylistDbConverter
+import com.example.playlistmaker.data.db.converter.TrackFromPlaylistDbConverter
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.data.db.entity.TrackFromPlaylistEntity
 import com.example.playlistmaker.domain.api.playlist.PlaylistRepository
@@ -48,11 +48,7 @@ class PlaylistRepositoryImpl(
         return  appDatabase.playlistDao().getPlaylistById(playlistId).map { playlistDbConverter.map(it) }
     }
 
-    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
-        return playlists.map { playlistDbConverter.map(it) }
-    }
-
-    override suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
+    override suspend fun addTrackToPlaylistById(playlistId: Int, newTrackId: Int) {
         val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
         val newTrackIdList = playlistDbConverter.mapIdList(trackIdList + newTrackId)
         appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, INCREMENT)
@@ -98,7 +94,7 @@ class PlaylistRepositoryImpl(
         return convertFromTrackFromPlaylistEntity(tracks)
     }
 
-    override suspend fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
+    override suspend fun deleteTrackFromPlaylistById(playlistId: Int, trackId: Int) {
         val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
         val newTrackIdList = playlistDbConverter.mapIdList(trackIdList - trackId)
         appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, DECREMENT)
@@ -108,6 +104,14 @@ class PlaylistRepositoryImpl(
             }
             if (!existsInOtherPlaylists) appDatabase.trackFromPlaylistDao().deleteTrackById(trackId)
         }
+    }
+
+    override suspend fun deletePlaylistById(playlistId: Int) {
+        appDatabase.playlistDao().deletePlaylistById(playlistId)
+    }
+
+    private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
+        return playlists.map { playlistDbConverter.map(it) }
     }
 
     private fun convertFromTrackFromPlaylistEntity(tracks: List<TrackFromPlaylistEntity>): List<Track> {

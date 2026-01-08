@@ -150,7 +150,7 @@ class PlayerViewModel(
                 )
             )
             viewModelScope.launch {
-                playlistInteractor.addTrackToPlaylist(playlist.playlistId, track.trackId)
+                playlistInteractor.addTrackToPlaylistById(playlist.playlistId, track.trackId)
                 playlistInteractor.saveTrackFromPlaylist(track)
             }
         }
