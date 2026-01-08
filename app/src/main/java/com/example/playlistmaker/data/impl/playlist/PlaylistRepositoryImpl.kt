@@ -98,6 +98,12 @@ class PlaylistRepositoryImpl(
         val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
         val newTrackIdList = playlistDbConverter.mapIdList(trackIdList - trackId)
         appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, DECREMENT)
+        getPlaylists().collect {
+            val existsInOtherPlaylists = it.any { playlist ->
+                playlist.trackIdList.any { id -> id == trackId }
+            }
+            if (!existsInOtherPlaylists) appDatabase.trackFromPlaylistDao().deleteTrackById(trackId)
+        }
     }
 
     private fun convertFromTrackFromPlaylistEntity(tracks: List<TrackFromPlaylistEntity>): List<Track> {
