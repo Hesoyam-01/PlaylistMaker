@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlaylistScreenViewModel(
@@ -41,7 +43,10 @@ class PlaylistScreenViewModel(
                 totalTime
             )
         )
-        if (trackList.isEmpty()) renderState(PlaylistScreenState.Empty)
+        viewModelScope.launch {
+            delay(MINIMAL_DELAY)
+            if (trackList.isEmpty()) renderState(PlaylistScreenState.Empty)
+        }
     }
 
     fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
@@ -78,4 +83,7 @@ class PlaylistScreenViewModel(
         stateLiveData.postValue(state)
     }
 
+    private companion object {
+        private const val MINIMAL_DELAY = 10L
+    }
 }
