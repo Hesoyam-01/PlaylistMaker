@@ -100,7 +100,7 @@ class PlaylistScreenFragment : Fragment() {
             .setTitle(R.string.delete_track_question)
             .setNegativeButton(R.string.no) { _, _ -> }
             .setPositiveButton(R.string.yes) { _, _ ->
-                viewModel.deleteTrackFromPlaylist(playlistId, selectedTrackId!!)
+                viewModel.deleteTrackFromPlaylistById(playlistId, selectedTrackId!!)
             }
 
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -145,6 +145,12 @@ class PlaylistScreenFragment : Fragment() {
                 binding.overlay.alpha = alpha
             }
         })
+
+        binding.bottomSheetDeletePlaylistButton.setOnClickListener {
+            viewModel.deletePlaylistById(playlistId)
+            findNavController().navigateUp()
+        }
+
     }
 
     private fun render(state: PlaylistScreenState) {

@@ -209,7 +209,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
-        android:visibility="gone"
         app:behavior_hideable="true"
         app:behavior_peekHeight="383dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -274,7 +273,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/share_button"
+            android:id="@+id/bottom_sheet_share_playlist_button"
             style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/track_height"
@@ -282,7 +281,7 @@
             android:text="@string/share" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/edit_information_button"
+            android:id="@+id/bottom_sheet_edit_information_button"
             style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/track_height"
@@ -290,7 +289,7 @@
             android:text="@string/edit_information" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/delete_playlist_button"
+            android:id="@+id/bottom_sheet_delete_playlist_button"
             style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/track_height"
