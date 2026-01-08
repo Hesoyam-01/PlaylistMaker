@@ -90,7 +90,7 @@ class PlaylistScreenViewModel(
         stringBuilder.appendLine(
             context.resources.getQuantityString(
                 R.plurals.track_count,
-                playlist.trackCount, "[${playlist.trackCount}]"
+                playlist.trackCount, playlist.trackCount
             )
         )
         trackList.withIndex().forEach { (index, track) ->
