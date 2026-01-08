@@ -15,6 +15,7 @@ import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.withContext
@@ -98,22 +99,23 @@ class PlaylistRepositoryImpl(
 
     override suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>) {
         val oldTrackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
-        val removedCount = oldTrackIdList.intersect(trackIdList.toSet()).size
         val newTrackIdList = playlistDbConverter.mapIdList(oldTrackIdList - trackIdList.toSet())
 
         appDatabase.playlistDao()
-            .updateTrackIdListAndCount(playlistId, newTrackIdList, -removedCount)
-        trackIdList.forEach { trackId ->
-            getPlaylists().collect { playlistList ->
-                val isInOtherPlaylists = playlistList.any { playlist ->
-                    playlist.trackIdList.any { id -> id == trackId }
-                }
+            .updateTrackIdListAndCount(playlistId, newTrackIdList, DECREMENT)
 
-                if (!isInOtherPlaylists) {
-                    appDatabase.trackFromPlaylistDao().deleteTrackById(trackId)
-                }
+        val allPlaylists = getPlaylists().first()
+        val tracksToRemove = mutableListOf<Int>()
+
+        trackIdList.forEach { trackId ->
+            val isInOtherPlaylists = allPlaylists.any { playlist ->
+                playlist.trackIdList.any { id -> id == trackId }
+            }
+            if (!isInOtherPlaylists) {
+                tracksToRemove.add(trackId)
             }
         }
+        appDatabase.trackFromPlaylistDao().deleteTracksByIds(tracksToRemove)
     }
 
     override suspend fun deletePlaylistById(playlistId: Int) {
@@ -130,5 +132,6 @@ class PlaylistRepositoryImpl(
 
     private companion object {
         private const val INCREMENT = 1
+        private const val DECREMENT = -1
     }
 }
