@@ -15,6 +15,8 @@ class PlaylistScreenViewModel(
 ) :
     ViewModel() {
 
+    private lateinit var playlist: Playlist
+
     private val stateLiveData = MutableLiveData<PlaylistScreenState>()
     fun observePlaylistScreenState(): LiveData<PlaylistScreenState> = stateLiveData
 
@@ -23,6 +25,7 @@ class PlaylistScreenViewModel(
             playlistInteractor
                 .getPlaylistById(playlistId)
                 .collect {
+                    playlist = it
                     val tracks = playlistInteractor.getTracksByIds(it.trackIdList)
                     val totalTime =
                         fromMillisToMinutes(tracks.sumOf { track -> parseTime(track.trackTime) })
@@ -44,20 +47,25 @@ class PlaylistScreenViewModel(
         )
         viewModelScope.launch {
             delay(MINIMAL_DELAY)
-            if (trackList.isEmpty()) renderState(PlaylistScreenState.Empty)
+            if (trackList.isEmpty()) renderState(PlaylistScreenState.EmptyPlaylist)
         }
     }
 
-    fun deleteTrackFromPlaylistById(playlistId: Int, trackId: Int) {
+    fun deleteTrackFromPlaylistById(trackId: Int) {
         viewModelScope.launch {
-            playlistInteractor.deleteTrackFromPlaylistById(playlistId, trackId)
+            playlistInteractor.deleteTracksFromPlaylistByIds(playlist.playlistId, listOf(trackId))
         }
     }
 
-    fun deletePlaylistById(playlistId: Int) {
+    fun deletePlaylist() {
         viewModelScope.launch {
-            playlistInteractor.deletePlaylistById(playlistId)
+            playlistInteractor.deleteTracksFromPlaylistByIds(playlist.playlistId, playlist.trackIdList)
+            playlistInteractor.deletePlaylistById(playlist.playlistId)
         }
+    }
+
+    fun deletePlaylistDialog() {
+        renderState(PlaylistScreenState.DeleteDialog(playlist.playlistName))
     }
 
     private fun parseTime(timeStr: String): Long {

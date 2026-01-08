@@ -20,7 +20,7 @@ interface PlaylistInteractor {
 
     suspend fun getTracksByIds(ids: List<Int>): List<Track>
 
-    suspend fun deleteTrackFromPlaylistById(playlistId: Int, trackId: Int)
+    suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>)
 
     suspend fun deletePlaylistById(playlistId: Int)
 }

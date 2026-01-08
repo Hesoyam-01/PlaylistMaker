@@ -96,15 +96,23 @@ class PlaylistRepositoryImpl(
         return convertFromTrackFromPlaylistEntity(tracks)
     }
 
-    override suspend fun deleteTrackFromPlaylistById(playlistId: Int, trackId: Int) {
-        val trackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
-        val newTrackIdList = playlistDbConverter.mapIdList(trackIdList - trackId)
-        appDatabase.playlistDao().updateTrackIdListAndCount(playlistId, newTrackIdList, DECREMENT)
-        getPlaylists().collect {
-            val existsInOtherPlaylists = it.any { playlist ->
-                playlist.trackIdList.any { id -> id == trackId }
+    override suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>) {
+        val oldTrackIdList = playlistDbConverter.mapIdList(getTrackIdList(playlistId))
+        val removedCount = oldTrackIdList.intersect(trackIdList.toSet()).size
+        val newTrackIdList = playlistDbConverter.mapIdList(oldTrackIdList - trackIdList.toSet())
+
+        appDatabase.playlistDao()
+            .updateTrackIdListAndCount(playlistId, newTrackIdList, -removedCount)
+        trackIdList.forEach { trackId ->
+            getPlaylists().collect { playlistList ->
+                val isInOtherPlaylists = playlistList.any { playlist ->
+                    playlist.trackIdList.any { id -> id == trackId }
+                }
+
+                if (!isInOtherPlaylists) {
+                    appDatabase.trackFromPlaylistDao().deleteTrackById(trackId)
+                }
             }
-            if (!existsInOtherPlaylists) appDatabase.trackFromPlaylistDao().deleteTrackById(trackId)
         }
     }
 
@@ -122,6 +130,5 @@ class PlaylistRepositoryImpl(
 
     private companion object {
         private const val INCREMENT = 1
-        private const val DECREMENT = -1
     }
 }

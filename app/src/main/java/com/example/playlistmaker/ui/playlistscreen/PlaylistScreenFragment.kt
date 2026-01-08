@@ -36,7 +36,8 @@ class PlaylistScreenFragment : Fragment() {
     private lateinit var trackBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var moreBottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
-    private lateinit var deleteDialog: MaterialAlertDialogBuilder
+    private lateinit var deleteTrackDialog: MaterialAlertDialogBuilder
+    private lateinit var deletePlaylistDialog: MaterialAlertDialogBuilder
 
     private lateinit var onTrackClickDebounce: (Track) -> Unit
 
@@ -82,7 +83,7 @@ class PlaylistScreenFragment : Fragment() {
             },
             onTrackLongClick = {
                 selectedTrackId = it
-                deleteDialog.show()
+                deleteTrackDialog.show()
             }
         )
 
@@ -93,14 +94,14 @@ class PlaylistScreenFragment : Fragment() {
                 navigateToPlayerFragment(it)
             }
 
-        deleteDialog = MaterialAlertDialogBuilder(
+        deleteTrackDialog = MaterialAlertDialogBuilder(
             requireContext(),
             R.style.MyAlertDialogStyle
         )
             .setTitle(R.string.delete_track_question)
             .setNegativeButton(R.string.no) { _, _ -> }
             .setPositiveButton(R.string.yes) { _, _ ->
-                viewModel.deleteTrackFromPlaylistById(playlistId, selectedTrackId!!)
+                viewModel.deleteTrackFromPlaylistById(selectedTrackId!!)
             }
 
         val displayMetrics = Resources.getSystem().displayMetrics
@@ -147,8 +148,7 @@ class PlaylistScreenFragment : Fragment() {
         })
 
         binding.bottomSheetDeletePlaylistButton.setOnClickListener {
-            viewModel.deletePlaylistById(playlistId)
-            findNavController().navigateUp()
+            viewModel.deletePlaylistDialog()
         }
 
     }
@@ -160,11 +160,11 @@ class PlaylistScreenFragment : Fragment() {
                 state.playlistDescription,
                 state.coverFilePath,
                 state.trackCount,
-                state.tracks,
+                state.trackList,
                 state.totalTime
             )
-
-            PlaylistScreenState.Empty -> showEmpty()
+            is PlaylistScreenState.EmptyPlaylist -> showEmpty()
+            is PlaylistScreenState.DeleteDialog -> showDeleteDialog(state.playlistName)
         }
     }
 
@@ -173,7 +173,7 @@ class PlaylistScreenFragment : Fragment() {
         playlistDescriptionArg: String?,
         coverFilePath: String?,
         trackCountArg: Int,
-        tracks: List<Track>,
+        trackList: List<Track>,
         totalTimeArg: Int
     ) {
         val filePath = File(
@@ -218,7 +218,7 @@ class PlaylistScreenFragment : Fragment() {
             )
         }
 
-        tracksInPlaylistAdapter.updateList(tracks)
+        tracksInPlaylistAdapter.updateList(trackList)
     }
 
     private fun showEmpty() {
@@ -226,6 +226,19 @@ class PlaylistScreenFragment : Fragment() {
             tracksInPlaylistRecyclerView.visibility = View.GONE
             emptyPlaylistPlaceholder.visibility = View.VISIBLE
         }
+    }
+
+    private fun showDeleteDialog(playlistName: String) {
+        deletePlaylistDialog = MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.MyAlertDialogStyle
+        )
+            .setTitle(getString(R.string.delete_playlist_question, playlistName))
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ ->
+                viewModel.deletePlaylist()
+                findNavController().navigateUp()
+            }.apply { show() }
     }
 
     private fun navigateToPlayerFragment(track: Track) {
@@ -263,6 +276,5 @@ class PlaylistScreenFragment : Fragment() {
             bundleOf(
                 ARGS_PLAYLIST_ID to playlistId,
             )
-
     }
 }
