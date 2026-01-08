@@ -15,7 +15,9 @@ import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
@@ -45,7 +47,8 @@ class PlaylistRepositoryImpl(
     }
 
     override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
-        return  appDatabase.playlistDao().getPlaylistById(playlistId).map { playlistDbConverter.map(it) }
+        return appDatabase.playlistDao().getPlaylistById(playlistId).takeWhile { it != null }
+            .map { playlistDbConverter.map(it!!) }
     }
 
     override suspend fun addTrackToPlaylistById(playlistId: Int, newTrackId: Int) {

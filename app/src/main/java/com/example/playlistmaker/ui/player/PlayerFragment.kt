@@ -2,7 +2,6 @@ package com.example.playlistmaker.ui.player
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +62,6 @@ class PlayerFragment : Fragment() {
         track = getTrackFromArgs()
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            Log.d("1", it.toString())
             render(it)
         }
 

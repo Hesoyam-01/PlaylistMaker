@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -41,6 +42,8 @@ class FavoritesFragment : Fragment() {
             render(it)
         }
 
+        viewModel.fillData()
+
         favoritesAdapter = TrackAdapter(
             onTrackClick = {
                 onTrackClickDebounce(it)
@@ -54,8 +57,6 @@ class FavoritesFragment : Fragment() {
             debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
                 navigateToPlayerFragment(it)
             }
-
-        viewModel.fillData()
 
     }
 

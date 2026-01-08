@@ -17,7 +17,7 @@ interface PlaylistDao {
     fun getPlaylists(): Flow<List<PlaylistEntity>>
 
     @Query("SELECT * FROM playlist_table WHERE playlistId = :playlistId")
-    fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity>
+    fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?>
 
     @Query("SELECT trackIdList FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun getTrackIdListById(playlistId: Int): String?

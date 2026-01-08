@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -37,6 +38,12 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.observePlaylistLiveData().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        viewModel.fillData()
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_makePlaylistFragment)
         }
@@ -55,11 +62,6 @@ class PlaylistsFragment : Fragment() {
             adapter = playlistsAdapter
         }
 
-        viewModel.observePlaylistLiveData().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
-        viewModel.fillData()
     }
 
     private fun render(state: PlaylistsState) {
