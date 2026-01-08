@@ -1,7 +1,6 @@
 package com.example.playlistmaker.domain.api.playlist
 
 import android.net.Uri
-import com.example.playlistmaker.data.db.entity.TrackFromPlaylistEntity
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.flow.Flow
