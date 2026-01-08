@@ -147,6 +147,21 @@ class PlaylistScreenFragment : Fragment() {
         })
     }
 
+    private fun render(state: PlaylistScreenState) {
+        when (state) {
+            is PlaylistScreenState.Content -> showContent(
+                state.playlistName,
+                state.playlistDescription,
+                state.coverFilePath,
+                state.trackCount,
+                state.tracks,
+                state.totalTime
+            )
+
+            PlaylistScreenState.Empty -> showEmpty()
+        }
+    }
+
     private fun showContent(
         playlistNameArg: String,
         playlistDescriptionArg: String?,
@@ -163,6 +178,9 @@ class PlaylistScreenFragment : Fragment() {
             if (coverFilePath != null) File(filePath, coverFilePath) else null
 
         binding.apply {
+            tracksInPlaylistRecyclerView.visibility = View.VISIBLE
+            emptyPlaylistPlaceholder.visibility = View.GONE
+
             Glide.with(root)
                 .load(file)
                 .placeholder(R.drawable.ic_cover_placeholder_312)
@@ -197,16 +215,10 @@ class PlaylistScreenFragment : Fragment() {
         tracksInPlaylistAdapter.updateList(tracks)
     }
 
-    private fun render(state: PlaylistScreenState) {
-        when (state) {
-            is PlaylistScreenState.Content -> showContent(
-                state.playlistName,
-                state.playlistDescription,
-                state.coverFilePath,
-                state.trackCount,
-                state.tracks,
-                state.totalTime
-            )
+    private fun showEmpty() {
+        binding.apply {
+            tracksInPlaylistRecyclerView.visibility = View.GONE
+            emptyPlaylistPlaceholder.visibility = View.VISIBLE
         }
     }
 

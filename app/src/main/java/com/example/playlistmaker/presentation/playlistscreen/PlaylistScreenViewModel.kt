@@ -41,6 +41,7 @@ class PlaylistScreenViewModel(
                 totalTime
             )
         )
+        if (trackList.isEmpty()) renderState(PlaylistScreenState.Empty)
     }
 
     fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {

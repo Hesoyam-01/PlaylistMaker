@@ -11,4 +11,6 @@ sealed interface PlaylistScreenState {
         val tracks: List<Track>,
         val totalTime: Int
     ) : PlaylistScreenState
+
+    data object Empty : PlaylistScreenState
 }
