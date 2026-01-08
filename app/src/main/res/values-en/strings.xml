@@ -47,6 +47,7 @@
     <string name="track_is_present">Track is already in the playlist \"%1$s\"</string>
     <string name="track_added_to_playlist">Added to the playlist %1$s</string>
     <string name="share">Share</string>
+    <string name="empty_playlist">Your playlist is empty</string>
     <string name="edit_information">Edit information</string>
     <string name="delete_playlist">Delete playlist</string>
     <string name="delete_track_question">Do you want to delete the track?</string>
