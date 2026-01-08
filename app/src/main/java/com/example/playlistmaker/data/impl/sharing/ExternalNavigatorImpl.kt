@@ -13,14 +13,14 @@ import com.example.playlistmaker.domain.model.sharing.EmailData
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun shareApp() {
-        val shareAppButtonIntent = Intent(ACTION_SEND)
+        val shareAppIntent = Intent(ACTION_SEND)
         val shareAppLink = getString(context, R.string.share_app_link)
-        shareAppButtonIntent.apply {
+        shareAppIntent.apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareAppLink)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        context.startActivity(shareAppButtonIntent)
+        context.startActivity(shareAppIntent)
     }
 
     override fun openEmail(emailData: EmailData) {
@@ -54,5 +54,15 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
             context.getString(R.string.support_message),
             context.getString(R.string.support_email)
         )
+    }
+
+    override fun sharePlaylist(shareMessage: String) {
+        val sharePlaylistIntent = Intent(ACTION_SEND)
+        sharePlaylistIntent.apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, shareMessage)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(sharePlaylistIntent)
     }
 }

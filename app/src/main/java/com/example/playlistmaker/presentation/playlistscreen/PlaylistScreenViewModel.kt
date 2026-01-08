@@ -1,21 +1,28 @@
 package com.example.playlistmaker.presentation.playlistscreen
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.api.sharing.SharingInteractor
 import com.example.playlistmaker.domain.model.library.Playlist
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlaylistScreenViewModel(
-    private val playlistInteractor: PlaylistInteractor
+    application: Application,
+    private val playlistInteractor: PlaylistInteractor,
+    private val sharingInteractor: SharingInteractor
 ) :
-    ViewModel() {
+    AndroidViewModel(application) {
+    private val context = getApplication<Application>()
 
     private lateinit var playlist: Playlist
+    private lateinit var trackList: List<Track>
 
     private val stateLiveData = MutableLiveData<PlaylistScreenState>()
     fun observePlaylistScreenState(): LiveData<PlaylistScreenState> = stateLiveData
@@ -26,10 +33,10 @@ class PlaylistScreenViewModel(
                 .getPlaylistById(playlistId)
                 .collect {
                     playlist = it
-                    val tracks = playlistInteractor.getTracksByIds(it.trackIdList)
+                    trackList = playlistInteractor.getTracksByIds(it.trackIdList)
                     val totalTime =
-                        fromMillisToMinutes(tracks.sumOf { track -> parseTime(track.trackTime) })
-                    processResult(it, tracks, totalTime)
+                        fromMillisToMinutes(trackList.sumOf { track -> parseTime(track.trackTime) })
+                    processResult(it, trackList, totalTime)
                 }
         }
     }
@@ -59,13 +66,37 @@ class PlaylistScreenViewModel(
 
     fun deletePlaylist() {
         viewModelScope.launch {
-            playlistInteractor.deleteTracksFromPlaylistByIds(playlist.playlistId, playlist.trackIdList)
+            playlistInteractor.deleteTracksFromPlaylistByIds(
+                playlist.playlistId,
+                playlist.trackIdList
+            )
             playlistInteractor.deletePlaylistById(playlist.playlistId)
         }
     }
 
     fun deletePlaylistDialog() {
         renderState(PlaylistScreenState.DeleteDialog(playlist.playlistName))
+    }
+
+    fun sharePlaylist() {
+        sharingInteractor.sharePlaylist(sharePlaylistMessage())
+    }
+
+    private fun sharePlaylistMessage(): String {
+        val stringBuilder = StringBuilder()
+
+        stringBuilder.appendLine(playlist.playlistName)
+        stringBuilder.appendLine(playlist.playlistDescription)
+        stringBuilder.appendLine(
+            context.resources.getQuantityString(
+                R.plurals.track_count,
+                playlist.trackCount, "[${playlist.trackCount}]"
+            )
+        )
+        trackList.withIndex().forEach { (index, track) ->
+            stringBuilder.appendLine("${index + 1}. ${track.artistName} - ${track.trackName} (${track.trackTime})")
+        }
+        return stringBuilder.toString()
     }
 
     private fun parseTime(timeStr: String): Long {

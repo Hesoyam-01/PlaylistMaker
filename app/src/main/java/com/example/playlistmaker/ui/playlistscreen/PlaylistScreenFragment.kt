@@ -151,6 +151,14 @@ class PlaylistScreenFragment : Fragment() {
             viewModel.deletePlaylistDialog()
         }
 
+        binding.sharePlaylistButton.setOnClickListener {
+            viewModel.sharePlaylist()
+        }
+
+        binding.bottomSheetSharePlaylistButton.setOnClickListener {
+            viewModel.sharePlaylist()
+        }
+
     }
 
     private fun render(state: PlaylistScreenState) {
