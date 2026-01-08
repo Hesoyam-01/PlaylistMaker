@@ -10,13 +10,13 @@ interface PlaylistInteractor {
 
     fun getPlaylists(): Flow<List<Playlist>>
 
+    fun getPlaylistById(playlistId: Int): Flow<Playlist>
+
     suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int)
 
     suspend fun saveImageAndGetPath(uri: Uri): String
 
     suspend fun saveTrackFromPlaylist(track: Track)
-
-//    suspend fun getTrackIds(playlistId: Int): List<Int>
 
     suspend fun getTracksByIds(ids: List<Int>): List<Track>
 

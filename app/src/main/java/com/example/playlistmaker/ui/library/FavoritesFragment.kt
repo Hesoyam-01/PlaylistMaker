@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoritesBinding
 import com.example.playlistmaker.domain.model.search.Track
-import com.example.playlistmaker.presentation.library.FavoritesFragmentViewModel
+import com.example.playlistmaker.presentation.library.FavoritesViewModel
 import com.example.playlistmaker.presentation.library.FavoritesState
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.search.TrackAdapter
@@ -18,7 +18,7 @@ import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
-    private val viewModel: FavoritesFragmentViewModel by viewModel()
+    private val viewModel: FavoritesViewModel by viewModel()
 
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!

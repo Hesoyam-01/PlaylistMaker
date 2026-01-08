@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.model.library.Playlist
-import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.library.PlaylistsViewModel
 import com.example.playlistmaker.presentation.library.PlaylistsState
 import com.example.playlistmaker.ui.playlistscreen.PlaylistScreenFragment
 import com.example.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
-    private val viewModel: PlaylistsFragmentViewModel by viewModel()
+    private val viewModel: PlaylistsViewModel by viewModel()
 
     private lateinit var binding: FragmentPlaylistsBinding
 
@@ -88,12 +88,7 @@ class PlaylistsFragment : Fragment() {
         findNavController().navigate(
             R.id.action_libraryFragment_to_playlistScreenFragment,
             PlaylistScreenFragment.createArgs(
-                playlistId = playlist.playlistId,
-                playlistName = playlist.playlistName,
-                playlistDescription = playlist.playlistDescription,
-                coverFilePath = playlist.coverFilePath,
-                trackIdList = playlist.trackIdList,
-                trackCount = playlist.trackCount
+                playlistId = playlist.playlistId
             )
         )
     }

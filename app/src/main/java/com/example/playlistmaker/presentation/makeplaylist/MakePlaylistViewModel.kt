@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import kotlinx.coroutines.launch
 
-class MakePlaylistFragmentViewModel(
+class MakePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 

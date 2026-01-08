@@ -1,11 +1,11 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.presentation.library.FavoritesFragmentViewModel
-import com.example.playlistmaker.presentation.makeplaylist.MakePlaylistFragmentViewModel
-import com.example.playlistmaker.presentation.library.PlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.library.FavoritesViewModel
+import com.example.playlistmaker.presentation.makeplaylist.MakePlaylistViewModel
+import com.example.playlistmaker.presentation.library.PlaylistsViewModel
 import com.example.playlistmaker.presentation.main.MainViewModel
 import com.example.playlistmaker.presentation.player.PlayerViewModel
-import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenFragmentViewModel
+import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenViewModel
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -30,19 +30,19 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FavoritesFragmentViewModel(get())
+        FavoritesViewModel(get())
     }
 
     viewModel {
-        PlaylistsFragmentViewModel(get())
+        PlaylistsViewModel(get())
     }
 
     viewModel {
-        MakePlaylistFragmentViewModel(get())
+        MakePlaylistViewModel(get())
     }
 
     viewModel {
-        PlaylistScreenFragmentViewModel(get())
+        PlaylistScreenViewModel(get())
     }
 
 }

@@ -44,6 +44,10 @@ class PlaylistRepositoryImpl(
         return appDatabase.playlistDao().getPlaylists().map { convertFromPlaylistEntity(it) }
     }
 
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
+        return  appDatabase.playlistDao().getPlaylistById(playlistId).map { playlistDbConverter.map(it) }
+    }
+
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { playlistDbConverter.map(it) }
     }
@@ -55,7 +59,7 @@ class PlaylistRepositoryImpl(
     }
 
     private suspend fun getTrackIdList(playlistId: Int): String? {
-        return appDatabase.playlistDao().getTrackIdList(playlistId)
+        return appDatabase.playlistDao().getTrackIdListById(playlistId)
     }
 
     override suspend fun saveImageAndGetPath(uri: Uri): String {

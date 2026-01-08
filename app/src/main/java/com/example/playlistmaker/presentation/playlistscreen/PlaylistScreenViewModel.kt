@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.model.library.Playlist
+import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.launch
 
-class PlaylistScreenFragmentViewModel(
+class PlaylistScreenViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) :
     ViewModel() {
@@ -15,14 +17,30 @@ class PlaylistScreenFragmentViewModel(
     private val stateLiveData = MutableLiveData<PlaylistScreenState>()
     fun observePlaylistScreenState(): LiveData<PlaylistScreenState> = stateLiveData
 
-    fun getTracksByIdsAndTotalTime(ids: List<Int>) {
+    fun fillData(playlistId: Int) {
         viewModelScope.launch {
-            val tracks = playlistInteractor.getTracksByIds(ids)
-            val totalTime =
-                fromMillisToMinutes(tracks.sumOf { parseTime(it.trackTime) })
-
-            renderState(PlaylistScreenState.Content(tracks, totalTime))
+            playlistInteractor
+                .getPlaylistById(playlistId)
+                .collect {
+                    val tracks = playlistInteractor.getTracksByIds(it.trackIdList)
+                    val totalTime =
+                        fromMillisToMinutes(tracks.sumOf { track -> parseTime(track.trackTime) })
+                    processResult(it, tracks, totalTime)
+                }
         }
+    }
+
+    private fun processResult(playlist: Playlist, trackList: List<Track>, totalTime: Int) {
+        renderState(
+            PlaylistScreenState.Content(
+                playlist.playlistName,
+                playlist.playlistDescription,
+                playlist.coverFilePath,
+                playlist.trackCount,
+                trackList,
+                totalTime
+            )
+        )
     }
 
     fun deleteTrackFromPlaylist(playlistId: Int, trackId: Int) {
