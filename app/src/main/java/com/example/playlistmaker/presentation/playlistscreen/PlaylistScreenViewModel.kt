@@ -79,7 +79,8 @@ class PlaylistScreenViewModel(
     }
 
     fun sharePlaylist() {
-        sharingInteractor.sharePlaylist(sharePlaylistMessage())
+        if (trackList.isNotEmpty()) sharingInteractor.sharePlaylist(sharePlaylistMessage())
+        else renderState(PlaylistScreenState.NothingToSend)
     }
 
     private fun sharePlaylistMessage(): String {

@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +24,7 @@ import com.example.playlistmaker.databinding.FragmentMakePlaylistBinding
 import com.example.playlistmaker.presentation.makeplaylist.MakePlaylistViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MakePlaylistFragment : Fragment() {
@@ -118,19 +118,19 @@ class MakePlaylistFragment : Fragment() {
                 viewModel.observeImagePath().observe(viewLifecycleOwner) {
                     coverFilePath = it
                     viewModel.makePlaylist(name, description, coverFilePath)
-                    Toast.makeText(
-                        requireContext(),
+                    Snackbar.make(
+                        binding.root,
                         getString(R.string.playlist_made, name),
-                        Toast.LENGTH_SHORT
+                        Snackbar.LENGTH_SHORT
                     ).show()
                     findNavController().navigateUp()
                 }
             } else {
                 viewModel.makePlaylist(name, description, null)
-                Toast.makeText(
-                    requireContext(),
+                Snackbar.make(
+                    binding.root,
                     getString(R.string.playlist_made, name),
-                    Toast.LENGTH_SHORT
+                    Snackbar.LENGTH_SHORT
                 ).show()
                 findNavController().navigateUp()
             }

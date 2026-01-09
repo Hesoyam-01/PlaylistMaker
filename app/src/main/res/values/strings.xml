@@ -45,7 +45,7 @@
     <string name="title">Название*</string>
     <string name="description">Описание</string>
     <string name="make">Создать</string>
-    <string name="playlist_made">Плейлист "%1$s" создан</string>
+    <string name="playlist_made">Плейлист \\\"%1$s\\\" создан</string>
     <string name="finish_making_question">Завершить создание плейлиста?</string>
     <string name="unsaved_data">Все несохраненные данные будут потеряны</string>
     <string name="cancel">Отмена</string>
@@ -62,5 +62,6 @@
     <string name="delete_playlist_question">Хотите удалить плейлист \"%1$s\"?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="nothing_to_send">В этом плейлисте нет списка треков, которым можно поделиться</string>
 
 </resources>

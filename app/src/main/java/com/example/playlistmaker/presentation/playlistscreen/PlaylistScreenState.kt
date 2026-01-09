@@ -18,4 +18,6 @@ sealed interface PlaylistScreenState {
     data class DeleteDialog(
         val playlistName: String
     ) : PlaylistScreenState
+
+    data object NothingToSend : PlaylistScreenState
 }

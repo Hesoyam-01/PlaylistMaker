@@ -33,8 +33,8 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.saveTrackFromPlaylist(track)
     }
 
-    override suspend fun getTracksByIds(ids: List<Int>): List<Track> {
-        return repository.getTracksByIds(ids)
+    override suspend fun getTracksByIds(trackIdList: List<Int>): List<Track> {
+        return repository.getTracksByIds(trackIdList)
     }
 
     override suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>) {

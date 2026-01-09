@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -24,6 +23,7 @@ import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -172,23 +172,24 @@ class PlayerFragment : Fragment() {
                 state.isPresent,
                 state.playlistName
             )
+
             is PlayerState.BottomSheet -> bottomSheetBehavior.state = state.bottomSheetState
         }
     }
 
     private fun showPlaylistCheckFeedback(isPresent: Boolean, playlistName: String) {
         binding.apply {
-            if (isPresent) Toast.makeText(
-                requireContext(),
+            if (isPresent) Snackbar.make(
+                binding.root,
                 getString(R.string.track_is_present, playlistName),
-                Toast.LENGTH_SHORT
+                Snackbar.LENGTH_SHORT
             ).show()
             else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                Toast.makeText(
-                    requireContext(),
+                Snackbar.make(
+                    binding.root,
                     getString(R.string.track_added_to_playlist, playlistName),
-                    Toast.LENGTH_SHORT
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
         }

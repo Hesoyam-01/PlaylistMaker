@@ -24,6 +24,7 @@ import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
@@ -157,6 +158,7 @@ class PlaylistScreenFragment : Fragment() {
 
         binding.bottomSheetSharePlaylistButton.setOnClickListener {
             viewModel.sharePlaylist()
+            moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
     }
@@ -171,8 +173,9 @@ class PlaylistScreenFragment : Fragment() {
                 state.trackList,
                 state.totalTime
             )
-            is PlaylistScreenState.EmptyPlaylist -> showEmpty()
+            is PlaylistScreenState.EmptyPlaylist -> showEmptyPlaceholder()
             is PlaylistScreenState.DeleteDialog -> showDeleteDialog(state.playlistName)
+            is PlaylistScreenState.NothingToSend -> showNothingToSend()
         }
     }
 
@@ -229,7 +232,7 @@ class PlaylistScreenFragment : Fragment() {
         tracksInPlaylistAdapter.updateList(trackList)
     }
 
-    private fun showEmpty() {
+    private fun showEmptyPlaceholder() {
         binding.apply {
             tracksInPlaylistRecyclerView.visibility = View.GONE
             emptyPlaylistPlaceholder.visibility = View.VISIBLE
@@ -247,6 +250,10 @@ class PlaylistScreenFragment : Fragment() {
                 viewModel.deletePlaylist()
                 findNavController().navigateUp()
             }.apply { show() }
+    }
+
+    private fun showNothingToSend() {
+        Snackbar.make(binding.root, R.string.nothing_to_send, Snackbar.LENGTH_SHORT).show()
     }
 
     private fun navigateToPlayerFragment(track: Track) {

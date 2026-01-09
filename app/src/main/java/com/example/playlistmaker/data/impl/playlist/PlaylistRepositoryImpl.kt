@@ -92,9 +92,11 @@ class PlaylistRepositoryImpl(
         appDatabase.trackFromPlaylistDao().insertTrack(trackFromPlaylistDbConverter.map(track))
     }
 
-    override suspend fun getTracksByIds(ids: List<Int>): List<Track> {
-        val tracks = appDatabase.trackFromPlaylistDao().getTracksByIds(ids)
-        return convertFromTrackFromPlaylistEntity(tracks)
+    override suspend fun getTracksByIds(trackIdList: List<Int>): List<Track> {
+        val tracks = appDatabase.trackFromPlaylistDao().getTracksByIds(trackIdList)
+        val trackMap = tracks.associateBy { it.trackId }
+        val sortedTracks = trackIdList.reversed().mapNotNull { trackMap[it] }
+        return convertFromTrackFromPlaylistEntity(sortedTracks)
     }
 
     override suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>) {
