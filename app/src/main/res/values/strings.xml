@@ -57,6 +57,8 @@
     <string name="share">Поделиться</string>
     <string name="empty_playlist">Ваш плейлист пуст</string>
     <string name="edit_information">Редактировать информацию</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="delete_track_question">Хотите удалить трек?</string>
     <string name="delete_playlist_question">Хотите удалить плейлист \"%1$s\"?</string>

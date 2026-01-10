@@ -19,6 +19,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistScreenBinding
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenState
 import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenViewModel
+import com.example.playlistmaker.ui.editplaylist.EditPlaylistFragment
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.search.TrackAdapter
 import com.example.playlistmaker.util.debounce
@@ -68,7 +69,7 @@ class PlaylistScreenFragment : Fragment() {
 
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
-        binding.playlistToolbar.setNavigationOnClickListener {
+        binding.newPlaylistToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
@@ -156,6 +157,10 @@ class PlaylistScreenFragment : Fragment() {
             viewModel.sharePlaylist()
         }
 
+        binding.bottomSheetEditInformationButton.setOnClickListener {
+            viewModel.editPlaylist()
+        }
+
         binding.bottomSheetSharePlaylistButton.setOnClickListener {
             viewModel.sharePlaylist()
             moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -176,6 +181,12 @@ class PlaylistScreenFragment : Fragment() {
             is PlaylistScreenState.EmptyPlaylist -> showEmptyPlaceholder()
             is PlaylistScreenState.DeleteDialog -> showDeleteDialog(state.playlistName)
             is PlaylistScreenState.NothingToSend -> showNothingToSend()
+            is PlaylistScreenState.Editing -> navigateToEditPlaylistFragment(
+                state.playlistId,
+                state.playlistName,
+                state.playlistDescription,
+                state.coverFilePath
+            )
         }
     }
 
@@ -256,6 +267,23 @@ class PlaylistScreenFragment : Fragment() {
         Snackbar.make(binding.root, R.string.nothing_to_send, Snackbar.LENGTH_SHORT).show()
     }
 
+    private fun navigateToEditPlaylistFragment(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    ) {
+        findNavController().navigate(
+            R.id.action_playlistScreenFragment_to_editPlaylistFragment,
+            EditPlaylistFragment.createArgs(
+                playlistId,
+                playlistName,
+                playlistDescription,
+                coverFilePath
+            )
+        )
+    }
+
     private fun navigateToPlayerFragment(track: Track) {
         findNavController().navigate(
             R.id.action_playlistScreenFragment_to_playerFragment,
@@ -281,7 +309,7 @@ class PlaylistScreenFragment : Fragment() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 300L
-        private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+        private const val INITIAL_OVERLAY_ALPHA= 0F
 
         private const val ARGS_PLAYLIST_ID = "playlist_id"
 

@@ -19,5 +19,12 @@ sealed interface PlaylistScreenState {
         val playlistName: String
     ) : PlaylistScreenState
 
+    data class Editing(
+        val playlistId: Int,
+        val playlistName: String,
+        val playlistDescription: String?,
+        val coverFilePath: String?
+    ) : PlaylistScreenState
+
     data object NothingToSend : PlaylistScreenState
 }

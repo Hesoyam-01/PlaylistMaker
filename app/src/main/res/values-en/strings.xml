@@ -49,6 +49,8 @@
     <string name="share">Share</string>
     <string name="empty_playlist">Your playlist is empty</string>
     <string name="edit_information">Edit information</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
     <string name="delete_playlist">Delete playlist</string>
     <string name="delete_track_question">Do you want to delete the track?</string>
     <string name="delete_playlist_question">Do you want to delete the playlist \"%1$s\"?</string>

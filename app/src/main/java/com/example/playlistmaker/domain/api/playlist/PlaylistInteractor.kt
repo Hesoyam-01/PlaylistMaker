@@ -24,7 +24,7 @@ interface PlaylistInteractor {
 
     suspend fun deletePlaylistById(playlistId: Int)
 
-    suspend fun updatePlaylist(
+    suspend fun editPlaylistInformation(
         playlistId: Int,
         playlistName: String,
         playlistDescription: String?,

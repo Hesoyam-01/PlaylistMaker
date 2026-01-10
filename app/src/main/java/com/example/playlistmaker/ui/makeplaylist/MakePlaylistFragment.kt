@@ -27,17 +27,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MakePlaylistFragment : Fragment() {
-    private val viewModel: MakePlaylistViewModel by viewModel()
-
-    private lateinit var confirmDialog: MaterialAlertDialogBuilder
+open class MakePlaylistFragment : Fragment() {
+    protected open val viewModel: MakePlaylistViewModel by viewModel()
 
     private lateinit var textWatcher: TextWatcher
+
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
     private var selectedImageUri: Uri? = null
 
     private var _binding: FragmentMakePlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,14 +49,6 @@ class MakePlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        fun navigateUpWithConfirmation() {
-            if ((!binding.playlistName.text.isNullOrEmpty())
-                or (!binding.playlistDescription.text.isNullOrEmpty())
-                or (selectedImageUri != null)
-            ) confirmDialog.show()
-            else findNavController().navigateUp()
-        }
 
         binding.newPlaylistToolbar.setNavigationOnClickListener {
             navigateUpWithConfirmation()
@@ -149,6 +141,14 @@ class MakePlaylistFragment : Fragment() {
 
         binding.playlistName.addTextChangedListener(textWatcher)
 
+    }
+
+    protected open fun navigateUpWithConfirmation() {
+        if ((!binding.playlistName.text.isNullOrEmpty())
+            or (!binding.playlistDescription.text.isNullOrEmpty())
+            or (selectedImageUri != null)
+        ) confirmDialog.show()
+        else findNavController().navigateUp()
     }
 
     private fun dpToPx(dp: Int): Int {

@@ -172,7 +172,6 @@ class PlayerFragment : Fragment() {
                 state.isPresent,
                 state.playlistName
             )
-
             is PlayerState.BottomSheet -> bottomSheetBehavior.state = state.bottomSheetState
         }
     }
@@ -236,7 +235,7 @@ class PlayerFragment : Fragment() {
         )
 
     companion object {
-        private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+        private const val INITIAL_OVERLAY_ALPHA = 0F
         private const val CLICK_DEBOUNCE_DELAY = 300L
         private const val MINIMAL_DELAY = 200L
 

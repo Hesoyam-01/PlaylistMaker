@@ -78,6 +78,15 @@ class PlaylistScreenViewModel(
         renderState(PlaylistScreenState.DeleteDialog(playlist.playlistName))
     }
 
+    fun editPlaylist() {
+        renderState(PlaylistScreenState.Editing(
+            playlist.playlistId,
+            playlist.playlistName,
+            playlist.playlistDescription,
+            playlist.coverFilePath
+        ))
+    }
+
     fun sharePlaylist() {
         if (trackList.isNotEmpty()) sharingInteractor.sharePlaylist(sharePlaylistMessage())
         else renderState(PlaylistScreenState.NothingToSend)

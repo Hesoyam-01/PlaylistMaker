@@ -120,7 +120,7 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().deletePlaylistById(playlistId)
     }
 
-    override suspend fun updatePlaylist(
+    override suspend fun editPlaylistInformation(
         playlistId: Int,
         playlistName: String,
         playlistDescription: String?,

@@ -45,13 +45,13 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.deletePlaylistById(playlistId)
     }
 
-    override suspend fun updatePlaylist(
+    override suspend fun editPlaylistInformation(
         playlistId: Int,
         playlistName: String,
         playlistDescription: String?,
         coverFilePath: String?
     ) {
-        repository.updatePlaylist(playlistId, playlistName, playlistDescription, coverFilePath)
+        repository.editPlaylistInformation(playlistId, playlistName, playlistDescription, coverFilePath)
     }
 
 }

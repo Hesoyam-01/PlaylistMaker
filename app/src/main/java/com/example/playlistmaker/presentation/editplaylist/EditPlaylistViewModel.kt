@@ -9,11 +9,11 @@ class EditPlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : MakePlaylistViewModel(playlistInteractor) {
 
-    fun updatePlaylist(
+    fun editPlaylistInformation(
         playlistId: Int, playlistName: String, playlistDescription: String?, coverFilePath: String?
     ) {
         viewModelScope.launch {
-            playlistInteractor.updatePlaylist(
+            playlistInteractor.editPlaylistInformation(
                 playlistId,
                 playlistName,
                 playlistDescription,
