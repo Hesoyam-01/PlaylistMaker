@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.model.library.Playlist
 import kotlinx.coroutines.launch
 
-class PlaylistsFragmentViewModel(
+class PlaylistsViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.db.converters
+package com.example.playlistmaker.data.db.converter
 
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.domain.model.library.Playlist

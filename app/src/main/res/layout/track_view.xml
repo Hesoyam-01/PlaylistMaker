@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/track_name"
-            style="@style/TrackTextViewStyle"
+            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="19dp"
             android:ellipsize="end"
@@ -44,7 +44,7 @@
 
             <TextView
                 android:id="@+id/artist_name"
-                style="@style/TrackTextViewStyle"
+                style="@style/TextViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:layout_gravity="center_vertical"
@@ -62,8 +62,7 @@
             <ImageView
                 android:layout_width="3dp"
                 android:layout_height="3dp"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginVertical="5dp"
+                android:layout_margin="5dp"
                 android:src="@drawable/ic_ellipse_3"
                 app:tint="?attr/colorOnPrimaryFixedVariant">
 
@@ -71,7 +70,7 @@
 
             <TextView
                 android:id="@+id/track_time"
-                style="@style/TrackTextViewStyle"
+                style="@style/TextViewStyle"
                 android:layout_width="64dp"
                 android:layout_height="13dp"
                 android:layout_gravity="center_vertical"

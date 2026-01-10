@@ -5,7 +5,6 @@ import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.api.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.model.search.Track
 import com.example.playlistmaker.util.Resource
-import java.text.SimpleDateFormat
 import java.util.Locale
 
 class SearchHistoryRepositoryImpl(
@@ -19,14 +18,6 @@ class SearchHistoryRepositoryImpl(
 
     init {
         loadLastTracksDtoList()
-    }
-
-    private val dateFormatFromMillisToMss by lazy { SimpleDateFormat("m:ss", Locale.getDefault()) }
-    private val dateFormatFromMssToMillis by lazy {
-        fun(durationStr: String): Long {
-            val date = dateFormatFromMillisToMss.parse(durationStr)
-            return date?.time ?: 0
-        }
     }
 
     override fun saveLastTracksDtoList() {
@@ -67,7 +58,7 @@ class SearchHistoryRepositoryImpl(
                 trackId = trackDto.trackId,
                 trackName = trackDto.trackName,
                 artistName = trackDto.artistName,
-                trackTime = dateFormatFromMillisToMss.format(trackDto.trackTimeMillis),
+                trackTime = formatMillisToHMSOptionalHours(trackDto.trackTimeMillis),
                 artworkUrl100 = trackDto.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"),
                 collectionName = trackDto.collectionName,
                 releaseDate = trackDto.releaseDate?.takeIf { it.length >= 4 }?.substring(0, 4),
@@ -83,7 +74,7 @@ class SearchHistoryRepositoryImpl(
             trackId = track.trackId,
             trackName = track.trackName,
             artistName = track.artistName,
-            trackTimeMillis = dateFormatFromMssToMillis(track.trackTime),
+            trackTimeMillis = parseTime(track.trackTime),
             artworkUrl100 = track.artworkUrl100,
             collectionName = track.collectionName,
             releaseDate = track.releaseDate,
@@ -92,6 +83,36 @@ class SearchHistoryRepositoryImpl(
             previewUrl = track.previewUrl
         )
         return trackDto
+    }
+
+    private fun parseTime(timeStr: String): Long {
+        val parts = timeStr.split(":")
+        return when (parts.size) {
+            2 -> {
+                val minutes = parts[0].toLongOrNull() ?: 0L
+                val seconds = parts[1].toLongOrNull() ?: 0L
+                minutes * 60_000 + seconds * 1_000
+            }
+            3 -> {
+                val hours = parts[0].toLongOrNull() ?: 0L
+                val minutes = parts[1].toLongOrNull() ?: 0L
+                val seconds = parts[2].toLongOrNull() ?: 0L
+                hours * 3_600_000 + minutes * 60_000 + seconds * 1_000
+            }
+            else -> 0L
+        }
+    }
+
+    private fun formatMillisToHMSOptionalHours(milliseconds: Long): String {
+        val hours = milliseconds / 3600000
+        val minutes = (milliseconds % 3600000) / 60000
+        val seconds = (milliseconds % 60000) / 1000
+
+        return if (hours > 0) {
+            String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format(Locale.getDefault(), "%d:%02d", minutes, seconds)
+        }
     }
 
 }

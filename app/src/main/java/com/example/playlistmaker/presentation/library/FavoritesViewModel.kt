@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.api.favorites.FavoritesInteractor
 import com.example.playlistmaker.domain.model.search.Track
 import kotlinx.coroutines.launch
 
-class FavoritesFragmentViewModel(private val favoritesInteractor: FavoritesInteractor) :
+class FavoritesViewModel(private val favoritesInteractor: FavoritesInteractor) :
     ViewModel() {
 
     private val favoritesLiveData = MutableLiveData<FavoritesState>()

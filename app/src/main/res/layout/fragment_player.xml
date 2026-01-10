@@ -22,6 +22,7 @@
                 style="@style/ToolbarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
+                android:layout_marginTop="@dimen/screen_margin_top"
                 app:contentInsetStartWithNavigation="64dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +42,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_end="24dp" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/player_track_cover"
                 android:layout_width="312dp"
                 android:layout_height="312dp"
@@ -50,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="@id/right_guideline"
                 app:layout_constraintStart_toStartOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/player_toolbar"
-                tools:src="@drawable/ic_cover_placeholder_45" />
+                tools:src="@drawable/ic_cover_placeholder_312" />
 
             <TextView
                 android:id="@+id/player_track_name"

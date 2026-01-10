@@ -34,7 +34,7 @@
         <item name="background">@drawable/main_button_ripple</item>
     </style>
 
-    <style name="TrackTextViewStyle" parent="Widget.MaterialComponents.TextView">
+    <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingHorizontal">@dimen/default_padding</item>
@@ -90,5 +90,15 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="MyTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+    </style>
+
+    <style name="MyAlertDialogStyle" parent="ShapeAppearanceOverlay.MaterialAlertDialog.Material3">
+        <item name="colorPrimary">@color/blue</item>
+    </style>
 
 </resources>

@@ -28,16 +28,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playlists_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/default_padding"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="@dimen/default_padding"
-        android:visibility="gone" />
-
-
     <LinearLayout
         android:id="@+id/empty_playlists_placeholder"
         android:layout_width="wrap_content"
@@ -66,4 +56,14 @@
             android:textSize="@dimen/medium_textSize" />
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/default_padding"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/default_padding"
+        android:visibility="gone" />
+
 </LinearLayout>

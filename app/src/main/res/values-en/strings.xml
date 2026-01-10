@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="tracks_count">
+    <plurals name="track_count">
         <item quantity="one">%d track</item>
         <item quantity="other">%d tracks</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
     </plurals>
 
     <string name="title_hello">Hello, Practicum</string>
@@ -33,13 +38,24 @@
     <string name="title">Title*</string>
     <string name="description">Description</string>
     <string name="make">Make</string>
-    <string name="playlist_maked">Playlist %1$s maked</string>
-    <string name="finish_making">Finish playlist making?</string>
+    <string name="playlist_made">Playlist \"%1$s\" made</string>
+    <string name="finish_making_question">Finish playlist making?</string>
     <string name="unsaved_data">All unsaved changes will be lost</string>
     <string name="cancel">Cancel</string>
     <string name="finish">Finish</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="track_is_present">Track is already in the playlist \"%1$s\"</string>
-    <string name="track_added_to_playlist">Added to the playlist %1$s</string>
+    <string name="track_added_to_playlist">Added to the playlist \"%1$s\"</string>
+    <string name="share">Share</string>
+    <string name="empty_playlist">Your playlist is empty</string>
+    <string name="edit_information">Edit information</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="delete_playlist">Delete playlist</string>
+    <string name="delete_track_question">Do you want to delete the track?</string>
+    <string name="delete_playlist_question">Do you want to delete the playlist \"%1$s\"?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="nothing_to_send">There are no tracks in this playlist to share</string>
 
 </resources>

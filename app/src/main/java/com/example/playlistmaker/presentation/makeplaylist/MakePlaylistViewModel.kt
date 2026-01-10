@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.library
+package com.example.playlistmaker.presentation.makeplaylist
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import kotlinx.coroutines.launch
 
-class MakePlaylistFragmentViewModel(
+open class MakePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 

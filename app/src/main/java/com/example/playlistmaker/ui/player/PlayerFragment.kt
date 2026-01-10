@@ -1,11 +1,12 @@
 package com.example.playlistmaker.ui.player
 
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -22,6 +23,7 @@ import com.example.playlistmaker.presentation.player.PlayerState
 import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.util.debounce
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,9 +32,7 @@ import org.koin.core.parameter.parametersOf
 class PlayerFragment : Fragment() {
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(
-            track
-        )
+        parametersOf(track)
     }
 
     private lateinit var binding: FragmentPlayerBinding
@@ -44,6 +44,8 @@ class PlayerFragment : Fragment() {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private lateinit var track: Track
+
+    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +60,10 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         track = getTrackFromArgs()
+
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
+            render(it)
+        }
 
         viewModel.fillData()
 
@@ -84,10 +90,6 @@ class PlayerFragment : Fragment() {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
 
-        viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
         binding.playerToolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
@@ -97,17 +99,29 @@ class PlayerFragment : Fragment() {
         }
 
         binding.isFavoriteButton.setOnClickListener {
-            viewModel.onFavoriteClicked(track)
+            viewModel.onFavoriteClicked(isFavorite)
         }
 
         binding.addToPlaylistButton.setOnClickListener {
-            viewModel.fillData()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenHeightPx = displayMetrics.heightPixels
+
+        val topMarginPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            0f,
+            resources.displayMetrics
+        ).toInt()
+
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {}
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val params = bottomSheet.layoutParams
+                params.height = screenHeightPx - topMarginPx
+                bottomSheet.layoutParams = params
+            }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 val alpha = (slideOffset + 1) / 2
@@ -128,15 +142,13 @@ class PlayerFragment : Fragment() {
             genreInfo.text = track.primaryGenreName
             yearInfo.text = track.releaseDate
             countryInfo.text = track.country
-            if (track.isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
-            else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
 
         val coverUrl = track.artworkUrl100
         Glide.with(this)
             .load(coverUrl)
             .transform(RoundedCorners(dpToPx(8)))
-            .placeholder(R.drawable.ic_cover_placeholder_45)
+            .placeholder(R.drawable.ic_cover_placeholder_312)
             .into(binding.playerTrackCover)
 
         requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
@@ -160,24 +172,23 @@ class PlayerFragment : Fragment() {
                 state.isPresent,
                 state.playlistName
             )
-
             is PlayerState.BottomSheet -> bottomSheetBehavior.state = state.bottomSheetState
         }
     }
 
     private fun showPlaylistCheckFeedback(isPresent: Boolean, playlistName: String) {
         binding.apply {
-            if (isPresent) Toast.makeText(
-                requireContext(),
+            if (isPresent) Snackbar.make(
+                binding.root,
                 getString(R.string.track_is_present, playlistName),
-                Toast.LENGTH_SHORT
+                Snackbar.LENGTH_SHORT
             ).show()
             else {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                Toast.makeText(
-                    requireContext(),
+                Snackbar.make(
+                    binding.root,
                     getString(R.string.track_added_to_playlist, playlistName),
-                    Toast.LENGTH_SHORT
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
         }
@@ -200,7 +211,7 @@ class PlayerFragment : Fragment() {
             if (isFavorite) isFavoriteButton.setImageResource(R.drawable.ic_favorite_51)
             else isFavoriteButton.setImageResource(R.drawable.ic_not_favorite_51)
         }
-        track.isFavorite = isFavorite
+        this.isFavorite = isFavorite
     }
 
     override fun onPause() {
@@ -209,8 +220,22 @@ class PlayerFragment : Fragment() {
         viewModel.saveBottomSheetState(bottomSheetBehavior.state)
     }
 
+    private fun getTrackFromArgs() =
+        Track(
+            trackId = requireArguments().getInt(ARGS_TRACK_ID),
+            trackName = requireArguments().getString(ARGS_TRACK_NAME) ?: "",
+            artistName = requireArguments().getString(ARGS_ARTIST_NAME) ?: "",
+            trackTime = requireArguments().getString(ARGS_TRACK_TIME) ?: "",
+            artworkUrl100 = requireArguments().getString(ARGS_TRACK_COVER) ?: "",
+            collectionName = requireArguments().getString(ARGS_ALBUM_NAME),
+            releaseDate = requireArguments().getString(ARGS_RELEASE_DATE),
+            primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
+            country = requireArguments().getString(ARGS_COUNTRY) ?: "",
+            previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
+        )
+
     companion object {
-        private const val INITIAL_OVERLAY_ALPHA: Float = 0F
+        private const val INITIAL_OVERLAY_ALPHA = 0F
         private const val CLICK_DEBOUNCE_DELAY = 300L
         private const val MINIMAL_DELAY = 200L
 
@@ -224,7 +249,6 @@ class PlayerFragment : Fragment() {
         private const val ARGS_GENRE_NAME = "genre_name"
         private const val ARGS_RELEASE_DATE = "release_date"
         private const val ARGS_COUNTRY = "country"
-        private const val ARGS_IS_FAVORITE = "favorite"
 
         fun createArgs(
             trackId: Int,
@@ -236,8 +260,7 @@ class PlayerFragment : Fragment() {
             albumName: String?,
             genreName: String,
             releaseDate: String?,
-            country: String,
-            isFavorite: Boolean,
+            country: String
         ): Bundle =
             bundleOf(
                 ARGS_TRACK_ID to trackId,
@@ -249,25 +272,8 @@ class PlayerFragment : Fragment() {
                 ARGS_ALBUM_NAME to albumName,
                 ARGS_GENRE_NAME to genreName,
                 ARGS_RELEASE_DATE to releaseDate,
-                ARGS_COUNTRY to country,
-                ARGS_IS_FAVORITE to isFavorite,
+                ARGS_COUNTRY to country
             )
-    }
-
-    private fun getTrackFromArgs(): Track {
-        return Track(
-            trackId = requireArguments().getInt(ARGS_TRACK_ID),
-            trackName = requireArguments().getString(ARGS_TRACK_NAME) ?: "",
-            artistName = requireArguments().getString(ARGS_ARTIST_NAME) ?: "",
-            trackTime = requireArguments().getString(ARGS_TRACK_TIME) ?: "",
-            artworkUrl100 = requireArguments().getString(ARGS_TRACK_COVER) ?: "",
-            collectionName = requireArguments().getString(ARGS_ALBUM_NAME),
-            releaseDate = requireArguments().getString(ARGS_RELEASE_DATE),
-            primaryGenreName = requireArguments().getString(ARGS_GENRE_NAME) ?: "",
-            country = requireArguments().getString(ARGS_COUNTRY) ?: "",
-            previewUrl = requireArguments().getString(ARGS_PREVIEW_URL) ?: "",
-            isFavorite = requireArguments().getBoolean(ARGS_IS_FAVORITE)
-        )
     }
 
 }

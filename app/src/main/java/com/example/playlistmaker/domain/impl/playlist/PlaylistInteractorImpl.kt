@@ -13,19 +13,45 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.makePlaylist(name, description, coverFilePath)
     }
 
-    override suspend fun getPlaylists(): Flow<List<Playlist>> {
+    override fun getPlaylists(): Flow<List<Playlist>> {
         return repository.getPlaylists()
     }
 
-    override suspend fun addTrackToPlaylist(playlistId: Int, newTrackId: Int) {
-        repository.addTrackToPlaylist(playlistId, newTrackId)
+    override fun getPlaylistById(playlistId: Int): Flow<Playlist> {
+        return repository.getPlaylistById(playlistId)
     }
 
-    override suspend fun saveImageAndGetPath(uri: Uri) : String {
+    override suspend fun addTrackToPlaylistById(playlistId: Int, newTrackId: Int) {
+        repository.addTrackToPlaylistById(playlistId, newTrackId)
+    }
+
+    override suspend fun saveImageAndGetPath(uri: Uri): String {
         return repository.saveImageAndGetPath(uri)
     }
 
     override suspend fun saveTrackFromPlaylist(track: Track) {
         repository.saveTrackFromPlaylist(track)
     }
+
+    override suspend fun getTracksByIds(trackIdList: List<Int>): List<Track> {
+        return repository.getTracksByIds(trackIdList)
+    }
+
+    override suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>) {
+        repository.deleteTracksFromPlaylistByIds(playlistId, trackIdList)
+    }
+
+    override suspend fun deletePlaylistById(playlistId: Int) {
+        repository.deletePlaylistById(playlistId)
+    }
+
+    override suspend fun editPlaylistInformation(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    ) {
+        repository.editPlaylistInformation(playlistId, playlistName, playlistDescription, coverFilePath)
+    }
+
 }

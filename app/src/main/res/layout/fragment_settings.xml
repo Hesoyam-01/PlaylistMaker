@@ -4,6 +4,7 @@
     android:id="@+id/settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/screen_margin_top"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
     tools:context=".ui.settings.SettingsFragment">
@@ -24,7 +25,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/theme_text"
-            style="@style/TrackTextViewStyle"
+            style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -43,7 +44,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/share_app_button"
-        style="@style/TrackTextViewStyle"
+        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_share_24"
@@ -51,7 +52,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/support_button"
-        style="@style/TrackTextViewStyle"
+        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_support_24"
@@ -59,7 +60,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/user_agreement_button"
-        style="@style/TrackTextViewStyle"
+        style="@style/TextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/track_height"
         android:drawableEnd="@drawable/ic_arrow_forward_24"

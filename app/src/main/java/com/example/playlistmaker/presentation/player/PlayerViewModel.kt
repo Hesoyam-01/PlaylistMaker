@@ -106,9 +106,9 @@ class PlayerViewModel(
         )
     }
 
-    fun onFavoriteClicked(track: Track) {
+    fun onFavoriteClicked(isFavorite: Boolean) {
         viewModelScope.launch {
-            if (track.isFavorite) {
+            if (isFavorite) {
                 favoritesInteractor.deleteFromFavoriteTracks(track)
                 renderState(PlayerState.IsFavorite(false))
             } else {
@@ -120,14 +120,14 @@ class PlayerViewModel(
 
     fun fillData() {
         viewModelScope.launch {
+            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
+            val isFavorite = favoriteTrackIds.contains(track.trackId)
+            renderState(PlayerState.IsFavorite(isFavorite))
             playlistInteractor
                 .getPlaylists()
                 .collect {
                     processResult(it)
                 }
-            val favoriteTrackIds = favoritesInteractor.getFavoriteTrackIds()
-            val isFavorite = favoriteTrackIds.contains(track.trackId)
-            renderState(PlayerState.IsFavorite(isFavorite))
         }
     }
 
@@ -150,7 +150,7 @@ class PlayerViewModel(
                 )
             )
             viewModelScope.launch {
-                playlistInteractor.addTrackToPlaylist(playlist.playlistId, track.trackId)
+                playlistInteractor.addTrackToPlaylistById(playlist.playlistId, track.trackId)
                 playlistInteractor.saveTrackFromPlaylist(track)
             }
         }

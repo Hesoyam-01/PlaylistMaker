@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -48,7 +49,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
-            startPlayerFragment(it)
+            navigateToPlayerFragment(it)
         }
 
         getSearchHistoryDebounce = debounce(
@@ -59,14 +60,19 @@ class SearchFragment : Fragment() {
             viewModel.getSearchHistory()
         }
 
-        trackAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
-        }
+        trackAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = {}
+        )
 
-        lastTracksAdapter = TrackAdapter {
-            onTrackClickDebounce(it)
-            getSearchHistoryDebounce
-        }
+        lastTracksAdapter = TrackAdapter(
+            onTrackClick = {
+                onTrackClickDebounce(it)
+            },
+            onTrackLongClick = {}
+        )
 
         binding.apply {
             tracksRecyclerView.adapter = trackAdapter
@@ -120,9 +126,15 @@ class SearchFragment : Fragment() {
         }
 
         binding.searchBar.addTextChangedListener(textWatcher)
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        })
     }
 
-    private fun startPlayerFragment(track: Track) {
+    private fun navigateToPlayerFragment(track: Track) {
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(
@@ -135,8 +147,7 @@ class SearchFragment : Fragment() {
                 albumName = track.collectionName,
                 genreName = track.primaryGenreName,
                 releaseDate = track.releaseDate,
-                country = track.country,
-                isFavorite = track.isFavorite
+                country = track.country
             )
         )
 
@@ -159,6 +170,7 @@ class SearchFragment : Fragment() {
                 searchPlaceholder.visibility = View.GONE
                 searchUpdateQueryButton.visibility = View.GONE
                 tracksRecyclerView.visibility = View.GONE
+                searchProgressBar.visibility = View.GONE
                 searchHistoryView.visibility = View.VISIBLE
             }
             lastTracksAdapter.updateList(lastTracksList)
