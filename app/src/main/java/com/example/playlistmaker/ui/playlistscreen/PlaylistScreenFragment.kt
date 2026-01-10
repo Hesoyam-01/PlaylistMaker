@@ -149,16 +149,17 @@ class PlaylistScreenFragment : Fragment() {
             }
         })
 
-        binding.bottomSheetDeletePlaylistButton.setOnClickListener {
-            viewModel.deletePlaylistDialog()
-        }
-
         binding.sharePlaylistButton.setOnClickListener {
             viewModel.sharePlaylist()
         }
 
+        binding.bottomSheetDeletePlaylistButton.setOnClickListener {
+            viewModel.deletePlaylistDialog()
+        }
+
         binding.bottomSheetEditInformationButton.setOnClickListener {
             viewModel.editPlaylist()
+            moreBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
         binding.bottomSheetSharePlaylistButton.setOnClickListener {
@@ -178,6 +179,7 @@ class PlaylistScreenFragment : Fragment() {
                 state.trackList,
                 state.totalTime
             )
+
             is PlaylistScreenState.EmptyPlaylist -> showEmptyPlaceholder()
             is PlaylistScreenState.DeleteDialog -> showDeleteDialog(state.playlistName)
             is PlaylistScreenState.NothingToSend -> showNothingToSend()
@@ -187,6 +189,7 @@ class PlaylistScreenFragment : Fragment() {
                 state.playlistDescription,
                 state.coverFilePath
             )
+            PlaylistScreenState.Reset -> {}
         }
     }
 
@@ -282,6 +285,7 @@ class PlaylistScreenFragment : Fragment() {
                 coverFilePath
             )
         )
+        viewModel.resetState()
     }
 
     private fun navigateToPlayerFragment(track: Track) {
@@ -309,7 +313,7 @@ class PlaylistScreenFragment : Fragment() {
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 300L
-        private const val INITIAL_OVERLAY_ALPHA= 0F
+        private const val INITIAL_OVERLAY_ALPHA = 0F
 
         private const val ARGS_PLAYLIST_ID = "playlist_id"
 

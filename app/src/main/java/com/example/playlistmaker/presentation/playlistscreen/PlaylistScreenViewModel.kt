@@ -79,12 +79,18 @@ class PlaylistScreenViewModel(
     }
 
     fun editPlaylist() {
-        renderState(PlaylistScreenState.Editing(
-            playlist.playlistId,
-            playlist.playlistName,
-            playlist.playlistDescription,
-            playlist.coverFilePath
-        ))
+        renderState(
+            PlaylistScreenState.Editing(
+                playlist.playlistId,
+                playlist.playlistName,
+                playlist.playlistDescription,
+                playlist.coverFilePath
+            )
+        )
+    }
+
+    fun resetState() {
+        renderState(PlaylistScreenState.Reset)
     }
 
     fun sharePlaylist() {

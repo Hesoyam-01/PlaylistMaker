@@ -34,7 +34,7 @@ open class MakePlaylistFragment : Fragment() {
 
     private lateinit var confirmDialog: MaterialAlertDialogBuilder
 
-    private var selectedImageUri: Uri? = null
+    protected var selectedImageUri: Uri? = null
 
     private var _binding: FragmentMakePlaylistBinding? = null
     protected val binding get() = _binding!!
@@ -143,7 +143,7 @@ open class MakePlaylistFragment : Fragment() {
 
     }
 
-    protected open fun navigateUpWithConfirmation() {
+    private fun navigateUpWithConfirmation() {
         if ((!binding.playlistName.text.isNullOrEmpty())
             or (!binding.playlistDescription.text.isNullOrEmpty())
             or (selectedImageUri != null)

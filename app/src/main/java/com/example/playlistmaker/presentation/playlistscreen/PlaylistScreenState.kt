@@ -27,4 +27,6 @@ sealed interface PlaylistScreenState {
     ) : PlaylistScreenState
 
     data object NothingToSend : PlaylistScreenState
+
+    data object Reset : PlaylistScreenState
 }
