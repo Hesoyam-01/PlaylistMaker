@@ -38,10 +38,6 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
 
-    /*private suspend fun addToPlaylists(playlist: Playlist) {
-        appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
-    }*/
-
     override fun getPlaylists(): Flow<List<Playlist>> {
         return appDatabase.playlistDao().getPlaylists().map { convertFromPlaylistEntity(it) }
     }
@@ -122,6 +118,16 @@ class PlaylistRepositoryImpl(
 
     override suspend fun deletePlaylistById(playlistId: Int) {
         appDatabase.playlistDao().deletePlaylistById(playlistId)
+    }
+
+    override suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    ) {
+        appDatabase.playlistDao()
+            .updatePlaylist(playlistId, playlistName, playlistDescription, coverFilePath)
     }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {

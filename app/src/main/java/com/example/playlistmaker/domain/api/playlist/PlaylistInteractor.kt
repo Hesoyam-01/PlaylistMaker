@@ -23,4 +23,12 @@ interface PlaylistInteractor {
     suspend fun deleteTracksFromPlaylistByIds(playlistId: Int, trackIdList: List<Int>)
 
     suspend fun deletePlaylistById(playlistId: Int)
+
+    suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    )
+
 }

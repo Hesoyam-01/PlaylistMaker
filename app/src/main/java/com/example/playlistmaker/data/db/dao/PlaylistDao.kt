@@ -2,7 +2,6 @@ package com.example.playlistmaker.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.playlistmaker.data.db.entity.PlaylistEntity
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlaylistDao {
 
-    @Insert(entity = PlaylistEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = PlaylistEntity::class)
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table ORDER BY playlistId DESC")
@@ -27,5 +26,13 @@ interface PlaylistDao {
 
     @Query("DELETE FROM playlist_table WHERE playlistId = :playlistId")
     suspend fun deletePlaylistById(playlistId: Int)
+
+    @Query("UPDATE playlist_table SET playlistName = :playlistName, playlistDescription = :playlistDescription, coverFilePath = :coverFilePath WHERE playlistId = :playlistId")
+    suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    )
 
 }

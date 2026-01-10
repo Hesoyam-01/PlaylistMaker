@@ -25,7 +25,7 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
         repository.addTrackToPlaylistById(playlistId, newTrackId)
     }
 
-    override suspend fun saveImageAndGetPath(uri: Uri) : String {
+    override suspend fun saveImageAndGetPath(uri: Uri): String {
         return repository.saveImageAndGetPath(uri)
     }
 
@@ -43,6 +43,15 @@ class PlaylistInteractorImpl(private val repository: PlaylistRepository) : Playl
 
     override suspend fun deletePlaylistById(playlistId: Int) {
         repository.deletePlaylistById(playlistId)
+    }
+
+    override suspend fun updatePlaylist(
+        playlistId: Int,
+        playlistName: String,
+        playlistDescription: String?,
+        coverFilePath: String?
+    ) {
+        repository.updatePlaylist(playlistId, playlistName, playlistDescription, coverFilePath)
     }
 
 }

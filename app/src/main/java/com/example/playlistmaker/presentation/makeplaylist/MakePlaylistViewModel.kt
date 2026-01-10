@@ -15,7 +15,7 @@ open class MakePlaylistViewModel(
     private val savedImagePathLiveData = MutableLiveData<String>()
     fun observeImagePath(): LiveData<String> = savedImagePathLiveData
 
-    open fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
+    fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
         viewModelScope.launch {
             playlistInteractor.makePlaylist(title, description, coverFilePath)
         }
