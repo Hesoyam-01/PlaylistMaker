@@ -35,12 +35,12 @@ class PlaylistRepositoryImpl(
             playlistDescription = description,
             coverFilePath = coverFilePath
         )
-        addToPlaylists(playlist)
-    }
-
-    private suspend fun addToPlaylists(playlist: Playlist) {
         appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
+
+    /*private suspend fun addToPlaylists(playlist: Playlist) {
+        appDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
+    }*/
 
     override fun getPlaylists(): Flow<List<Playlist>> {
         return appDatabase.playlistDao().getPlaylists().map { convertFromPlaylistEntity(it) }

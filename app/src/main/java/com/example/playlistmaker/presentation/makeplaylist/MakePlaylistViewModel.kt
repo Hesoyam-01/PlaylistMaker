@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api.playlist.PlaylistInteractor
 import kotlinx.coroutines.launch
 
-class MakePlaylistViewModel(
+open class MakePlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val savedImagePathLiveData = MutableLiveData<String>()
     fun observeImagePath(): LiveData<String> = savedImagePathLiveData
 
-    fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
+    open fun makePlaylist(title: String, description: String?, coverFilePath: String?) {
         viewModelScope.launch {
             playlistInteractor.makePlaylist(title, description, coverFilePath)
         }
