@@ -4,6 +4,7 @@ agp = "8.7.2"
 appcompatVersion = "1.6.1"
 compiler = "4.14.2"
 constraintlayoutVersion = "2.0.0"
+firebaseBom = "34.7.0"
 fragmentKtx = "1.5.6"
 glide = "4.16.0"
 gson = "2.10.1"
@@ -44,6 +45,8 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
