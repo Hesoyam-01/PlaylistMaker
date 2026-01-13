@@ -15,6 +15,7 @@ import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.network.SearchAPI
 import com.example.playlistmaker.data.storage.PrefsStorageClient
 import com.example.playlistmaker.domain.api.sharing.ExternalNavigator
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.koin.android.ext.koin.androidContext
@@ -79,7 +80,7 @@ val dataModule = module {
 
     single {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 
@@ -88,5 +89,9 @@ val dataModule = module {
     factory { PlaylistDbConverter(get()) }
 
     factory { TrackFromPlaylistDbConverter() }
+
+    single<FirebaseAnalytics> {
+        FirebaseAnalytics.getInstance(androidContext())
+    }
 
 }

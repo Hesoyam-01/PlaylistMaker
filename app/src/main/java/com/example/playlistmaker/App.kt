@@ -14,16 +14,12 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class App : Application() {
-    lateinit var firebaseAnalytics: FirebaseAnalytics
-
     override fun onCreate() {
         super.onCreate()
         startKoin {
             androidContext(this@App)
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
-
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         PermissionRequester.initialize(applicationContext)
 

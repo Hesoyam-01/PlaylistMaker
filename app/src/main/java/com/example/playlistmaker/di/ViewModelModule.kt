@@ -9,7 +9,7 @@ import com.example.playlistmaker.presentation.player.PlayerViewModel
 import com.example.playlistmaker.presentation.playlistscreen.PlaylistScreenViewModel
 import com.example.playlistmaker.presentation.search.SearchViewModel
 import com.example.playlistmaker.presentation.settings.SettingsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
@@ -27,7 +27,7 @@ val viewModelModule = module {
     }
 
     viewModel { params ->
-        PlayerViewModel(params.get(), get(), get(), get())
+        PlayerViewModel(params.get(), get(), get(), get(), get())
     }
 
     viewModel {
