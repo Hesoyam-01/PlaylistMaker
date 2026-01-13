@@ -13,6 +13,7 @@ import com.example.playlistmaker.domain.model.player.MediaState
 import com.example.playlistmaker.domain.model.search.Track
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -114,7 +115,9 @@ class PlayerViewModel(
                 favoritesInteractor.deleteFromFavoriteTracks(track)
                 renderState(PlayerState.IsFavorite(false))
             } else {
-                firebaseAnalytics.logEvent()
+                firebaseAnalytics.logEvent("add_to_favorites") {
+                    param("track_name", track.trackName)
+                }
                 favoritesInteractor.addToFavoriteTracks(track)
                 renderState(PlayerState.IsFavorite(true))
             }
