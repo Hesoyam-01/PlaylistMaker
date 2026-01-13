@@ -20,7 +20,7 @@ class App : Application() {
             modules(dataModule, repositoryModule, interactorModule, viewModelModule)
         }
 
-        PermissionRequester.initialize(applicationContext)
+
 
         val themeInteractor = getKoin().get<ThemeInteractor>()
         themeInteractor.getThemeMode(object : ThemeInteractor.ThemeConsumer {
