@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.kapt")
     id("com.google.devtools.ksp") version "1.9.0-1.0.13"
     id("com.google.gms.google-services") version "4.4.4" apply false
 }
@@ -68,10 +67,10 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.peko)
     implementation(platform(libs.firebase.bom))
-//    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.analytics)
 
 }
