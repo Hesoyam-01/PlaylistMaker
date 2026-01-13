@@ -72,6 +72,10 @@ class PlayerFragment : Fragment() {
             viewModel.getBottomSheetState()
         }
 
+        binding.playerToolbar.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.newPlaylistButton.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_makePlaylistFragment)
         }
@@ -89,10 +93,6 @@ class PlayerFragment : Fragment() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         binding.overlay.alpha = INITIAL_OVERLAY_ALPHA
-
-        binding.playerToolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
 
         binding.playStopButton.setOnClickListener {
             viewModel.playbackControl()
